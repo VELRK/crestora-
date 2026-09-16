@@ -60,7 +60,7 @@ export default function Header({
             <span className="topbar-separator d-none-tablet">|</span>
             <div className="topbar-item d-none-tablet">
               <MapPin size={12.5} className="topbar-icon" />
-              <span>Coimbatore &amp; Chennai</span>
+              <span>Coimbatore</span>
             </div>
           </div>
 
@@ -69,21 +69,6 @@ export default function Header({
               <ShieldCheck size={13} className="topbar-icon-gold" />
               <span>DTCP &amp; RERA Approved Projects</span>
             </div>
-            <span className="topbar-separator">|</span>
-            <button
-              type="button"
-              className="topbar-link-btn"
-              onClick={() => {
-                onNavigate && onNavigate("home");
-                setTimeout(() => {
-                  document
-                    .getElementById("nri-benefits-section")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
-            >
-              NRI Desk
-            </button>
             <span className="topbar-separator d-none-mobile">|</span>
             <span className="topbar-hours d-none-mobile">
               <Clock size={12} className="topbar-icon" /> 9:00 AM – 7:30 PM
@@ -270,87 +255,87 @@ export default function Header({
             </div>
 
             {/* Locations Dropdown */}
-            <div className="nav-link-item">
-              <button
-                type="button"
-                className="nav-link-btn"
-                onClick={() => {
-                  onNavigate && onNavigate("home");
-                  setTimeout(() => {
-                    document
-                      .getElementById("city-locations-section")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
+            {/* <div className="nav-link-item"> */}
+            {/* <button
+              type="button"
+              className="nav-link-btn"
+              onClick={() => {
+                onNavigate && onNavigate("home");
+                setTimeout(() => {
+                  document
+                    .getElementById("city-locations-section")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+              }}
+            >
+              LOCATIONS <ChevronDown className="nav-chevron" size={13} />
+            </button>
+            <div className="nav-dropdown-menu">
+              <a
+                href="#neelambur"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "neelambur" });
                 }}
               >
-                LOCATIONS <ChevronDown className="nav-chevron" size={13} />
-              </button>
-              <div className="nav-dropdown-menu">
-                <a
-                  href="#neelambur"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "neelambur" });
-                  }}
-                >
-                  Neelambur (Avinashi Bypass)
-                </a>
-                <a
-                  href="#saravanampatti"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "saravanampatti" });
-                  }}
-                >
-                  Saravanampatti (IT Corridor)
-                </a>
-                <a
-                  href="#avinashi-road"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "avinashi-road" });
-                  }}
-                >
-                  Avinashi Road / Airport
-                </a>
-                <a
-                  href="#kovaipudur"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "kovaipudur" });
-                  }}
-                >
-                  Kovaipudur (Western Foothills)
-                </a>
-                <a
-                  href="#vadavalli"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "vadavalli" });
-                  }}
-                >
-                  Vadavalli (Marudhamalai)
-                </a>
-                <a
-                  href="#chennai"
-                  className="dropdown-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "chennai" });
-                  }}
-                >
-                  Chennai (OMR Corridor)
-                </a>
-              </div>
-            </div>
+                Neelambur (Avinashi Bypass)
+              </a>
+              <a
+                href="#saravanampatti"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "saravanampatti" });
+                }}
+              >
+                Saravanampatti (IT Corridor)
+              </a>
+              <a
+                href="#avinashi-road"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "avinashi-road" });
+                }}
+              >
+                Avinashi Road / Airport
+              </a>
+              <a
+                href="#kovaipudur"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "kovaipudur" });
+                }}
+              >
+                Kovaipudur (Western Foothills)
+              </a>
+              <a
+                href="#vadavalli"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "vadavalli" });
+                }}
+              >
+                Vadavalli (Marudhamalai)
+              </a>
+              <a
+                href="#chennai"
+                className="dropdown-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate && onNavigate("projects", { location: "chennai" });
+                }}
+              >
+                Chennai (OMR Corridor)
+              </a>
+            </div> */}
+            {/* </div> */}
 
             {/* Services Dropdown */}
-            <div className="nav-link-item">
+            {/* <div className="nav-link-item">
               <button
                 type="button"
                 className="nav-link-btn"
@@ -397,7 +382,7 @@ export default function Header({
                   Crestora for NRI
                 </a>
               </div>
-            </div>
+            </div> */}
 
             <div className="nav-link-item">
               <button
