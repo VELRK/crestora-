@@ -1,0 +1,196 @@
+import React from "react";
+import {
+  PROPERTY_TYPES,
+  LOCATIONS,
+  MAX_PRICES,
+  SORT_OPTIONS,
+} from "../../data/projectsData";
+import { Search, RotateCcw, Filter } from "lucide-react";
+
+export default function ProjectFilters({
+  filters,
+  onFilterChange,
+  onResetFilters,
+  totalCount,
+  filteredCount,
+  sortBy,
+  onSortChange,
+}) {
+  const handleInputChange = (field, value) => {
+    onFilterChange({
+      ...filters,
+      [field]: value,
+    });
+  };
+
+  const hasActiveFilters =
+    (filters.keyword && filters.keyword !== "") ||
+    (filters.type && filters.type !== "all") ||
+    (filters.location && filters.location !== "all") ||
+    (filters.maxPrice && filters.maxPrice !== "all") ||
+    (filters.status && filters.status !== "all");
+
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 10px 30px rgba(10, 28, 56, 0.06)",
+        padding: "24px",
+        marginBottom: "35px",
+      }}
+    >
+      {/* Top Filter Bar */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "16px",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
+        {/* Keyword Search */}
+        <div style={{ position: "relative" }}>
+          <Search size={16} color="#718096" style={{ position: "absolute", left: "14px", top: "15px" }} />
+          <input
+            type="text"
+            placeholder="Search by name, road..."
+            className="crestora-input"
+            style={{ paddingLeft: "38px" }}
+            value={filters.keyword || ""}
+            onChange={(e) => handleInputChange("keyword", e.target.value)}
+          />
+        </div>
+
+        {/* Location Dropdown */}
+        <div>
+          <select
+            className="crestora-input"
+            value={filters.location || "all"}
+            onChange={(e) => handleInputChange("location", e.target.value)}
+          >
+            <option value="all">All Prime Locations</option>
+            {LOCATIONS.filter((l) => l.value !== "all").map((loc) => (
+              <option key={loc.id} value={loc.value}>
+                {loc.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Category / Type */}
+        <div>
+          <select
+            className="crestora-input"
+            value={filters.type || "all"}
+            onChange={(e) => handleInputChange("type", e.target.value)}
+          >
+            {PROPERTY_TYPES.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Budget Max */}
+        <div>
+          <select
+            className="crestora-input"
+            value={filters.maxPrice || "all"}
+            onChange={(e) => handleInputChange("maxPrice", e.target.value)}
+          >
+            {MAX_PRICES.map((p) => (
+              <option key={p.label} value={p.value}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Status */}
+        <div>
+          <select
+            className="crestora-input"
+            value={filters.status || "all"}
+            onChange={(e) => handleInputChange("status", e.target.value)}
+          >
+            <option value="all">All Stages</option>
+            <option value="ongoing">Ongoing Projects</option>
+            <option value="upcoming">Upcoming Projects</option>
+            <option value="completed">Completed Landmarks</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Filter Stats & Reset Row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "14px",
+          paddingTop: "16px",
+          borderTop: "1px solid #edf2f7",
+        }}
+      >
+        <div style={{ fontSize: "14px", color: "#4a5568" }}>
+          Showing <strong style={{ color: "#163057" }}>{filteredCount}</strong> of{" "}
+          <strong>{totalCount}</strong> developments in Coimbatore & Chennai
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          {/* Sort By */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "13px", color: "#718096" }}>Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              style={{
+                height: "36px",
+                border: "1px solid #cbd5e1",
+                background: "#ffffff",
+                padding: "0 10px",
+                fontSize: "13px",
+                borderRadius: "2px",
+                color: "#1e293b",
+              }}
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Reset Filters */}
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={onResetFilters}
+              style={{
+                background: "#fee2e2",
+                border: "1px solid #fca5a5",
+                color: "#b91c1c",
+                padding: "6px 14px",
+                fontSize: "12px",
+                fontWeight: "700",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                borderRadius: "2px",
+                cursor: "pointer",
+              }}
+            >
+              <RotateCcw size={12} />
+              <span>Reset Filters</span>
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

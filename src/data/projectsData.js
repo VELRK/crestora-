@@ -1,0 +1,814 @@
+/**
+ * Crestora Properties - Project & Inventory Data
+ * DTCP & RERA Approved Developments across Coimbatore, Chennai & Tamil Nadu.
+ * Pricing in Indian Rupees (INR).
+ */
+
+export const CATEGORIES = [
+  { id: "all", label: "All Categories", value: "all" },
+  { id: "plots", label: "Plots", subtitle: "DTCP & RERA Villa Plots", value: "plots", icon: "LandPlot" },
+  { id: "villa", label: "Villas", subtitle: "Luxury Gated Villas", value: "villa", icon: "Home" },
+  { id: "farmlands", label: "Farmlands", subtitle: "Hillside & Eco Farmlands", value: "farmlands", icon: "Trees" },
+  { id: "commercial", label: "Commercial Lands", subtitle: "Commercial & Retail Frontage", value: "commercial", icon: "Building2" },
+  { id: "gated-community", label: "Gated Communities", subtitle: "Master-Planned Enclaves", value: "gated-community", icon: "ShieldCheck" },
+];
+
+export const PROPERTY_TYPES = [
+  { label: "All Categories", value: "all" },
+  { label: "Plots (Residential Villa Plots)", value: "plots" },
+  { label: "Villas (Luxury Gated Villas)", value: "villa" },
+  { label: "Farmlands (Hillside & Eco Farmlands)", value: "farmlands" },
+  { label: "Commercial Lands (Retail & Highway)", value: "commercial" },
+  { label: "Gated Communities (Integrated Enclaves)", value: "gated-community" },
+];
+
+export const COIMBATORE_LOCALITIES = [
+  { id: "all", label: "All Prime Locations", value: "all", city: "all" },
+  { id: "neelambur", label: "Neelambur (Avinashi Bypass)", value: "neelambur", city: "coimbatore" },
+  { id: "saravanampatti", label: "Saravanampatti (IT Corridor)", value: "saravanampatti", city: "coimbatore" },
+  { id: "avinashi-road", label: "Avinashi Road / Airport", value: "avinashi-road", city: "coimbatore" },
+  { id: "kovaipudur", label: "Kovaipudur (Western Foothills)", value: "kovaipudur", city: "coimbatore" },
+  { id: "vadavalli", label: "Vadavalli (Marudhamalai)", value: "vadavalli", city: "coimbatore" },
+  { id: "peelamedu", label: "Peelamedu", value: "peelamedu", city: "coimbatore" },
+  { id: "thudiyalur", label: "Thudiyalur (Mettupalayam Rd)", value: "thudiyalur", city: "coimbatore" },
+  { id: "pollachi-road", label: "Pollachi Road (Kinathukadavu)", value: "pollachi-road", city: "coimbatore" },
+  { id: "kalapatti", label: "Kalapatti (Tech Zone)", value: "kalapatti", city: "coimbatore" },
+  { id: "chennai", label: "Chennai (OMR / ECR Corridor)", value: "chennai", city: "chennai" },
+];
+
+export const LOCATIONS = COIMBATORE_LOCALITIES;
+
+export const BUDGET_RANGES = [
+  { label: "All Budgets", value: "all", min: 0, max: Infinity },
+  { label: "Under ₹35 Lakhs", value: "3500000", min: 0, max: 3500000 },
+  { label: "₹35L - ₹60 Lakhs", value: "6000000", min: 3500000, max: 6000000 },
+  { label: "₹60L - ₹1 Crore", value: "10000000", min: 6000000, max: 10000000 },
+  { label: "₹1 Cr - ₹2.5 Crores", value: "25000000", min: 10000000, max: 25000000 },
+  { label: "₹2.5 Crores & Above", value: "100000000", min: 25000000, max: Infinity },
+];
+
+export const MAX_PRICES = BUDGET_RANGES;
+
+export const BEDS_OPTIONS = [
+  { label: "Any Bedrooms", value: "all" },
+  { label: "2+ BHK / Plots", value: "2" },
+  { label: "3+ BHK / Plots", value: "3" },
+  { label: "4+ BHK Luxury", value: "4" },
+  { label: "5+ BHK Signature", value: "5" },
+];
+
+export const FLOORS_OPTIONS = [
+  { label: "Any Structure", value: "all" },
+  { label: "Ground Floor / Plot", value: "1" },
+  { label: "G + 1 Duplex", value: "2" },
+  { label: "G + 2 Triplex", value: "3" },
+];
+
+export const GARAGES_OPTIONS = [
+  { label: "Any Parking", value: "all" },
+  { label: "1 Car Covered", value: "1" },
+  { label: "2+ Cars Covered", value: "2" },
+];
+
+export const SORT_OPTIONS = [
+  { label: "Featured Developments", value: "featured" },
+  { label: "Price: Low to High", value: "price-asc" },
+  { label: "Price: High to Low", value: "price-desc" },
+  { label: "Highest Rated", value: "rating" },
+];
+
+export const INITIAL_PROJECTS = [
+  {
+    id: "p1",
+    slug: "regal-arch",
+    title: "Crestora Regal Arch",
+    tagline: "British-Themed Gated Villa Community in Neelambur",
+    location: "Neelambur, Coimbatore, Tamil Nadu",
+    locality: "neelambur",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "plots",
+    type: "plots",
+    typeName: "Villa Plots",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 4550000,
+    priceDisplay: "₹45.5 Lakhs",
+    priceRange: "₹45.5 L - ₹1.10 Cr",
+    pricePerSqft: 2950,
+    period: "Onwards",
+    tag: "British Themed",
+    badge: "DTCP & RERA Approved",
+    approval: "TN/11/Layout/1284/2023",
+    reraNumber: "TN/11/Layout/1284/2023",
+    dtcpNumber: "DTCP No: 184/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
+    ],
+    beds: 3,
+    baths: 3,
+    area: "640 - 3,302 sq.ft",
+    sqft: 1500,
+    totalArea: "10 Acres",
+    totalUnits: "168 Plots",
+    isFeatured: true,
+    isPopular: true,
+    rating: 4.9,
+    reviewsCount: 68,
+    description: "Crestora Regal Arch is a British-themed plotted community in Neelambur, offering strong investment potential in a fast-growing Coimbatore corridor with grand entry arch, tree-lined avenues, and underground drainage.",
+    highlights: [
+      "Architectural British Entrance Arch with security",
+      "30 & 40 feet wide blacktop roads with solar street lighting",
+      "Underground electrical cabling & water supply infrastructure",
+      "10 minutes from Coimbatore International Airport & KMCH",
+      "DTCP & RERA certified with clear title guarantee"
+    ],
+    amenities: [
+      "Grand Entrance Gateway",
+      "Children's Play Sanctuary",
+      "Avenue Tree Plantations",
+      "Solar Street Lighting",
+      "24/7 CCTV Security",
+      "Underground EB & Sewage Lines"
+    ],
+    whyPoints: [
+      {
+        title: "British Heritage Theme",
+        desc: "Distinctive British colonial architecture with manicured landscapes and majestic entranceway.",
+        icon: "landmark"
+      },
+      {
+        title: "Secure Gated Enclave",
+        desc: "Compound wall on all sides with biometric entry and round-the-clock patrol.",
+        icon: "shield"
+      },
+      {
+        title: "Flexible Plot Layouts",
+        desc: "Carefully designed 640 to 3,302 sq.ft plots with 100% Vasthu orientation.",
+        icon: "layout"
+      },
+      {
+        title: "High Growth Neelambur Corridor",
+        desc: "Positioned directly on Avinashi Road bypass with rapid 15%+ annual appreciation.",
+        icon: "trending-up"
+      }
+    ]
+  },
+  {
+    id: "p2",
+    slug: "the-crown",
+    title: "Crestora The Crown",
+    tagline: "Exclusive Gated Community in Saravanampatti IT Corridor",
+    location: "Saravanampatti, Coimbatore, Tamil Nadu",
+    locality: "saravanampatti",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "villa",
+    type: "villa",
+    typeName: "Luxury Villas",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 6850000,
+    priceDisplay: "₹68.5 Lakhs",
+    priceRange: "₹68.5 L - ₹1.45 Cr",
+    pricePerSqft: 3450,
+    period: "Onwards",
+    tag: "IT Corridor Enclave",
+    badge: "RERA Approved",
+    approval: "TN/11/Building/0192/2023",
+    reraNumber: "TN/11/Building/0192/2023",
+    dtcpNumber: "DTCP No: 92/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+    ],
+    beds: 4,
+    baths: 4,
+    area: "1,200 - 3,500 sq.ft",
+    sqft: 2200,
+    totalArea: "15 Acres",
+    totalUnits: "220 Units",
+    isFeatured: true,
+    isPopular: true,
+    rating: 4.85,
+    reviewsCount: 52,
+    description: "Live next to Coimbatore's tech powerhouse. Walkable to CHIL SEZ, prestigious international academies, and top multi-specialty hospitals with lifestyle club amenities.",
+    highlights: [
+      "Adjacent to CHIL SEZ & Cognizant / Bosch / Tech Mahindra campus",
+      "Contemporary Spanish & Modern Minimalist custom villa options",
+      "Clubhouse with swimming pool, gym & badminton arena",
+      "100% Siruvani water connection pipeline"
+    ],
+    amenities: [
+      "Lifestyle Clubhouse",
+      "Swimming Pool",
+      "Fitness Gymnasium",
+      "Indoor Games Room",
+      "Jogging Track",
+      "24/7 Manned Security"
+    ],
+    whyPoints: [
+      {
+        title: "IT Corridor Proximity",
+        desc: "5 minutes from major IT parks, giving unparalleled rental yields and resale value.",
+        icon: "cpu"
+      },
+      {
+        title: "Premium Club Lifestyle",
+        desc: "Over 12,000 sq.ft clubhouse with health and recreational leisure amenities.",
+        icon: "sparkles"
+      },
+      {
+        title: "Immediate Bank Approvals",
+        desc: "Pre-approved by SBI, HDFC, ICICI, and Axis Bank with zero processing hassle.",
+        icon: "check-circle"
+      },
+      {
+        title: "Siruvani Water",
+        desc: "Pure natural Siruvani drinking water supply line for all individual villa units.",
+        icon: "droplet"
+      }
+    ]
+  },
+  {
+    id: "p3",
+    slug: "new-meadows",
+    title: "Crestora New Meadows",
+    tagline: "Serene Plotted Layout with Lush Greenery in Kovaipudur",
+    location: "Kovaipudur, Coimbatore, Tamil Nadu",
+    locality: "kovaipudur",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "plots",
+    type: "plots",
+    typeName: "Villa Plots",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 3800000,
+    priceDisplay: "₹38.0 Lakhs",
+    priceRange: "₹38 L - ₹75 Lakhs",
+    pricePerSqft: 2400,
+    period: "Onwards",
+    tag: "Microclimate Haven",
+    badge: "DTCP Approved",
+    approval: "DTCP No: 412/2023",
+    reraNumber: "TN/11/Layout/341/2023",
+    dtcpNumber: "DTCP No: 412/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/ec15717a06c499f74e8bc6305a2d5e89ea070d09-450x450.png",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/ec15717a06c499f74e8bc6305a2d5e89ea070d09-450x450.png",
+      "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+    ],
+    beds: 3,
+    baths: 2,
+    area: "800 - 2,400 sq.ft",
+    sqft: 1200,
+    totalArea: "8 Acres",
+    totalUnits: "112 Plots",
+    isFeatured: true,
+    isPopular: false,
+    rating: 4.8,
+    reviewsCount: 39,
+    description: "Nestled in the pleasant year-round microclimate of Kovaipudur, often called Little Ooty. Pure mountain breeze, abundant groundwater, and tranquil nature-rich surroundings.",
+    highlights: [
+      "Nestled against the Western Ghats breeze with cool climate",
+      "Copious groundwater at 80-120 ft sweet water table",
+      "Tar roads with stormwater gutters & perimeter security",
+      "Minutes from leading universities and CBSE schools"
+    ],
+    amenities: [
+      "Landscaped Central Park",
+      "Senior Citizens Gazebo",
+      "Walking & Jogging Pathway",
+      "Solar Street Illumination",
+      "Gated Entry"
+    ],
+    whyPoints: [
+      {
+        title: "Little Ooty Climate",
+        desc: "Experience 3 to 4 degrees lower temperatures year-round with refreshing mountain air.",
+        icon: "wind"
+      },
+      {
+        title: "Sweet Groundwater",
+        desc: "Abundant sweet table water ideal for serene lifetime residential living.",
+        icon: "droplet"
+      },
+      {
+        title: "Ready for Registration",
+        desc: "100% DTCP approved with prompt patta transfer and immediate construction clearance.",
+        icon: "award"
+      },
+      {
+        title: "Scenic Hill Views",
+        desc: "Unobstructed vistas of the mist-clad Western Ghats right from your doorstep.",
+        icon: "mountain"
+      }
+    ]
+  },
+  {
+    id: "p4",
+    slug: "vivaana",
+    title: "Crestora Vivaana",
+    tagline: "Ultra-Luxury Villas on Avinashi Road Spine",
+    location: "Avinashi Road, Peelamedu, Coimbatore",
+    locality: "avinashi-road",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "gated-community",
+    type: "villa",
+    typeName: "Gated Enclave",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 12500000,
+    priceDisplay: "₹1.25 Cr",
+    priceRange: "₹1.25 Cr - ₹2.80 Cr",
+    pricePerSqft: 5200,
+    period: "Onwards",
+    tag: "Ultra Luxury",
+    badge: "RERA Approved",
+    approval: "TN/11/Building/0488/2024",
+    reraNumber: "TN/11/Building/0488/2024",
+    dtcpNumber: "DTCP No: 78/2024",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/c22c627d9423e6c8b47700ad7db7fb2bc04e26ea-1920x1000.jpg",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/c22c627d9423e6c8b47700ad7db7fb2bc04e26ea-1920x1000.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
+    ],
+    beds: 4,
+    baths: 5,
+    area: "2,400 - 5,200 sq.ft",
+    sqft: 3400,
+    totalArea: "12 Acres",
+    totalUnits: "84 Signature Villas",
+    isFeatured: true,
+    isPopular: true,
+    rating: 4.95,
+    reviewsCount: 44,
+    description: "Coimbatore's most prestigious luxury address. Located along the premier Avinashi Road corridor, featuring bespoke triplex mansions with private elevators, plunge pools, and double-height living spaces.",
+    highlights: [
+      "Prime Avinashi Road proximity: 4 mins to Coimbatore International Airport",
+      "Private swimming pool & rooftop party terrace in each signature villa",
+      "Triple-height grand clubhouse with tennis court & indoor heated pool",
+      "Home automation and smart security pre-installed"
+    ],
+    amenities: [
+      "Private Elevators",
+      "Clubhouse & Heated Pool",
+      "Lawn Tennis Court",
+      "Concierge Reception",
+      "EV Charging Stations",
+      "Smart Home Automation"
+    ],
+    whyPoints: [
+      {
+        title: "Premier Arterial Address",
+        desc: "Avinashi Road represents Coimbatore's highest land value and elite corporate addresses.",
+        icon: "star"
+      },
+      {
+        title: "Architectural Grandeur",
+        desc: "Designed by renowned architects with imported Italian marble and teak fittings.",
+        icon: "home"
+      },
+      {
+        title: "Exclusive Private Enclave",
+        desc: "Limited collection of only 84 discerning families ensuring peak privacy.",
+        icon: "users"
+      },
+      {
+        title: "Turnkey Maintenance",
+        desc: "Complete 5-year facility management and landscaping maintenance covered.",
+        icon: "tool"
+      }
+    ]
+  },
+  {
+    id: "p5",
+    slug: "one-world",
+    title: "Crestora One World",
+    tagline: "Integrated Mega Township at Vadavalli Marudhamalai Foothills",
+    location: "Vadavalli, Coimbatore, Tamil Nadu",
+    locality: "vadavalli",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "plots",
+    type: "plots",
+    typeName: "Township Plots",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 5800000,
+    priceDisplay: "₹58.0 Lakhs",
+    priceRange: "₹58 L - ₹1.35 Cr",
+    pricePerSqft: 3100,
+    period: "Onwards",
+    tag: "Award Winning",
+    badge: "DTCP & RERA Approved",
+    approval: "TN/11/Layout/0892/2023",
+    reraNumber: "TN/11/Layout/0892/2023",
+    dtcpNumber: "DTCP No: 201/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/c22c627d9423e6c8b47700ad7db7fb2bc04e26ea-1920x1000.jpg",
+    ],
+    beds: 3,
+    baths: 3,
+    area: "900 - 3,600 sq.ft",
+    sqft: 1800,
+    totalArea: "22 Acres",
+    totalUnits: "280 Plots",
+    isFeatured: true,
+    isPopular: true,
+    rating: 4.9,
+    reviewsCount: 79,
+    description: "Winner of 'Plotted Development Project of the Year'. An integrated master-planned community at the serene foothills of Marudhamalai with wide arterial avenues, sports courts, and organic community gardens.",
+    highlights: [
+      "Voted Best Lifestyle Plotted Development South India",
+      "Over 3 acres dedicated purely to parks, walking trails & organic groves",
+      "Direct scenic connectivity to RS Puram, Thondamuthur & Siruvani Road",
+      "Underground drainage, stormwater recharge wells & 24/7 security"
+    ],
+    amenities: [
+      "Multipurpose Sports Arena",
+      "Organic Fruit Grove",
+      "Amphitheatre",
+      "Herbal Zen Garden",
+      "Reflexology Track",
+      "Children's Play Castle"
+    ],
+    whyPoints: [
+      {
+        title: "Prestigious Foothill Living",
+        desc: "Unspoiled natural surroundings with zero pollution and rejuvenating mountain air.",
+        icon: "sun"
+      },
+      {
+        title: "Awarded Plotted Community",
+        desc: "Recognized by Realty+ Conclave as Tamil Nadu's benchmark plotted development.",
+        icon: "award"
+      },
+      {
+        title: "Water Abundance",
+        desc: "Deep recharge groundwater system coupled with corporation Siruvani water supply.",
+        icon: "droplet"
+      },
+      {
+        title: "100% Vasthu Compliance",
+        desc: "Each individual plot crafted with cardinal alignment for peace and abundance.",
+        icon: "compass"
+      }
+    ]
+  },
+  {
+    id: "p6",
+    slug: "echo-valley",
+    title: "Crestora Echo Valley",
+    tagline: "Eco-Luxury Villa Plots in Thudiyalur Corridor",
+    location: "Thudiyalur, Coimbatore, Tamil Nadu",
+    locality: "thudiyalur",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "farmlands",
+    type: "plots",
+    typeName: "Eco Villa Plots",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 3600000,
+    priceDisplay: "₹36.0 Lakhs",
+    priceRange: "₹36 L - ₹82 Lakhs",
+    pricePerSqft: 2250,
+    period: "Onwards",
+    tag: "Eco Sanctuary",
+    badge: "DTCP Approved",
+    approval: "DTCP No: 512/2023",
+    reraNumber: "TN/11/Layout/1102/2023",
+    dtcpNumber: "DTCP No: 512/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/145c4135002bb8a6d71c96e722500c7a219299a6-450x450.png",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/145c4135002bb8a6d71c96e722500c7a219299a6-450x450.png",
+      "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+    ],
+    beds: 3,
+    baths: 2,
+    area: "800 - 2,800 sq.ft",
+    sqft: 1400,
+    totalArea: "14 Acres",
+    totalUnits: "140 Plots",
+    isFeatured: false,
+    isPopular: true,
+    rating: 4.75,
+    reviewsCount: 31,
+    description: "Located on the fast-appreciating Mettupalayam corridor near Thudiyalur. Offers a serene green lifestyle surrounded by coconut groves while maintaining fast access to central Coimbatore.",
+    highlights: [
+      "Direct connectivity to Mettupalayam Highway & Thudiyalur junction",
+      "Surrounded by natural green belts and fresh breeze",
+      "Rapidly developing residential corridor with top CBSE schools",
+      "High capital gains potential with upcoming ring road connectivity"
+    ],
+    amenities: [
+      "Gated Community Archway",
+      "Blacktop Roads",
+      "Overhead Water Tank",
+      "Solar Street Lights",
+      "Landscape Garden"
+    ],
+    whyPoints: [
+      {
+        title: "Highway Connectivity",
+        desc: "Immediate access to the 6-lane Mettupalayam road and proposed western bypass.",
+        icon: "navigation"
+      },
+      {
+        title: "High Rental & Resale Demand",
+        desc: "Strong demand from healthcare and textile professionals working in the belt.",
+        icon: "trending-up"
+      },
+      {
+        title: "Lush Agro Surroundings",
+        desc: "Surrounded by organic greenery and clean unpolluted air.",
+        icon: "leaf"
+      },
+      {
+        title: "Clear Title & Approvals",
+        desc: "All approvals verified by top panel legal advocates with immediate registry.",
+        icon: "check"
+      }
+    ]
+  },
+  {
+    id: "p7",
+    slug: "edenfields",
+    title: "Crestora Edenfields",
+    tagline: "Upcoming Signature Plotted Enclave near Airport Bypass",
+    location: "Neelambur Extn, Coimbatore",
+    locality: "neelambur",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "plots",
+    type: "plots",
+    typeName: "Villa Plots",
+    status: "upcoming",
+    statusLabel: "Upcoming Project",
+    price: 4900000,
+    priceDisplay: "₹49.0 Lakhs",
+    priceRange: "₹49 L - ₹95 Lakhs",
+    pricePerSqft: 2850,
+    period: "Pre-Launch Price",
+    tag: "Pre-Launch Privilege",
+    badge: "DTCP Approved • RERA Applied",
+    approval: "DTCP No: 712/2024",
+    reraNumber: "TN/11/Layout/Applied/2024",
+    dtcpNumber: "DTCP No: 712/2024",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/b56863d36543626e5cff4b6b8eedcb5e51404905-450x450.png",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/b56863d36543626e5cff4b6b8eedcb5e51404905-450x450.png",
+      "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+    ],
+    beds: 3,
+    baths: 3,
+    area: "1,000 - 3,000 sq.ft",
+    sqft: 1600,
+    totalArea: "16 Acres",
+    totalUnits: "195 Plots",
+    isFeatured: true,
+    isPopular: false,
+    rating: 4.9,
+    reviewsCount: 18,
+    description: "An upcoming grand gated sanctuary right on the Avinashi-L&T bypass connector. Pre-launch privilege pricing offers early investors exponential value addition.",
+    highlights: [
+      "Pre-launch special pricing with guaranteed early bird allotment",
+      "Upcoming international lifestyle clubhouse and sports zones",
+      "5 minutes from PSG iTech, Kathir College & Neelambur Toll",
+      "Wide 40 ft grand entrance boulevard"
+    ],
+    amenities: [
+      "Grand Landmark Arch",
+      "Clubhouse & Swimming Pool",
+      "Fitness Park",
+      "Children's Play Arena",
+      "24/7 Surveillance"
+    ],
+    whyPoints: [
+      {
+        title: "Early Bird Advantage",
+        desc: "Lock in pre-launch rates before commercial launch and enjoy substantial appreciation.",
+        icon: "dollar-sign"
+      },
+      {
+        title: "Bypass Junction Strategic Location",
+        desc: "Immediate transit to Salem, Kochi, Bangalore, and Coimbatore Airport.",
+        icon: "map-pin"
+      },
+      {
+        title: "High-End Development Standards",
+        desc: "Built with premium concrete pavers, underground LED lines, and manicured medians.",
+        icon: "layers"
+      },
+      {
+        title: "Crestora Assurance",
+        desc: "Backed by Crestora Properties' strict commitment to on-time infrastructure delivery.",
+        icon: "shield"
+      }
+    ]
+  },
+  {
+    id: "p8",
+    slug: "the-address",
+    title: "Crestora The Address",
+    tagline: "Completed Landmark Villa Community in Saravanampatti",
+    location: "Saravanampatti, Coimbatore, Tamil Nadu",
+    locality: "saravanampatti",
+    city: "coimbatore",
+    cityName: "Coimbatore",
+    category: "villa",
+    type: "villa",
+    typeName: "Luxury Villas",
+    status: "completed",
+    statusLabel: "Completed Landmark",
+    price: 8500000,
+    priceDisplay: "₹85.0 Lakhs",
+    priceRange: "₹85 L - ₹1.75 Cr",
+    pricePerSqft: 3850,
+    period: "Ready to Move",
+    tag: "Ready to Move",
+    badge: "100% Handed Over",
+    approval: "TN/11/Building/0088/2022",
+    reraNumber: "TN/11/Building/0088/2022",
+    dtcpNumber: "DTCP No: 33/2022",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
+      "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
+    ],
+    beds: 4,
+    baths: 4,
+    area: "1,500 - 3,800 sq.ft",
+    sqft: 2600,
+    totalArea: "11 Acres",
+    totalUnits: "148 Villas",
+    isFeatured: false,
+    isPopular: true,
+    rating: 4.95,
+    reviewsCount: 94,
+    description: "A triumph of architectural finesse and timely handover. 148 happy families are currently residing in this thriving, fully secured gated villa enclave.",
+    highlights: [
+      "100% completed and handed over on schedule",
+      "Fully operational clubhouse, gym, and children's recreation park",
+      "Active homeowner association with 24/7 professional facility management",
+      "Ready for immediate occupation and registration"
+    ],
+    amenities: [
+      "Operational Clubhouse",
+      "Active Children's Park",
+      "Jogging Track",
+      "Security Cabin & CCTV",
+      "Backup Power"
+    ],
+    whyPoints: [
+      {
+        title: "Zero Construction Risk",
+        desc: "Inspect the finished villas, touch the quality, and move in right away.",
+        icon: "check-circle"
+      },
+      {
+        title: "Vibrant Community Living",
+        desc: "Join an active neighborhood of like-minded tech leaders, doctors, and entrepreneurs.",
+        icon: "users"
+      },
+      {
+        title: "Proven Capital Appreciation",
+        desc: "Early buyers have witnessed over 65% capital growth since launch.",
+        icon: "trending-up"
+      },
+      {
+        title: "Instant Rental Income",
+        desc: "Instant high-yield rental demand from nearby IT executives.",
+        icon: "dollar-sign"
+      }
+    ]
+  },
+  {
+    id: "p9",
+    slug: "chennai-signature-omr",
+    title: "Crestora Signature OMR",
+    tagline: "Prime Commercial & Residential Plots on Chennai OMR Corridor",
+    location: "Old Mahabalipuram Road (OMR), Chennai",
+    locality: "chennai",
+    city: "chennai",
+    cityName: "Chennai",
+    category: "commercial",
+    type: "commercial",
+    typeName: "Commercial Lands",
+    status: "ongoing",
+    statusLabel: "Ongoing Project",
+    price: 9500000,
+    priceDisplay: "₹95.0 Lakhs",
+    priceRange: "₹95 L - ₹3.20 Cr",
+    pricePerSqft: 4800,
+    period: "Onwards",
+    tag: "Metro Growth Zone",
+    badge: "CMDA & RERA Approved",
+    approval: "TN/01/Layout/0241/2023",
+    reraNumber: "TN/01/Layout/0241/2023",
+    dtcpNumber: "CMDA Approval 118/2023",
+    image: "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
+    gallery: [
+      "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
+      "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
+    ],
+    beds: 4,
+    baths: 4,
+    area: "1,200 - 4,800 sq.ft",
+    sqft: 2400,
+    totalArea: "9 Acres",
+    totalUnits: "88 Plots",
+    isFeatured: true,
+    isPopular: true,
+    rating: 4.88,
+    reviewsCount: 37,
+    description: "Crestora Properties expands into Chennai's tech corridor. Located directly off OMR near Sholinganallur, offering CMDA approved commercial and residential plots with metro rail connectivity.",
+    highlights: [
+      "Minutes from upcoming Chennai Metro Phase 2 OMR station",
+      "CMDA approved layouts suitable for corporate offices or luxury villas",
+      "Surrounded by leading multinational IT campuses and hospitals",
+      "Clear legal title with institutional bank guarantees"
+    ],
+    amenities: [
+      "Commercial Frontage",
+      "Wide Stormwater Drains",
+      "60 ft Main Avenue",
+      "LED Street Lighting",
+      "Security Checkpost"
+    ],
+    whyPoints: [
+      {
+        title: "Chennai Tech Highway",
+        desc: "OMR is South India's premier IT artery housing over 300,000 corporate professionals.",
+        icon: "briefcase"
+      },
+      {
+        title: "Metro Line 3 Impact",
+        desc: "The upcoming metro station just 600m away guarantees strong capital appreciation.",
+        icon: "navigation"
+      },
+      {
+        title: "Dual Purpose Zoning",
+        desc: "Flexibility to build corporate offices, boutique retail, or luxury city villas.",
+        icon: "building"
+      },
+      {
+        title: "CMDA Cleared",
+        desc: "100% sanctioned by CMDA and TN RERA with clear patta and no encumbrance.",
+        icon: "award"
+      }
+    ]
+  }
+];
+
+export const NAV_LINKS = [
+  { title: "Home", href: "home" },
+  { title: "About Us", href: "about" },
+  {
+    title: "Projects",
+    subItems: [
+      { title: "Ongoing Developments", status: "ongoing" },
+      { title: "Upcoming Projects", status: "upcoming" },
+      { title: "Completed Landmarks", status: "completed" },
+    ],
+  },
+  {
+    title: "Categories",
+    subItems: [
+      { title: "DTCP Villa Plots", category: "plots" },
+      { title: "Luxury Gated Villas", category: "villa" },
+      { title: "Integrated Communities", category: "gated-community" },
+      { title: "Hillside & Farmlands", category: "farmlands" },
+      { title: "Commercial Lands", category: "commercial" },
+    ],
+  },
+  {
+    title: "Locations",
+    subItems: [
+      { title: "Neelambur (Avinashi Bypass)", locality: "neelambur" },
+      { title: "Saravanampatti (IT Corridor)", locality: "saravanampatti" },
+      { title: "Avinashi Road / Airport", locality: "avinashi-road" },
+      { title: "Kovaipudur (Western Foothills)", locality: "kovaipudur" },
+      { title: "Vadavalli (Marudhamalai)", locality: "vadavalli" },
+      { title: "Chennai (OMR Corridor)", locality: "chennai" },
+    ],
+  },
+  {
+    title: "Services",
+    subItems: [
+      { title: "Crestora Build Companion", href: "services" },
+      { title: "Crestora for NRI", href: "nri" },
+      { title: "Site Visit Concierge", href: "site-visit" },
+    ],
+  },
+  { title: "Contact", href: "contact" },
+];

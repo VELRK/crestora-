@@ -1,0 +1,10 @@
+/* Application specific custom overrides */
+.realestics-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.realestics-app main {
+  flex-grow: 1;
+}
