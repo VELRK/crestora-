@@ -388,6 +388,8 @@ export default function Header({
                 BLOGS
               </button>
             </div>
+
+
           </nav>
 
           {/* Right Header Actions */}
@@ -404,11 +406,12 @@ export default function Header({
 
             <button
               type="button"
-              className="crestora-btn crestora-btn-fill header-btn-visit"
-              onClick={onOpenBookVisit}
+              className={`crestora-btn crestora-btn-fill header-btn-visit ${activePage === "contact" ? "active" : ""}`}
+              onClick={() => onNavigate && onNavigate("contact")}
+              title="Contact Crestora Properties Advisors"
             >
-              <Calendar size={13.5} className="btn-icon-prefix" />
-              <span className="btn-text">BOOK SITE VISIT</span>
+              <Phone size={13} className="btn-icon-prefix" />
+              <span className="btn-text">CONTACT US</span>
               <span className="btn-arrow-hover">→</span>
             </button>
 

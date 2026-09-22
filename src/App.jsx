@@ -29,6 +29,7 @@ import ProjectDetailsPage from "./components/projects/ProjectDetailsPage";
 import AboutPage from "./components/about/AboutPage";
 import BlogListPage from "./components/blogs/BlogListPage";
 import BlogDetailsPage from "./components/blogs/BlogDetailsPage";
+import ContactPage from "./components/contact/ContactPage";
 
 import { INITIAL_PROJECTS } from "./data/projectsData";
 import { BLOGS_DATA } from "./data/blogsData";
@@ -154,6 +155,9 @@ export default function App() {
       } else if (hash.startsWith("#projects")) {
         setActivePage("projects");
         return;
+      } else if (hash.startsWith("#contact-us") || hash.startsWith("#contact")) {
+        setActivePage("contact");
+        return;
       } else if (hash.startsWith("#about")) {
         setActivePage("about");
         return;
@@ -221,6 +225,8 @@ export default function App() {
       window.history.pushState({ page: "about" }, "", "#about");
     } else if (page === "blogs") {
       window.history.pushState({ page: "blogs" }, "", "#blogs");
+    } else if (page === "contact") {
+      window.history.pushState({ page: "contact" }, "", "#contact");
     } else if (page === "home") {
       window.history.pushState({ page: "home" }, "", "#home");
     }
@@ -411,8 +417,6 @@ export default function App() {
               onSelectLocation={handleSelectLocation}
             />
 
-            {/* 8. Crestora Build Companion & NRI Corner */}
-            <BuildCompanion onBookSiteVisit={() => handleOpenBookVisit()} />
 
             {/* 9. Featured Residences & Plots Grid */}
             <HomeFeaturedProperties
@@ -462,6 +466,13 @@ export default function App() {
             onSelectBlog={handleSelectBlog}
             onSelectProject={handleSelectProject}
             allProjects={projects}
+            onBookSiteVisit={() => handleOpenBookVisit()}
+            showToast={showToast}
+          />
+        ) : activePage === "contact" ? (
+          /* ==================== SEPARATE CONTACT US PAGE VIEW ==================== */
+          <ContactPage
+            onNavigate={handleNavigate}
             onBookSiteVisit={() => handleOpenBookVisit()}
             showToast={showToast}
           />

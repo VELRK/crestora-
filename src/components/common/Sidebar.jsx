@@ -178,13 +178,33 @@ export default function Sidebar({
               padding: "12px 0",
               fontSize: "15px",
               fontWeight: "700",
-              color: "#dfb743",
+              color: "#ffffff",
               borderBottom: "1px solid rgba(255,255,255,0.08)",
               background: "none",
               border: "none",
             }}
           >
             BLOGS & INSIGHTS
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate && onNavigate("contact");
+              onClose();
+            }}
+            style={{
+              textAlign: "left",
+              padding: "12px 0",
+              fontSize: "15px",
+              fontWeight: "700",
+              color: "#dfb743",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "none",
+              border: "none",
+            }}
+          >
+            CONTACT US
           </button>
 
           {/* Collapsible Projects */}
@@ -418,29 +438,6 @@ export default function Sidebar({
               </div>
             )}
           </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              onNavigate && onNavigate("home");
-              onClose();
-              setTimeout(() => {
-                document.getElementById("build-companion-section")?.scrollIntoView({ behavior: "smooth" });
-              }, 150);
-            }}
-            style={{
-              textAlign: "left",
-              padding: "12px 0",
-              fontSize: "15px",
-              fontWeight: "700",
-              color: "#ffffff",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
-              background: "none",
-              border: "none",
-            }}
-          >
-            BUILD COMPANION & NRI
-          </button>
         </nav>
 
         {/* Direct Contact Details */}

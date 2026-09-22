@@ -67,6 +67,25 @@ export default function Footer({ onNavigate }) {
                 <span>Market Insights &amp; Blogs</span>
                 <span>→</span>
               </button>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("contact")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dfb743",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: 0,
+                }}
+              >
+                <span>Contact &amp; Offices</span>
+                <span>→</span>
+              </button>
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "16px" }}>
               <span style={{ fontSize: "11.5px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(197, 155, 39, 0.4)", color: "#dfb743", padding: "4px 10px", borderRadius: "2px" }}>
@@ -91,6 +110,26 @@ export default function Footer({ onNavigate }) {
             <div>
               <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Corporate Office:</p>
               <p>3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037</p>
+            </div>
+            <div style={{ marginTop: "12px" }}>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("contact")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dfb743",
+                  fontSize: "12.5px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  padding: 0,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px"
+                }}
+              >
+                <span>View Full Map &amp; Directions →</span>
+              </button>
             </div>
           </div>
 
@@ -134,7 +173,6 @@ export default function Footer({ onNavigate }) {
           {/* Direct Assistance & Helplines */}
           <div className="footer-col">
             <h4>CONTACT & ASSISTANCE</h4>
-            <p>Direct assistance for buyers, investors, and NRI clients:</p>
             <div style={{ marginTop: "12px" }}>
               <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#a0aec0", letterSpacing: "1px" }}>Customer Support</span>
               <a href="tel:+919159066666" className="footer-contact-link">+91 91590 66666</a>
@@ -150,10 +188,10 @@ export default function Footer({ onNavigate }) {
                 type="button"
                 className="crestora-btn crestora-btn-gold"
                 style={{ width: "100%", height: "42px", fontSize: "12.5px" }}
-                onClick={() => onNavigate && onNavigate("projects")}
+                onClick={() => onNavigate && onNavigate("contact")}
               >
                 <span className="btn-arrow-normal">✓</span>
-                <span className="btn-text">BROWSE ALL DEVELOPMENTS</span>
+                <span className="btn-text">CONTACT US &amp; BOOK VISIT</span>
                 <span className="btn-arrow-hover">→</span>
               </button>
             </div>
