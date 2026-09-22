@@ -18,6 +18,37 @@ export default function HeroBanner({
 
   const activeSlide = HERO_SLIDES[currentIdx];
 
+  const renderSlideTitle = () => {
+    if (activeSlide.id === "s1") {
+      return (
+        <>
+          Finest <span className="gold-word">{activeSlide.titleHighlight1}</span>{" "}
+          <br className="hero-title-desktop-br" />
+          in the most Promising <span>{activeSlide.titleHighlight2}</span>
+        </>
+      );
+    }
+    if (activeSlide.id === "s2") {
+      return (
+        <>
+          Where <span className="gold-word">{activeSlide.titleHighlight1}</span>{" "}
+          <br className="hero-title-desktop-br" />
+          Meets Strategic <span>{activeSlide.titleHighlight2}</span>
+        </>
+      );
+    }
+    if (activeSlide.id === "s3") {
+      return (
+        <>
+          <span className="gold-word">{activeSlide.titleHighlight1}</span>-Embraced Living{" "}
+          <br className="hero-title-desktop-br" />
+          with Pure Air &amp; <span>{activeSlide.titleHighlight2}</span>
+        </>
+      );
+    }
+    return activeSlide.title;
+  };
+
   return (
     <section className="hero-section" id="home">
       {/* Background slide images with Ken Burns zoom */}
@@ -62,9 +93,7 @@ export default function HeroBanner({
 
           {/* Classic Luxury Headline */}
           <h1 className="hero-title">
-            Finest <span className="gold-word">{activeSlide.titleHighlight1}</span>
-            <br />
-            in the most Promising <span>{activeSlide.titleHighlight2}</span>
+            {renderSlideTitle()}
           </h1>
 
           {/* Description */}
