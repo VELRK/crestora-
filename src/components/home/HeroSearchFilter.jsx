@@ -31,7 +31,7 @@ export default function HeroSearchFilter({ onSearch }) {
               onChange={(e) => handleChange("location", e.target.value)}
               className="filter-select"
             >
-              <option value="all">All Locations (Coimbatore & Chennai)</option>
+              <option value="all">All Locations in Coimbatore</option>
               {LOCATIONS.filter((l) => l.value !== "all").map((loc) => (
                 <option key={loc.id} value={loc.value}>
                   {loc.label}

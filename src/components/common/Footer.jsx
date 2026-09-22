@@ -26,8 +26,48 @@ export default function Footer({ onNavigate }) {
               </div>
             </div>
             <p>
-              Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore and Chennai, combining strategic growth locations, crystal-clear titles, and transparent processes.
+              Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.
             </p>
+            <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "14px" }}>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("about")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dfb743",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: 0,
+                }}
+              >
+                <span>Read Company Story &amp; Heritage</span>
+                <span>→</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("blogs")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#94a3b8",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: 0,
+                }}
+              >
+                <span>Market Insights &amp; Blogs</span>
+                <span>→</span>
+              </button>
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "16px" }}>
               <span style={{ fontSize: "11.5px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(197, 155, 39, 0.4)", color: "#dfb743", padding: "4px 10px", borderRadius: "2px" }}>
                 ✓ DTCP Approved
@@ -84,8 +124,8 @@ export default function Footer({ onNavigate }) {
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "chennai" }); }}>
-                  Crestora Signature (Chennai OMR)
+                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "peelamedu" }); }}>
+                  Crestora Commercial Hub (Peelamedu)
                 </a>
               </li>
             </ul>

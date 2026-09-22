@@ -122,15 +122,8 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className="nav-link-btn"
-                onClick={() => {
-                  onNavigate && onNavigate("home");
-                  setTimeout(() => {
-                    document
-                      .getElementById("about-crestora")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
-                }}
+                className={`nav-link-btn ${activePage === "about" ? "active" : ""}`}
+                onClick={() => onNavigate && onNavigate("about")}
               >
                 ABOUT US
               </button>
@@ -322,14 +315,14 @@ export default function Header({
                 Vadavalli (Marudhamalai)
               </a>
               <a
-                href="#chennai"
+                href="#peelamedu"
                 className="dropdown-link"
                 onClick={(e) => {
                   e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "chennai" });
+                  onNavigate && onNavigate("projects", { location: "peelamedu" });
                 }}
               >
-                Chennai (OMR Corridor)
+                Peelamedu (Airport Corridor)
               </a>
             </div> */}
             {/* </div> */}
@@ -387,17 +380,12 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className="nav-link-btn"
+                className={`nav-link-btn ${activePage === "blogs" || activePage === "blog-details" ? "active" : ""}`}
                 onClick={() => {
-                  onNavigate && onNavigate("home");
-                  setTimeout(() => {
-                    document
-                      .getElementById("faqs-section")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
+                  onNavigate && onNavigate("blogs");
                 }}
               >
-                FAQS
+                BLOGS
               </button>
             </div>
           </nav>

@@ -1,6 +1,6 @@
 /**
  * Crestora Properties - Project & Inventory Data
- * DTCP & RERA Approved Developments across Coimbatore, Chennai & Tamil Nadu.
+ * DTCP & RERA Approved Developments across Coimbatore & Kongu Region.
  * Pricing in Indian Rupees (INR).
  */
 
@@ -33,7 +33,7 @@ export const COIMBATORE_LOCALITIES = [
   { id: "thudiyalur", label: "Thudiyalur (Mettupalayam Rd)", value: "thudiyalur", city: "coimbatore" },
   { id: "pollachi-road", label: "Pollachi Road (Kinathukadavu)", value: "pollachi-road", city: "coimbatore" },
   { id: "kalapatti", label: "Kalapatti (Tech Zone)", value: "kalapatti", city: "coimbatore" },
-  { id: "chennai", label: "Chennai (OMR / ECR Corridor)", value: "chennai", city: "chennai" },
+  { id: "trichy-road", label: "Trichy Road (Singanallur)", value: "trichy-road", city: "coimbatore" },
 ];
 
 export const LOCATIONS = COIMBATORE_LOCALITIES;
@@ -694,13 +694,13 @@ export const INITIAL_PROJECTS = [
   },
   {
     id: "p9",
-    slug: "chennai-signature-omr",
-    title: "Crestora Signature OMR",
-    tagline: "Prime Commercial & Residential Plots on Chennai OMR Corridor",
-    location: "Old Mahabalipuram Road (OMR), Chennai",
-    locality: "chennai",
-    city: "chennai",
-    cityName: "Chennai",
+    slug: "crestora-commercial-hub",
+    title: "Crestora Commercial Hub",
+    tagline: "Prime Commercial & Retail Plots on Avinashi Road Corridor",
+    location: "Avinashi Road (Peelamedu), Coimbatore",
+    locality: "peelamedu",
+    city: "coimbatore",
+    cityName: "Coimbatore",
     category: "commercial",
     type: "commercial",
     typeName: "Commercial Lands",
@@ -711,14 +711,14 @@ export const INITIAL_PROJECTS = [
     priceRange: "₹95 L - ₹3.20 Cr",
     pricePerSqft: 4800,
     period: "Onwards",
-    tag: "Metro Growth Zone",
-    badge: "CMDA & RERA Approved",
-    approval: "TN/01/Layout/0241/2023",
-    reraNumber: "TN/01/Layout/0241/2023",
-    dtcpNumber: "CMDA Approval 118/2023",
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
+    tag: "Prime Arterial Zone",
+    badge: "DTCP & RERA Approved",
+    approval: "TN/11/Layout/0241/2023",
+    reraNumber: "TN/11/Layout/0241/2023",
+    dtcpNumber: "DTCP Approval 118/2023",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
     gallery: [
-      "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
       "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
     ],
     beds: 4,
@@ -731,12 +731,12 @@ export const INITIAL_PROJECTS = [
     isPopular: true,
     rating: 4.88,
     reviewsCount: 37,
-    description: "Crestora Properties expands into Chennai's tech corridor. Located directly off OMR near Sholinganallur, offering CMDA approved commercial and residential plots with metro rail connectivity.",
+    description: "Crestora Properties presents prime commercial and mixed-use plots along Coimbatore's prestigious Avinashi Road in Peelamedu, offering high frontage for corporate offices, healthcare centers, and premium retail showrooms.",
     highlights: [
-      "Minutes from upcoming Chennai Metro Phase 2 OMR station",
-      "CMDA approved layouts suitable for corporate offices or luxury villas",
-      "Surrounded by leading multinational IT campuses and hospitals",
-      "Clear legal title with institutional bank guarantees"
+      "Direct frontage on Coimbatore's 6-lane Avinashi Road expressway",
+      "DTCP and RERA approved layouts suitable for corporate offices, retail, or luxury enclaves",
+      "Minutes from Coimbatore International Airport, KMCH, and TIDEL Park",
+      "Clear legal title with institutional bank approvals"
     ],
     amenities: [
       "Commercial Frontage",
@@ -747,23 +747,23 @@ export const INITIAL_PROJECTS = [
     ],
     whyPoints: [
       {
-        title: "Chennai Tech Highway",
-        desc: "OMR is South India's premier IT artery housing over 300,000 corporate professionals.",
+        title: "Coimbatore Commercial Highway",
+        desc: "Avinashi Road is the premier growth corridor of Coimbatore housing top tech campuses, hospitals, and luxury retail.",
         icon: "briefcase"
       },
       {
-        title: "Metro Line 3 Impact",
-        desc: "The upcoming metro station just 600m away guarantees strong capital appreciation.",
+        title: "Airport & Metro Flyover Proximity",
+        desc: "Located minutes from the Coimbatore International Airport and the upcoming Avinashi Road elevated expressway junction.",
         icon: "navigation"
       },
       {
         title: "Dual Purpose Zoning",
-        desc: "Flexibility to build corporate offices, boutique retail, or luxury city villas.",
+        desc: "Flexibility to build corporate offices, boutique retail, healthcare facilities, or luxury residences.",
         icon: "building"
       },
       {
-        title: "CMDA Cleared",
-        desc: "100% sanctioned by CMDA and TN RERA with clear patta and no encumbrance.",
+        title: "DTCP & RERA Cleared",
+        desc: "100% sanctioned by DTCP and TN RERA with clear patta and no encumbrance.",
         icon: "award"
       }
     ]
@@ -799,7 +799,7 @@ export const NAV_LINKS = [
       { title: "Avinashi Road / Airport", locality: "avinashi-road" },
       { title: "Kovaipudur (Western Foothills)", locality: "kovaipudur" },
       { title: "Vadavalli (Marudhamalai)", locality: "vadavalli" },
-      { title: "Chennai (OMR Corridor)", locality: "chennai" },
+      { title: "Peelamedu (Airport Corridor)", locality: "peelamedu" },
     ],
   },
   {

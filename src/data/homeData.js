@@ -123,7 +123,7 @@ export const CATEGORIES_DATA = [
     categoryKey: "commercial",
     categoryName: "Commercial Lands",
     title: "Highway & Commercial Lands",
-    exampleText: "e.g. Avinashi Road, OMR Chennai Arterial Frontages",
+    exampleText: "e.g. Avinashi Road, Peelamedu, Trichy Road Arterial Frontages",
     subtitle: "High Visibility & Rapid Appreciation",
     description: "Prime retail, institutional, and commercial land parcels positioned directly on high-traffic growth corridors with wide road access and heavy footfall potential.",
     badge: "Commercial",
@@ -196,12 +196,12 @@ export const POPULAR_CITIES = [
   },
   {
     id: "c6",
-    name: "Chennai (OMR)",
-    state: "IT Expressway Corridor",
-    count: 88,
-    cityKey: "chennai",
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
-    highlight: "CMDA Approved Plots on Metro Expressway",
+    name: "Peelamedu",
+    state: "Airport & Educational Spine",
+    count: 125,
+    cityKey: "peelamedu",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
+    highlight: "Coimbatore's Premier Educational & Commercial Spine",
   },
 ];
 
@@ -232,45 +232,11 @@ export const CITY_SPOTLIGHT = {
       },
       {
         title: "STRATEGIC CONNECTIVITY HUB",
-        desc: "Direct air, rail, and six-lane national highway transit connecting Chennai, Bangalore, Kochi, and global capitals."
+        desc: "Direct air, rail, and six-lane national highway transit connecting major metro corridors including Bangalore, Kochi, and global capitals."
       },
       {
         title: "A CITY CRAFTED FOR TRANQUIL LIVING",
         desc: "Pleasant year-round weather, Siruvani drinking water (world's 2nd sweetest water), and unmatched safety for families."
-      }
-    ]
-  },
-  chennai: {
-    badge: "CHENNAI",
-    title: "Why Chennai?",
-    subtitle: "A metropolitan powerhouse driven by global corporations, expanding metro lines, and maritime trade, Chennai provides robust capital appreciation.",
-    leftPoints: [
-      {
-        title: "SOUTH ASIA'S AUTOMOTIVE & TECH CAPITAL",
-        desc: "Home to global manufacturing titans, automotive giants, and massive fintech innovation hubs."
-      },
-      {
-        title: "METRO PHASE 2 EXPANSION",
-        desc: "The 116-km upcoming metro network directly links OMR, Porur, and central transit nodes, supercharging property values."
-      },
-      {
-        title: "GLOBAL BUSINESS HEADQUARTERS",
-        desc: "Extensive base for GCCs, multinational corporate towers, and world-renowned healthcare destinations."
-      }
-    ],
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/0d4a3b97d45ef56d94d291ececf6dc71685e69fc-694x752.png",
-    rightPoints: [
-      {
-        title: "EDUCATIONAL & RESEARCH LEADER",
-        desc: "Anchored by premier institutes like IIT Madras, Anna University, and top international research centers."
-      },
-      {
-        title: "INTERNATIONAL LOGISTICS & PORT ACCESS",
-        desc: "Dual seaport infrastructure and modern international air cargo terminals driving immense commercial trade."
-      },
-      {
-        title: "ENDURING ASSET DEMAND",
-        desc: "Sustained influx of professionals and NRI investments ensuring steady rental yields and consistent land appreciation."
       }
     ]
   }
@@ -351,11 +317,11 @@ export const GOOGLE_REVIEWS_META = {
 export const FAQS_DATA = [
   {
     q: "Who is Crestora Properties and what makes your developments unique?",
-    a: "Crestora Properties is a premier real estate development company dedicated to creating benchmark plotted communities and luxury residences across Coimbatore, Chennai, and key growth corridors of Tamil Nadu. We differentiate ourselves through 100% DTCP and RERA compliance, clear legal titles, rapid patta transfers, and high-quality physical infrastructure like wide blacktop roads, underground utilities, and landscaped entrance gateways."
+    a: "Crestora Properties is a premier real estate development company dedicated to creating benchmark plotted communities and luxury residences across Coimbatore and key growth corridors of the Kongu region. We differentiate ourselves through 100% DTCP and RERA compliance, clear legal titles, rapid patta transfers, and high-quality physical infrastructure like wide blacktop roads, underground utilities, and landscaped entrance gateways."
   },
   {
     q: "Are all Crestora Properties projects DTCP and RERA approved?",
-    a: "Yes. Every single plotted community and villa enclave developed by Crestora Properties undergoes rigorous legal due diligence and obtains mandatory DTCP (Directorate of Town and Country Planning) or CMDA sanctions, alongside Tamil Nadu RERA registration. RERA registration numbers and approval orders are publicly disclosed on every project brochure and webpage."
+    a: "Yes. Every single plotted community and villa enclave developed by Crestora Properties undergoes rigorous legal due diligence and obtains mandatory DTCP (Directorate of Town and Country Planning) sanctions, alongside Tamil Nadu RERA registration. RERA registration numbers and approval orders are publicly disclosed on every project brochure and webpage."
   },
   {
     q: "Can NRI investors purchase plots or villas remotely?",
@@ -375,38 +341,8 @@ export const FAQS_DATA = [
   }
 ];
 
-export const BLOGS_DATA = [
-  {
-    id: "b1",
-    title: "Why Coimbatore's Neelambur & Avinashi Bypass is the Next Real Estate Goldmine",
-    date: "MARCH 2026",
-    category: "Market Insights",
-    readTime: "5 min read",
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/6bc91f6370b77b96434e07cd305a2428abe89613-572x650.jpg",
-    excerpt: "Infrastructure expansion, elevated corridors, and proximity to Coimbatore International Airport have propelled Neelambur as the highest-yielding plotted market.",
-    author: "Crestora Research Desk"
-  },
-  {
-    id: "b2",
-    title: "DTCP vs RERA: What Every Land Investor in Tamil Nadu Must Know Before Buying",
-    date: "FEBRUARY 2026",
-    category: "Legal & Advisory",
-    readTime: "6 min read",
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg",
-    excerpt: "A complete step-by-step checklist to inspect layout approvals, gift deed handovers for OSR, and RERA authenticity before transferring funds.",
-    author: "Legal Advisory Wing"
-  },
-  {
-    id: "b3",
-    title: "The NRI Guide to Remote Land Acquisition in Coimbatore & Chennai",
-    date: "JANUARY 2026",
-    category: "NRI Guide",
-    readTime: "7 min read",
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/b810554875cacac541bcec93cc0c19559ae2326f-1920x1000.jpg",
-    excerpt: "How digital registries, NRE accounts, and trusted developer concierge services are making homeland property ownership effortless for global Indians.",
-    author: "Global NRI Desk"
-  }
-];
+import { BLOGS_DATA as IMPORTED_BLOGS } from "./blogsData";
+export const BLOGS_DATA = IMPORTED_BLOGS;
 
 export const BANK_PARTNERS = [
   { name: "State Bank of India", logo: "SBI", desc: "Preferred Nationalized Lender" },
@@ -421,7 +357,7 @@ export const WHY_CHOOSE_FEATURES = [
   {
     id: "wf1",
     title: "100% Clear Titles & Approvals",
-    desc: "Every project is certified with DTCP/CMDA sanctions, RERA compliance, and undisputed patta clearance.",
+    desc: "Every project is certified with DTCP sanctions, RERA compliance, and undisputed patta clearance.",
     icon: "ShieldCheck"
   },
   {

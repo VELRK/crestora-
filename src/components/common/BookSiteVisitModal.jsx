@@ -237,31 +237,6 @@ export default function BookSiteVisitModal({
                 </div>
               </div>
 
-              {/* Complimentary Pickup Checkbox */}
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", fontSize: "14px", color: "#2d3748" }}>
-                  <input
-                    type="checkbox"
-                    name="needPickup"
-                    checked={formData.needPickup}
-                    onChange={handleChange}
-                    style={{ width: "16px", height: "16px" }}
-                  />
-                  <span>Request complimentary chauffeured AC pickup & drop from airport/hotel</span>
-                </label>
-                {formData.needPickup && (
-                  <div style={{ marginTop: "10px" }}>
-                    <input
-                      type="text"
-                      name="pickupAddress"
-                      value={formData.pickupAddress}
-                      onChange={handleChange}
-                      placeholder="Enter pickup address or hotel name in Coimbatore"
-                      className="crestora-input"
-                    />
-                  </div>
-                )}
-              </div>
 
               {/* Submit Button */}
               <button

@@ -1,39 +1,88 @@
 import React from "react";
 import { BLOGS_DATA } from "../../data/homeData";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 
-export default function LatestBlogs() {
+export default function LatestBlogs({ onSelectBlog, onNavigate }) {
+  const displayBlogs = BLOGS_DATA.slice(0, 3);
+
+  const handlePostClick = (post) => {
+    if (onSelectBlog) {
+      onSelectBlog(post);
+    } else if (onNavigate) {
+      onNavigate("blogs");
+    }
+  };
+
   return (
     <section className="comTitle" style={{ background: "#f8fafc", padding: "80px 0" }}>
       <div className="crestora-container">
-        <div className="section-header">
-          <h5>INSIGHT HUB</h5>
-          <h2>
-            Market Insights & <span>Advisory</span>
-          </h2>
-          <p>
-            Stay informed with expert analysis on Coimbatore and Chennai infrastructure projects, DTCP legal procedures, and high-yield real estate investments.
-          </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "24px",
+            marginBottom: "40px",
+          }}
+        >
+          <div className="section-header" style={{ textAlign: "left", margin: 0, maxWidth: "700px" }}>
+            <h5>INSIGHT HUB</h5>
+            <h2>
+              Market Insights &amp; <span>Advisory</span>
+            </h2>
+            <p style={{ margin: 0 }}>
+              Stay informed with expert analysis on Coimbatore infrastructure projects, Avinashi road elevated expressway, DTCP legal procedures, and high-yield real estate investments.
+            </p>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              className="crestora-btn crestora-btn-outline"
+              onClick={() => onNavigate && onNavigate("blogs")}
+              style={{ padding: "12px 24px", fontSize: "13px" }}
+            >
+              <span>Explore All Insights &amp; Blogs</span>
+              <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
 
         <div className="blogs-responsive-grid">
-          {BLOGS_DATA.map((post) => (
-            <article key={post.id} className="blog-card-article">
-              <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
+          {displayBlogs.map((post) => (
+            <article
+              key={post.id}
+              className="blog-card-article"
+              onClick={() => handlePostClick(post)}
+              style={{ cursor: "pointer" }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handlePostClick(post)}
+            >
+              <div style={{ position: "relative", height: "210px", overflow: "hidden" }}>
                 <img
                   src={post.image}
                   alt={post.title}
                   loading="lazy"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    transition: "transform 0.4s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1.0)")}
                 />
                 <span
                   style={{
                     position: "absolute",
                     top: "14px",
                     left: "14px",
-                    background: "#163057",
+                    background: "#091a38",
+                    border: "1px solid #c59b27",
                     color: "#ffffff",
-                    fontSize: "11px",
+                    fontSize: "10.5px",
                     fontWeight: "700",
                     letterSpacing: "0.8px",
                     textTransform: "uppercase",
@@ -46,7 +95,16 @@ export default function LatestBlogs() {
               </div>
 
               <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "12px", color: "#718096", marginBottom: "10px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    fontSize: "12px",
+                    color: "#718096",
+                    marginBottom: "10px",
+                  }}
+                >
                   <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                     <Calendar size={13} color="#c59b27" />
                     {post.date}
@@ -58,11 +116,27 @@ export default function LatestBlogs() {
                   </span>
                 </div>
 
-                <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#163057", lineHeight: "1.4", marginBottom: "10px" }}>
+                <h3
+                  style={{
+                    fontSize: "17.5px",
+                    fontWeight: "700",
+                    color: "#163057",
+                    lineHeight: "1.4",
+                    marginBottom: "10px",
+                  }}
+                >
                   {post.title}
                 </h3>
 
-                <p style={{ fontSize: "14px", color: "#4a5568", lineHeight: "1.6", marginBottom: "20px", flex: 1 }}>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    color: "#4a5568",
+                    lineHeight: "1.6",
+                    marginBottom: "20px",
+                    flex: 1,
+                  }}
+                >
                   {post.excerpt}
                 </p>
 
@@ -71,7 +145,7 @@ export default function LatestBlogs() {
                     style={{
                       fontSize: "13px",
                       fontWeight: "700",
-                      color: "#274f9a",
+                      color: "#c59b27",
                       display: "inline-flex",
                       alignItems: "center",
                       gap: "6px",

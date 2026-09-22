@@ -150,11 +150,8 @@ export default function Sidebar({
           <button
             type="button"
             onClick={() => {
-              onNavigate && onNavigate("home");
+              onNavigate && onNavigate("about");
               onClose();
-              setTimeout(() => {
-                document.getElementById("about-crestora")?.scrollIntoView({ behavior: "smooth" });
-              }, 150);
             }}
             style={{
               textAlign: "left",
@@ -168,6 +165,26 @@ export default function Sidebar({
             }}
           >
             ABOUT US
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate && onNavigate("blogs");
+              onClose();
+            }}
+            style={{
+              textAlign: "left",
+              padding: "12px 0",
+              fontSize: "15px",
+              fontWeight: "700",
+              color: "#dfb743",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "none",
+              border: "none",
+            }}
+          >
+            BLOGS & INSIGHTS
           </button>
 
           {/* Collapsible Projects */}
@@ -391,12 +408,12 @@ export default function Sidebar({
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "chennai" });
+                    onNavigate && onNavigate("projects", { location: "peelamedu" });
                     onClose();
                   }}
                   style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
                 >
-                  Chennai (OMR Corridor)
+                  Peelamedu (Airport Corridor)
                 </button>
               </div>
             )}

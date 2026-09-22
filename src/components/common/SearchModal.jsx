@@ -58,7 +58,7 @@ export default function SearchModal({
     "Avinashi Road",
     "Kovaipudur",
     "Vadavalli",
-    "Chennai OMR",
+    "Peelamedu",
   ];
 
   if (!isOpen) return null;

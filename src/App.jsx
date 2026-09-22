@@ -26,8 +26,12 @@ import Breadcrumb from "./components/projects/Breadcrumb";
 import ProjectFilters from "./components/projects/ProjectFilters";
 import ProjectGrid from "./components/projects/ProjectGrid";
 import ProjectDetailsPage from "./components/projects/ProjectDetailsPage";
+import AboutPage from "./components/about/AboutPage";
+import BlogListPage from "./components/blogs/BlogListPage";
+import BlogDetailsPage from "./components/blogs/BlogDetailsPage";
 
 import { INITIAL_PROJECTS } from "./data/projectsData";
+import { BLOGS_DATA } from "./data/blogsData";
 import { mockupApi } from "./services/mockupApi";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
@@ -66,6 +70,7 @@ export default function App() {
   const [isBookVisitOpen, setIsBookVisitOpen] = useState(false);
   const [bookVisitProject, setBookVisitProject] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedBlog, setSelectedBlog] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
   // Fetch projects from Mockup API on mount
@@ -131,8 +136,26 @@ export default function App() {
             return;
           }
         }
+      } else if (hash.startsWith("#blog-details")) {
+        const query = hash.split("?")[1] || "";
+        const params = new URLSearchParams(query);
+        const id = params.get("id");
+        if (id) {
+          const match = BLOGS_DATA.find((b) => b.id === id || b.slug === id);
+          if (match) {
+            setSelectedBlog(match);
+            setActivePage("blog-details");
+            return;
+          }
+        }
+      } else if (hash.startsWith("#blogs")) {
+        setActivePage("blogs");
+        return;
       } else if (hash.startsWith("#projects")) {
         setActivePage("projects");
+        return;
+      } else if (hash.startsWith("#about")) {
+        setActivePage("about");
         return;
       } else if (hash.startsWith("#home")) {
         setActivePage("home");
@@ -164,6 +187,21 @@ export default function App() {
     }
   };
 
+  // Blog post selection helper (Navigates to dedicated Blog Details page)
+  const handleSelectBlog = (blog) => {
+    if (!blog) return;
+    setSelectedBlog(blog);
+    setActivePage("blog-details");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (blog.id) {
+      window.history.pushState(
+        { page: "blog-details", id: blog.id },
+        "",
+        `#blog-details?id=${blog.id}`
+      );
+    }
+  };
+
   // Open site visit modal
   const handleOpenBookVisit = (project = null) => {
     setBookVisitProject(project);
@@ -179,6 +217,10 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (page === "projects") {
       window.history.pushState({ page: "projects" }, "", "#projects");
+    } else if (page === "about") {
+      window.history.pushState({ page: "about" }, "", "#about");
+    } else if (page === "blogs") {
+      window.history.pushState({ page: "blogs" }, "", "#blogs");
     } else if (page === "home") {
       window.history.pushState({ page: "home" }, "", "#home");
     }
@@ -349,6 +391,7 @@ export default function App() {
             <AboutAdissia
               onExplore={() => handleNavigate("projects")}
               onBookSiteVisit={() => handleOpenBookVisit()}
+              onReadMore={() => handleNavigate("about")}
             />
 
 
@@ -362,7 +405,7 @@ export default function App() {
             />
             {/* 3. Smooth Infinite Marquee Ticker */}
             <MarqueeTicker />
-            {/* 7. City & Location Spotlight (Why Coimbatore / Chennai 3-Col Layout) */}
+            {/* 7. City & Location Spotlight (Why Coimbatore 3-Col Layout) */}
             <WhyCoimbatore
               onExploreProjects={() => handleNavigate("projects")}
               onSelectLocation={handleSelectLocation}
@@ -388,11 +431,40 @@ export default function App() {
             <FaqSection />
 
             {/* 12. Market Insights & Blog */}
-            <LatestBlogs />
+            <LatestBlogs
+              onSelectBlog={handleSelectBlog}
+              onNavigate={handleNavigate}
+            />
 
             {/* 13. Banking Pre-Approval Partners */}
             <PartnersSection />
           </div>
+        ) : activePage === "about" ? (
+          /* ==================== SEPARATE ABOUT US PAGE VIEW ==================== */
+          <AboutPage
+            onNavigate={handleNavigate}
+            onBookSiteVisit={() => handleOpenBookVisit()}
+          />
+        ) : activePage === "blogs" ? (
+          /* ==================== DEDICATED BLOG LIST VIEW ==================== */
+          <BlogListPage
+            onSelectBlog={handleSelectBlog}
+            onNavigate={handleNavigate}
+            onBookSiteVisit={() => handleOpenBookVisit()}
+            showToast={showToast}
+          />
+        ) : activePage === "blog-details" ? (
+          /* ==================== DEDICATED BLOG DETAILS VIEW ==================== */
+          <BlogDetailsPage
+            post={selectedBlog || BLOGS_DATA[0]}
+            allPosts={BLOGS_DATA}
+            onBackToBlogs={() => handleNavigate("blogs")}
+            onSelectBlog={handleSelectBlog}
+            onSelectProject={handleSelectProject}
+            allProjects={projects}
+            onBookSiteVisit={() => handleOpenBookVisit()}
+            showToast={showToast}
+          />
         ) : activePage === "project-details" ? (
           /* ==================== SEPARATE PROJECT DETAILS VIEW ==================== */
           <ProjectDetailsPage
@@ -411,7 +483,7 @@ export default function App() {
             {/* Breadcrumb Banner */}
             <Breadcrumb
               title="All Developments"
-              pageName="Coimbatore & Chennai"
+              pageName="Coimbatore"
               onHomeClick={() => handleNavigate("home")}
             />
 

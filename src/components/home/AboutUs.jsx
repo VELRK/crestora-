@@ -3,7 +3,7 @@ import { STATS_DATA } from "../../data/homeData";
 import aboutImg from "../../assets/about/about.png";
 import { ShieldCheck, CheckCircle2, Award, Users } from "lucide-react";
 
-export default function AboutAdissia({ onExplore, onBookSiteVisit }) {
+export default function AboutAdissia({ onExplore, onBookSiteVisit, onReadMore }) {
   return (
     <section id="about-crestora" className="about-crestora-section">
       <div className="crestora-container">
@@ -49,6 +49,16 @@ export default function AboutAdissia({ onExplore, onBookSiteVisit }) {
               >
                 <span className="btn-arrow-normal">→</span>
                 <span className="btn-text">EXPLORE DEVELOPMENTS</span>
+                <span className="btn-arrow-hover">→</span>
+              </button>
+
+              <button
+                type="button"
+                className="crestora-btn crestora-btn-gold"
+                onClick={onReadMore}
+              >
+                <span className="btn-arrow-normal">★</span>
+                <span className="btn-text">OUR HERITAGE & STORY</span>
                 <span className="btn-arrow-hover">→</span>
               </button>
 

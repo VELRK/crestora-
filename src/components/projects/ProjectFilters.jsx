@@ -114,7 +114,7 @@ export default function ProjectFilters({
       <div className="filter-stats-reset-row">
         <div style={{ fontSize: "14px", color: "#4a5568" }}>
           Showing <strong style={{ color: "#163057" }}>{filteredCount}</strong> of{" "}
-          <strong>{totalCount}</strong> developments in Coimbatore & Chennai
+          <strong>{totalCount}</strong> developments in Coimbatore
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
