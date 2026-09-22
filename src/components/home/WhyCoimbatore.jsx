@@ -20,13 +20,6 @@ export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
           >
             COIMBATORE SPOTLIGHT
           </button>
-          <button
-            type="button"
-            className={`city-tab-chip ${activeCityKey === "chennai" ? "active" : ""}`}
-            onClick={() => setActiveCityKey("chennai")}
-          >
-            CHENNAI SPOTLIGHT
-          </button>
         </div>
 
         {/* Section Heading */}

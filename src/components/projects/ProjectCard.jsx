@@ -1,6 +1,12 @@
 import React from "react";
 import { formatINR } from "../../services/mockupApi";
-import { MapPin, Heart, ShieldCheck, ArrowRight, Calendar } from "lucide-react";
+import {
+  MapPin,
+  Heart,
+  ShieldCheck,
+  Compass,
+  Sparkles,
+} from "lucide-react";
 
 export default function ProjectCard({
   project,
@@ -9,13 +15,15 @@ export default function ProjectCard({
   onSelectProject,
   onBookSiteVisit,
 }) {
+  if (!project) return null;
+
   const {
     id,
     title,
     location,
-    locality,
     price,
     priceDisplay,
+    pricePerSqft,
     tag,
     badge,
     image,
@@ -23,192 +31,169 @@ export default function ProjectCard({
     totalArea,
     totalUnits,
     typeName,
+    status,
+    highlights,
   } = project;
 
   const displayPrice = priceDisplay || formatINR(price);
+  const statusText =
+    status === "upcoming"
+      ? "Pre-Launch"
+      : status === "completed"
+      ? "Completed"
+      : "Ongoing";
+
+  // Derive key highlight
+  const firstHighlight =
+    tag || (highlights && highlights[0]) || "DTCP & RERA Approved";
 
   return (
-    <article
-      style={{
-        background: "#ffffff",
-        border: "1px solid #e0e6ed",
-        boxShadow: "0 10px 30px rgba(10, 28, 56, 0.06)",
-        transition: "all 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-      }}
-      className="crestora-property-card"
-    >
-      {/* Thumbnail with overlay & badge */}
+    <article className="classic-project-card" data-project-id={id}>
+      {/* 1. Media Visual Header */}
       <div
-        style={{ position: "relative", height: "230px", overflow: "hidden", cursor: "pointer" }}
+        className="cpc-media-wrap"
         onClick={() => onSelectProject && onSelectProject(project)}
       >
         <img
           src={image}
           alt={title}
           loading="lazy"
-          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.6s ease" }}
-          className="card-thumb-img"
+          className="cpc-thumb-img"
         />
+        <div className="cpc-media-gradient"></div>
 
-        {/* Tag Pill */}
-        {tag && (
-          <span
-            style={{
-              position: "absolute",
-              top: "14px",
-              left: "14px",
-              background: "#163057",
-              color: "#ffffff",
-              fontSize: "11px",
-              fontWeight: "700",
-              letterSpacing: "0.8px",
-              textTransform: "uppercase",
-              padding: "4px 10px",
-              borderRadius: "2px",
-            }}
-          >
-            {tag}
+        {/* Top Badges Row */}
+        <div className="cpc-top-bar">
+          <span className={`cpc-status-pill status-${status || "ongoing"}`}>
+            <span className="cpc-status-dot"></span>
+            {statusText}
           </span>
-        )}
 
-        {/* Favorite Heart Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleFavorite && onToggleFavorite(id);
-          }}
-          style={{
-            position: "absolute",
-            top: "12px",
-            right: "12px",
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.9)",
-            border: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          }}
-          aria-label="Save to favorites"
-        >
-          <Heart
-            size={18}
-            fill={isFavorite ? "#ef4444" : "none"}
-            color={isFavorite ? "#ef4444" : "#4a5568"}
-          />
-        </button>
-
-        {/* DTCP / RERA Badge at Bottom of Image */}
-        {badge && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              left: "14px",
-              background: "rgba(2, 25, 70, 0.85)",
-              backdropFilter: "blur(6px)",
-              color: "#dfb743",
-              fontSize: "11px",
-              fontWeight: "700",
-              letterSpacing: "0.5px",
-              padding: "4px 10px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
+          <button
+            type="button"
+            className={`cpc-wishlist-btn ${isFavorite ? "is-fav" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite && onToggleFavorite(id);
             }}
+            aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
+            title={isFavorite ? "Saved in Wishlist" : "Save Property"}
           >
-            <ShieldCheck size={13} color="#dfb743" />
-            <span>{badge}</span>
+            <Heart
+              size={17}
+              fill={isFavorite ? "#dfb743" : "none"}
+              color={isFavorite ? "#dfb743" : "#163057"}
+              strokeWidth={2.2}
+            />
+          </button>
+        </div>
+
+        {/* Bottom Badges Row Over Image */}
+        <div className="cpc-bottom-media-bar">
+          <div className="cpc-approval-tag">
+            <ShieldCheck size={13} className="cpc-gold-shield" />
+            <span>{badge || "DTCP & RERA Approved"}</span>
           </div>
-        )}
+
+          <span className="cpc-type-chip">{typeName || "Villa Plots"}</span>
+        </div>
       </div>
 
-      {/* Card Body */}
-      <div style={{ padding: "22px", display: "flex", flexDirection: "column", flex: 1 }}>
-        {/* Price Row */}
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "8px" }}>
-          <div style={{ fontSize: "22px", fontWeight: "800", color: "#163057" }}>
-            {displayPrice}
+      {/* 2. Card Content Body */}
+      <div className="cpc-body">
+        {/* Locality & Vasthu Marker */}
+        <div className="cpc-meta-row">
+          <div className="cpc-location-info">
+            <MapPin size={14} className="cpc-loc-pin" />
+            <span className="cpc-location-text">{location}</span>
           </div>
-          <span style={{ fontSize: "12px", color: "#718096", textTransform: "uppercase", fontWeight: "600" }}>
-            {project.status === "upcoming" ? "Pre-Launch" : "Onwards"}
+          <span className="cpc-vasthu-pill" title="100% Vasthu Compliant">
+            <Compass size={12} />
+            <span>Vasthu</span>
           </span>
         </div>
 
         {/* Title */}
-        <h4
-          style={{
-            fontSize: "19px",
-            fontWeight: "700",
-            color: "#1e293b",
-            margin: "0 0 8px",
-            cursor: "pointer",
-          }}
+        <h3
+          className="cpc-title"
           onClick={() => onSelectProject && onSelectProject(project)}
+          title={title}
         >
           {title}
-        </h4>
+        </h3>
 
-        {/* Location */}
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#274f9a", fontSize: "13.5px", fontWeight: "600", marginBottom: "16px" }}>
-          <MapPin size={14} color="#274f9a" />
-          <span>{location}</span>
+        {/* Price & Sq.Ft Row */}
+        <div className="cpc-pricing-box">
+          <div>
+            <span className="cpc-price-sub">Starting Price</span>
+            <div className="cpc-price-val">
+              {displayPrice}{" "}
+              <span className="cpc-period-text">Onwards</span>
+            </div>
+          </div>
+
+          {pricePerSqft && (
+            <div className="cpc-sqft-badge">
+              <span className="cpc-sqft-num">
+                ₹{Number(pricePerSqft).toLocaleString("en-IN")}
+              </span>
+              <span className="cpc-sqft-lbl">per sq.ft</span>
+            </div>
+          )}
         </div>
 
-        {/* Specs Row */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: "8px",
-            padding: "12px 0",
-            borderTop: "1px solid #edf2f7",
-            borderBottom: "1px solid #edf2f7",
-            marginBottom: "18px",
-            textAlign: "center",
-            fontSize: "12px",
-            color: "#4a5568",
-          }}
-        >
-          <div>
-            <div style={{ fontWeight: "700", color: "#163057" }}>{typeName || "Plots"}</div>
-            <div style={{ color: "#718096", fontSize: "11px" }}>Type</div>
+        {/* Specifications Strip (3 Classic Columns) */}
+        <div className="cpc-specs-grid">
+          <div className="cpc-spec-col">
+            <span className="cpc-spec-title">Land Area</span>
+            <span className="cpc-spec-data">{totalArea || "10 Acres"}</span>
           </div>
-          <div>
-            <div style={{ fontWeight: "700", color: "#163057" }}>{totalArea || "10 Acres"}</div>
-            <div style={{ color: "#718096", fontSize: "11px" }}>Land Area</div>
+
+          <div className="cpc-spec-divider"></div>
+
+          <div className="cpc-spec-col">
+            <span className="cpc-spec-title">Plot Sizes</span>
+            <span className="cpc-spec-data">
+              {area ? area.replace(" sq.ft", "") : "640 - 3,302"}{" "}
+              <small>sq.ft</small>
+            </span>
           </div>
-          <div>
-            <div style={{ fontWeight: "700", color: "#163057" }}>{totalUnits || "168 Units"}</div>
-            <div style={{ color: "#718096", fontSize: "11px" }}>Units</div>
+
+          <div className="cpc-spec-divider"></div>
+
+          <div className="cpc-spec-col">
+            <span className="cpc-spec-title">Total Units</span>
+            <span className="cpc-spec-data">
+              {totalUnits ? totalUnits.split(" ")[0] : "168"}{" "}
+              <small>Units</small>
+            </span>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div style={{ display: "flex", gap: "10px", marginTop: "auto" }}>
+        {/* Key Feature Highlight Pill */}
+        <div className="cpc-feature-highlight">
+          <Sparkles size={13} className="cpc-sparkle-icon" />
+          <span className="cpc-feature-text">{firstHighlight}</span>
+        </div>
+
+        {/* Action Buttons Row */}
+        <div className="cpc-actions-row">
           <button
             type="button"
-            className="crestora-btn crestora-btn-outline"
-            style={{ flex: 1, height: "42px", padding: "0 12px", fontSize: "12px" }}
+            className="crestora-btn crestora-btn-outline cpc-btn-details"
             onClick={() => onSelectProject && onSelectProject(project)}
+            aria-label={`View details for ${title}`}
           >
             <span className="btn-arrow-normal">→</span>
-            <span className="btn-text">DETAILS</span>
+            <span className="btn-text">VIEW DETAILS</span>
             <span className="btn-arrow-hover">→</span>
           </button>
 
           <button
             type="button"
-            className="crestora-btn crestora-btn-fill"
-            style={{ flex: 1, height: "42px", padding: "0 12px", fontSize: "12px" }}
+            className="crestora-btn crestora-btn-gold cpc-btn-visit"
             onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+            aria-label={`Book site visit for ${title}`}
           >
             <span className="btn-arrow-normal">✓</span>
             <span className="btn-text">BOOK VISIT</span>

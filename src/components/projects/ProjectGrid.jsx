@@ -63,14 +63,7 @@ export default function ProjectGrid({
   return (
     <>
       {/* Project Cards Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: "28px",
-          marginBottom: "45px",
-        }}
-      >
+      <div className="projects-responsive-grid">
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
@@ -85,15 +78,7 @@ export default function ProjectGrid({
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "8px",
-            marginBottom: "50px",
-          }}
-        >
+        <div className="pagination-controls-row">
           <button
             type="button"
             onClick={() => onPageChange(currentPage - 1)}

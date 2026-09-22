@@ -7,16 +7,7 @@ export default function Breadcrumb({
   onHomeClick,
 }) {
   return (
-    <div
-      style={{
-        background: "linear-gradient(rgba(2, 25, 70, 0.9), rgba(2, 25, 70, 0.9)), url(https://cdn.sanity.io/images/hxiv51wl/production/896ee8efe4a681f3058d53747295962d9c51b2eb-1920x1000.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        padding: "155px 0 50px",
-        color: "#ffffff",
-        textAlign: "center",
-      }}
-    >
+    <div className="breadcrumb-banner">
       <div className="crestora-container">
         <h1
           style={{

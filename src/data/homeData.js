@@ -338,17 +338,6 @@ export const TESTIMONIALS_DATA = [
     rating: 5,
     videoUrl: null,
   },
-  {
-    id: "t4",
-    name: "Kavitha Mohan",
-    role: "Chartered Accountant & Wealth Planner",
-    location: "Chennai",
-    project: "Crestora Vivaana, Avinashi Road",
-    quote: "As a financial planner, I always look for developers with zero legal ambiguities and genuine institutional backing. Crestora Properties delivers exactly that: on-time execution, prime road frontages, and honest pricing.",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80",
-    rating: 5,
-    videoUrl: null,
-  }
 ];
 
 export const GOOGLE_REVIEWS_META = {

@@ -58,21 +58,8 @@ export default function BuildCompanion({ onBookSiteVisit }) {
         </div>
 
         {/* NRI Corner Callout Card */}
-        <div
-          style={{
-            marginTop: "60px",
-            background: "#091a38",
-            borderRadius: "6px",
-            padding: "clamp(30px, 4vw, 50px)",
-            color: "#ffffff",
-            display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr",
-            gap: "35px",
-            alignItems: "center",
-            boxShadow: "0 20px 50px rgba(0,0,0,0.15)",
-          }}
-        >
-          <div>
+        <div className="nri-callout-card">
+          <div className="nri-text-col">
             <span style={{ color: "#dfb743", fontSize: "12px", fontWeight: "700", letterSpacing: "1.5px", textTransform: "uppercase" }}>
               {NRI_SERVICES.subtitle}
             </span>
@@ -96,19 +83,11 @@ export default function BuildCompanion({ onBookSiteVisit }) {
             </button>
           </div>
 
-          <div style={{ textAlign: "center" }}>
+          <div className="nri-visual-col">
             <img
               src="https://cdn.sanity.io/images/hxiv51wl/production/ec15717a06c499f74e8bc6305a2d5e89ea070d09-450x450.png"
               alt="NRI Remote Assistance"
-              style={{
-                borderRadius: "50%",
-                width: "240px",
-                height: "240px",
-                objectFit: "cover",
-                margin: "0 auto",
-                border: "4px solid #dfb743",
-                boxShadow: "0 15px 35px rgba(0,0,0,0.3)",
-              }}
+              className="nri-circle-img"
             />
           </div>
         </div>

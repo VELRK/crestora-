@@ -35,13 +35,7 @@ export default function HomeFeaturedProperties({
         </div>
 
         {/* 3 Featured Cards Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "28px",
-          }}
-        >
+        <div className="properties-responsive-grid">
           {featuredProjects.slice(0, 3).map((project) => (
             <ProjectCard
               key={project.id}

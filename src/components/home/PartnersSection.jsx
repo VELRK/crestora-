@@ -18,13 +18,7 @@ export default function PartnersSection() {
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: "18px",
-          }}
-        >
+        <div className="partners-responsive-grid">
           {BANK_PARTNERS.map((bank, idx) => (
             <div
               key={idx}

@@ -31,25 +31,9 @@ export default function ProjectFilters({
     (filters.status && filters.status !== "all");
 
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
-        boxShadow: "0 10px 30px rgba(10, 28, 56, 0.06)",
-        padding: "24px",
-        marginBottom: "35px",
-      }}
-    >
+    <div className="project-filters-card">
       {/* Top Filter Bar */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "16px",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+      <div className="project-filters-grid">
         {/* Keyword Search */}
         <div style={{ position: "relative" }}>
           <Search size={16} color="#718096" style={{ position: "absolute", left: "14px", top: "15px" }} />
@@ -125,17 +109,7 @@ export default function ProjectFilters({
       </div>
 
       {/* Filter Stats & Reset Row */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "14px",
-          paddingTop: "16px",
-          borderTop: "1px solid #edf2f7",
-        }}
-      >
+      <div className="filter-stats-reset-row">
         <div style={{ fontSize: "14px", color: "#4a5568" }}>
           Showing <strong style={{ color: "#163057" }}>{filteredCount}</strong> of{" "}
           <strong>{totalCount}</strong> developments in Coimbatore & Chennai

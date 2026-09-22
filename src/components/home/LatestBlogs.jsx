@@ -16,26 +16,9 @@ export default function LatestBlogs() {
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "28px",
-          }}
-        >
+        <div className="blogs-responsive-grid">
           {BLOGS_DATA.map((post) => (
-            <article
-              key={post.id}
-              style={{
-                background: "#ffffff",
-                border: "1px solid #e2e8f0",
-                overflow: "hidden",
-                boxShadow: "0 8px 25px rgba(10, 28, 56, 0.05)",
-                display: "flex",
-                flexDirection: "column",
-                transition: "transform 0.3s, box-shadow 0.3s",
-              }}
-            >
+            <article key={post.id} className="blog-card-article">
               <div style={{ position: "relative", height: "200px", overflow: "hidden" }}>
                 <img
                   src={post.image}

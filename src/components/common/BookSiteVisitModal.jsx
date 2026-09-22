@@ -169,7 +169,7 @@ export default function BookSiteVisitModal({
               </div>
 
               {/* Name & Phone Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+              <div className="form-row-2col">
                 <div className="crestora-form-group">
                   <label>Full Name *</label>
                   <input
@@ -210,7 +210,7 @@ export default function BookSiteVisitModal({
               </div>
 
               {/* Date & Time Slot Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+              <div className="form-row-2col">
                 <div className="crestora-form-group">
                   <label>Preferred Date</label>
                   <input

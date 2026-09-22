@@ -42,12 +42,12 @@ export default function SearchModal({
 
   const filtered = query.trim()
     ? projects.filter(
-        (p) =>
-          p.title.toLowerCase().includes(query.toLowerCase()) ||
-          p.location.toLowerCase().includes(query.toLowerCase()) ||
-          p.typeName?.toLowerCase().includes(query.toLowerCase()) ||
-          p.locality?.toLowerCase().includes(query.toLowerCase())
-      )
+      (p) =>
+        p.title.toLowerCase().includes(query.toLowerCase()) ||
+        p.location.toLowerCase().includes(query.toLowerCase()) ||
+        p.typeName?.toLowerCase().includes(query.toLowerCase()) ||
+        p.locality?.toLowerCase().includes(query.toLowerCase())
+    )
     : [];
 
   const suggestionChips = [
@@ -65,21 +65,13 @@ export default function SearchModal({
 
   return (
     <div
-      className="modal-backdrop"
+      className="modal-backdrop search-modal-backdrop"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
-      style={{ zIndex: 2500, padding: "40px 20px" }}
     >
       <div
-        style={{
-          background: "#ffffff",
-          borderRadius: "6px",
-          width: "100%",
-          maxWidth: "700px",
-          overflow: "hidden",
-          boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
-        }}
+        className="search-modal-box"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}

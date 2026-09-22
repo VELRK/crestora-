@@ -61,7 +61,7 @@ export default function PropertyDetailsModal({
         {/* Modal Body */}
         <div className="modal-body-crestora" style={{ padding: "24px" }}>
           {/* Main Visual */}
-          <div style={{ position: "relative", height: "340px", borderRadius: "4px", overflow: "hidden", marginBottom: "16px" }}>
+          <div className="modal-visual-img-wrap">
             <img
               src={activeImg || project.image}
               alt={project.title}
@@ -112,20 +112,9 @@ export default function PropertyDetailsModal({
           )}
 
           {/* Pricing & Location Overview */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "12px",
-              paddingBottom: "18px",
-              borderBottom: "1px solid #e2e8f0",
-              marginBottom: "20px",
-            }}
-          >
+          <div className="modal-pricing-row">
             <div>
-              <div style={{ fontSize: "28px", fontWeight: "800", color: "#163057", lineHeight: "1.1" }}>
+              <div className="modal-price-val">
                 {displayPrice}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#274f9a", fontSize: "14px", fontWeight: "600", marginTop: "4px" }}>
@@ -137,8 +126,7 @@ export default function PropertyDetailsModal({
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 type="button"
-                className="crestora-btn crestora-btn-fill"
-                style={{ height: "44px", padding: "0 20px" }}
+                className="crestora-btn crestora-btn-fill modal-visit-btn"
                 onClick={() => {
                   onClose();
                   onBookSiteVisit && onBookSiteVisit(project);
@@ -152,19 +140,7 @@ export default function PropertyDetailsModal({
           </div>
 
           {/* Specifications Bar */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
-              gap: "12px",
-              background: "#f8fafc",
-              padding: "16px",
-              borderRadius: "4px",
-              border: "1px solid #e2e8f0",
-              marginBottom: "22px",
-              textAlign: "center",
-            }}
-          >
+          <div className="modal-specs-bar">
             <div>
               <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Type</div>
               <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.typeName}</div>
@@ -199,7 +175,7 @@ export default function PropertyDetailsModal({
               <h4 style={{ fontSize: "16px", fontWeight: "700", color: "#163057", marginBottom: "12px" }}>
                 Development Highlights
               </h4>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+              <div className="modal-highlights-grid">
                 {project.highlights.map((hl, idx) => (
                   <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13.5px", color: "#2d3748" }}>
                     <CheckCircle2 size={16} color="#c59b27" style={{ flexShrink: 0, marginTop: "2px" }} />

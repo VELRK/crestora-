@@ -140,7 +140,7 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className={`nav-link-btn ${activePage === "projects" ? "active" : ""}`}
+                className={`nav-link-btn ${activePage === "projects" || activePage === "project-details" ? "active" : ""}`}
                 onClick={() => onNavigate && onNavigate("projects")}
               >
                 PROJECTS <ChevronDown className="nav-chevron" size={13} />

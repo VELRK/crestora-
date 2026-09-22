@@ -10,7 +10,7 @@ import Footer from "./components/common/Footer";
 import HeroBanner from "./components/home/HeroBanner";
 import HeroSearchFilter from "./components/home/HeroSearchFilter";
 import MarqueeTicker from "./components/home/MarqueeTicker";
-import AboutAdissia from "./components/home/AboutAdissia";
+import AboutAdissia from "./components/home/AboutUs";
 import CategoriesShowcase from "./components/home/CategoriesShowcase";
 import AdissiaProjectsShowcase from "./components/home/AdissiaProjectsShowcase";
 import WhyCoimbatore from "./components/home/WhyCoimbatore";
@@ -25,7 +25,7 @@ import PartnersSection from "./components/home/PartnersSection";
 import Breadcrumb from "./components/projects/Breadcrumb";
 import ProjectFilters from "./components/projects/ProjectFilters";
 import ProjectGrid from "./components/projects/ProjectGrid";
-import PropertyDetailsModal from "./components/projects/PropertyDetailsModal";
+import ProjectDetailsPage from "./components/projects/ProjectDetailsPage";
 
 import { INITIAL_PROJECTS } from "./data/projectsData";
 import { mockupApi } from "./services/mockupApi";
@@ -114,6 +114,55 @@ export default function App() {
     });
   };
 
+  // Synchronize URL hash with page state for back/forward navigation
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith("#project-details")) {
+        const query = hash.split("?")[1] || "";
+        const params = new URLSearchParams(query);
+        const id = params.get("id");
+        if (id) {
+          const match = projects.find((p) => p.id === id || p.slug === id);
+          if (match) {
+            setSelectedProject(match);
+            setActivePage("project-details");
+            return;
+          }
+        }
+      } else if (hash.startsWith("#projects")) {
+        setActivePage("projects");
+        return;
+      } else if (hash.startsWith("#home")) {
+        setActivePage("home");
+        return;
+      }
+    };
+
+    handleLocationChange();
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, [projects]);
+
+  // Project selection helper (Navigates to dedicated Project Details page)
+  const handleSelectProject = (project) => {
+    if (!project) return;
+    setSelectedProject(project);
+    setActivePage("project-details");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (project.id) {
+      window.history.pushState(
+        { page: "project-details", id: project.id },
+        "",
+        `#project-details?id=${project.id}`
+      );
+    }
+  };
+
   // Open site visit modal
   const handleOpenBookVisit = (project = null) => {
     setBookVisitProject(project);
@@ -127,6 +176,11 @@ export default function App() {
       setFilters((prev) => ({ ...prev, ...filterUpdates }));
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
+    if (page === "projects") {
+      window.history.pushState({ page: "projects" }, "", "#projects");
+    } else if (page === "home") {
+      window.history.pushState({ page: "home" }, "", "#home");
+    }
   };
 
   // Hero search filter submission
@@ -263,7 +317,7 @@ export default function App() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         projects={projects}
-        onSelectProject={(project) => setSelectedProject(project)}
+        onSelectProject={handleSelectProject}
       />
 
       {/* 5. Book Site Visit Modal */}
@@ -301,7 +355,7 @@ export default function App() {
             {/* 6. Flagship Landmark Projects Showcase (Adissia Signature Layout) */}
             <AdissiaProjectsShowcase
               projects={projects}
-              onSelectProject={(project) => setSelectedProject(project)}
+              onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onExploreAll={() => handleNavigate("projects")}
             />
@@ -321,7 +375,7 @@ export default function App() {
               featuredProjects={projects.filter((p) => p.isPopular || p.isFeatured)}
               favorites={favorites}
               onToggleFavorite={handleToggleFavorite}
-              onSelectProject={(project) => setSelectedProject(project)}
+              onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onViewAll={() => handleNavigate("projects")}
             />
@@ -337,30 +391,19 @@ export default function App() {
 
             {/* 13. Banking Pre-Approval Partners */}
             <PartnersSection />
-
-            {/* 14. Enquiry & Take the First Step CTA Banner */}
-            <section className="enquiry-cta-section">
-              <div className="enquiry-cta-inner">
-                <h5>ENQUIRE NOW</h5>
-                <h2>
-                  Take the <span>First Step</span> Towards <span>Ownership</span>
-                </h2>
-                <p>
-                  Explore master-planned gated plots in Coimbatore and Chennai. Secure your family's future with clear titles, superior infrastructure, and trusted guidance.
-                </p>
-                <button
-                  type="button"
-                  className="crestora-btn crestora-btn-gold"
-                  onClick={() => handleOpenBookVisit()}
-                  style={{ height: "52px", padding: "0 32px" }}
-                >
-                  <span className="btn-arrow-normal">✓</span>
-                  <span className="btn-text">BOOK A COMPLIMENTARY SITE VISIT</span>
-                  <span className="btn-arrow-hover">→</span>
-                </button>
-              </div>
-            </section>
           </div>
+        ) : activePage === "project-details" ? (
+          /* ==================== SEPARATE PROJECT DETAILS VIEW ==================== */
+          <ProjectDetailsPage
+            project={selectedProject || projects[0]}
+            allProjects={projects}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onBookSiteVisit={(project) => handleOpenBookVisit(project)}
+            onBackToProjects={() => handleNavigate("projects")}
+            onSelectProject={handleSelectProject}
+            showToast={showToast}
+          />
         ) : (
           /* ==================== PROJECTS / DEVELOPMENTS PAGE VIEW ==================== */
           <div className="projects-view-wrapper">
@@ -390,7 +433,7 @@ export default function App() {
                   projects={displayedProjects}
                   favorites={favorites}
                   onToggleFavorite={handleToggleFavorite}
-                  onSelectProject={(project) => setSelectedProject(project)}
+                  onSelectProject={handleSelectProject}
                   onBookSiteVisit={(project) => handleOpenBookVisit(project)}
                   onResetFilters={handleResetFilters}
                   currentPage={currentPage}
@@ -405,15 +448,6 @@ export default function App() {
 
       {/* 7. Classic Deep Royal Navy Footer */}
       <Footer onNavigate={handleNavigate} />
-
-      {/* 8. Property Quick View Modal */}
-      <PropertyDetailsModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-        isFavorite={selectedProject ? favorites.has(selectedProject.id) : false}
-        onToggleFavorite={handleToggleFavorite}
-        onBookSiteVisit={(project) => handleOpenBookVisit(project)}
-      />
 
       {/* 9. Floating Side Action Rail */}
       <div className="side-action-rail" aria-label="Quick Actions">
@@ -470,7 +504,7 @@ export default function App() {
         </button>
         <button
           type="button"
-          className={`mbb-item ${activePage === "projects" ? "active" : ""}`}
+          className={`mbb-item ${activePage === "projects" || activePage === "project-details" ? "active" : ""}`}
           onClick={() => handleNavigate("projects")}
         >
           <Building2 size={18} />

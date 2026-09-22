@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { formatINR } from "../../services/mockupApi";
+import aboutImg from "../../assets/about/about.png";
 import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star } from "lucide-react";
 
 export default function AdissiaProjectsShowcase({
@@ -199,7 +199,7 @@ export default function AdissiaProjectsShowcase({
 
               <div className="why-arch-image-wrap">
                 <div className="why-arch-image">
-                  <img src={activeProject.image} alt={activeProject.title} />
+                  <img src={aboutImg} alt={activeProject.title} />
                 </div>
               </div>
             </div>

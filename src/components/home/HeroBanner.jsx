@@ -117,11 +117,24 @@ export default function HeroBanner({
             fontWeight: "700",
             letterSpacing: "1px",
             textTransform: "uppercase",
-            cursor: "pointer",
+            cursor: "pointer    ",
           }}
         >
           View
         </button>
+      </div>
+
+      {/* Mobile Slide Dots (displayed only on mobile) */}
+      <div className="hero-mobile-dots" aria-label="Slide dots">
+        {HERO_SLIDES.map((slide, idx) => (
+          <button
+            key={slide.id}
+            type="button"
+            className={`hero-dot-item ${idx === currentIdx ? "active" : ""}`}
+            onClick={() => setCurrentIdx(idx)}
+            aria-label={`Slide ${idx + 1}`}
+          />
+        ))}
       </div>
     </section>
   );
