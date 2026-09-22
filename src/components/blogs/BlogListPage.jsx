@@ -344,54 +344,6 @@ export default function BlogListPage({
         </div>
       </section>
 
-      {/* 5. INTERACTIVE NEWSLETTER / ADVISORY SUBSCRIPTION */}
-      <section className="blog-newsletter-section">
-        <div className="crestora-container">
-          <div className="blog-newsletter-card">
-            <div className="newsletter-left">
-              <span className="newsletter-pill">{BLOG_NEWSLETTER_DATA.badge}</span>
-              <h2 className="newsletter-title">{BLOG_NEWSLETTER_DATA.title}</h2>
-              <p className="newsletter-desc">{BLOG_NEWSLETTER_DATA.description}</p>
-              <div className="newsletter-social-proof">
-                <ShieldCheck size={16} color="#dfb743" />
-                <span>{BLOG_NEWSLETTER_DATA.subscriberCount}</span>
-              </div>
-            </div>
-
-            <div className="newsletter-right">
-              {newsletterSubscribed ? (
-                <div className="newsletter-success-box">
-                  <CheckCircle2 size={32} color="#10b981" />
-                  <h4>You're on the Crestora Intelligence list!</h4>
-                  <p>Check your inbox shortly for our latest quarterly Coimbatore Land Price Index.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleNewsletterSubmit} className="newsletter-form">
-                  <div className="newsletter-input-group">
-                    <Mail size={18} className="newsletter-input-icon" />
-                    <input
-                      type="email"
-                      required
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      placeholder={BLOG_NEWSLETTER_DATA.placeholder}
-                      className="newsletter-input"
-                    />
-                  </div>
-                  <button type="submit" className="crestora-btn crestora-btn-gold newsletter-submit-btn">
-                    <span>{BLOG_NEWSLETTER_DATA.buttonText}</span>
-                    <ArrowRight size={14} />
-                  </button>
-                  <span className="newsletter-disclaimer">
-                    Zero spam. Unsubscribe anytime with 1-click.
-                  </span>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 6. REAL ESTATE ADVISORY CONSULTATION BANNER */}
       <section className="blog-advisory-cta-section">
         <div className="crestora-container">

@@ -87,17 +87,17 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
           {/* Quick Metrics Header Bar */}
           <div className="about-hero-metrics-bar">
             <div className="about-hero-metric-item">
-              <span className="ah-metric-num">12+</span>
+              <span className="ah-metric-num">6+</span>
               <span className="ah-metric-lbl">Years of Excellence</span>
             </div>
             <div className="ah-metric-divider" />
             <div className="about-hero-metric-item">
-              <span className="ah-metric-num">15+</span>
+              <span className="ah-metric-num">8+</span>
               <span className="ah-metric-lbl">Landmark Enclaves</span>
             </div>
             <div className="ah-metric-divider" />
             <div className="about-hero-metric-item">
-              <span className="ah-metric-num">1,500+</span>
+              <span className="ah-metric-num">100+</span>
               <span className="ah-metric-lbl">Sanctioned Plots</span>
             </div>
             <div className="ah-metric-divider" />
@@ -217,7 +217,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                     <Award size={24} className="seal-icon" />
                   </div>
                   <div className="seal-text-wrap">
-                    <span className="seal-number">12+</span>
+                    <span className="seal-number">6+</span>
                     <span className="seal-desc">YEARS OF ETHICAL EXCELLENCE</span>
                   </div>
                 </div>
@@ -236,23 +236,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
         </div>
       </section>
 
-      {/* 3. LUXURY 5-COLUMN STATS COUNTER STRIP */}
-      <section className="about-stats-strip-section">
-        <div className="crestora-container">
-          <div className="about-stats-grid">
-            {STATS_DATA.map((stat, idx) => (
-              <div key={idx} className="about-stat-col-card">
-                <div className="about-stat-number-wrap">
-                  <span className="about-stat-number">{stat.value}</span>
-                  <span className="about-stat-plus">{stat.suffix}</span>
-                </div>
-                <div className="about-stat-title">{stat.label}</div>
-                <div className="about-stat-sub">{stat.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* 4. VISION, MISSION & PHILOSOPHY (3D INTERACTIVE CARDS) */}
       <section className="about-philosophy-section">

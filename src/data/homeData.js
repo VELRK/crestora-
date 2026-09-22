@@ -68,11 +68,9 @@ export const HERO_SLIDES = [
 ];
 
 export const STATS_DATA = [
-  { value: "15", suffix: "+", label: "Landmark Projects", sub: "Delivered & Ongoing" },
-  { value: "1,500", suffix: "+", label: "VILLA PLOTS", sub: "DTCP & RERA Cleared" },
-  { value: "1,200", suffix: "+", label: "HAPPY FAMILIES", sub: "Residing Community" },
-  { value: "65 Lakhs", suffix: "+", label: "SQ.FT DELIVERED", sub: "Developed Land" },
-  { value: "18 Lakhs", suffix: "+", label: "SQ.FT PIPELINE", sub: "Under Active Execution" },
+  { value: "8", suffix: "+", label: "Landmark Projects", sub: "Delivered & Ongoing" },
+  { value: "100", suffix: "+", label: "VILLA PLOTS", sub: "DTCP & RERA Cleared" },
+  { value: "80", suffix: "+", label: "HAPPY FAMILIES", sub: "Residing Community" },
 ];
 
 export const CATEGORIES_DATA = [
