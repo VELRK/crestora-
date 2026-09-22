@@ -4317,6 +4317,15 @@ ol {
   gap: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.pdp-back-text-short {
+  display: none;
+}
+
+.pdp-btn-text-short {
+  display: none;
 }
 
 .pdp-back-btn:hover {
@@ -4331,12 +4340,14 @@ ol {
   gap: 8px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
+  max-width: 100%;
 }
 
 .pdp-crumb-link {
   color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .pdp-crumb-link:hover {
@@ -4350,6 +4361,10 @@ ol {
 .pdp-crumb-current {
   color: #dfb743;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
 }
 
 .pdp-header-actions {
@@ -4718,6 +4733,12 @@ ol {
   top: 75px;
   z-index: 10;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pdp-section-jump-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .pdp-tab-item {
@@ -5561,69 +5582,30 @@ ol {
   border-top: 1px solid #e2e8f0;
 }
 
-/* 7. Mobile Sticky Bottom Action Bar */
+/* 7. Mobile Sticky Bottom Action Bar Base */
 .pdp-mobile-bottom-bar {
   display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #0a1c38;
-  border-top: 1px solid rgba(223, 183, 67, 0.4);
-  padding: 10px 16px;
-  z-index: 999;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.pdp-mobile-price {
-  display: flex;
-  flex-direction: column;
+/* Hide global mobile bar, whatsapp fab, and side rail when on PDP */
+body:has(.project-details-page) .mobile-bottom-bar,
+body:has(.project-details-page) .whatsapp-fab,
+body:has(.project-details-page) .side-action-rail {
+  display: none !important;
 }
 
-.pdp-mobile-price .lbl {
-  font-size: 10px;
-  color: #dfb743;
-  text-transform: uppercase;
-  font-weight: 700;
+/* Utility visibility classes */
+.d-none-desktop {
+  display: none !important;
 }
 
-.pdp-mobile-price .val {
-  font-size: 17px;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.pdp-mobile-btns {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.pdp-mob-btn.whatsapp {
-  width: 42px;
-  height: 42px;
-  border-radius: 4px;
-  background: #25d366;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.pdp-mob-btn.book {
-  background: #dfb743;
-  color: #0a1c38;
-  border: none;
-  height: 42px;
-  padding: 0 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  cursor: pointer;
+@media (max-width: 768px) {
+  .d-none-mobile {
+    display: none !important;
+  }
+  .d-none-desktop {
+    display: block !important;
+  }
 }
 
 /* ==========================================================================
@@ -5633,7 +5615,7 @@ ol {
 @media (max-width: 1150px) {
   .pdp-stats-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 14px;
   }
 
   .pdp-stat-cell:nth-child(3) {
@@ -5649,26 +5631,50 @@ ol {
 @media (max-width: 992px) {
   .project-details-page {
     padding-top: 96px;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .pdp-main-content-layout {
+    padding: 20px 0 30px;
   }
 
   .pdp-content-grid {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .pdp-details-col {
+    min-width: 0;
+    width: 100%;
   }
 
   .pdp-sidebar-col {
     position: static;
-    margin-top: 20px;
+    margin-top: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pdp-sticky-card {
+    max-height: none;
+    overflow-y: visible;
+    width: 100%;
   }
 
   .pdp-emi-calculator-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
+    gap: 20px;
   }
 
   .pdp-highlights-grid,
   .pdp-why-cards-grid,
   .pdp-amenities-grid,
   .pdp-connectivity-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 
   .pdp-plot-sizes-strip {
@@ -5677,41 +5683,846 @@ ol {
 
   .pdp-hero-header-content {
     flex-direction: column;
+    gap: 16px;
   }
 
   .pdp-price-col {
     width: 100%;
     text-align: left;
+    min-width: 0;
+  }
+
+  .pdp-loan-assistance-callout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .pdp-loan-assistance-callout .crestora-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 768px) {
-  .pdp-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .project-details-page {
+    padding-top: 96px;
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 14px));
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
-  .pdp-stat-cell {
-    border-right: none;
-    padding: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  .project-details-page .crestora-container {
+    padding: 0 14px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 1. Top Navigation & Breadcrumbs */
+  .pdp-top-nav-bar {
+    padding: 8px 0;
+    width: 100%;
   }
 
   .pdp-top-nav-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .pdp-back-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    order: 1;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .pdp-header-actions {
-    width: 100%;
-    justify-content: flex-start;
+    order: 2;
+    margin-left: auto;
+    gap: 6px;
+    display: flex;
+    align-items: center;
   }
 
+  .pdp-action-icon-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    height: 34px;
+    min-width: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .pdp-breadcrumbs-trail {
+    order: 3;
+    width: 100%;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 11.5px;
+    gap: 6px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .pdp-crumb-current {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 2. Hero Header */
+  .pdp-hero-header {
+    padding: 16px 0 12px;
+    width: 100%;
+  }
+
+  .pdp-title-col {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .pdp-badge-strip {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .pdp-status-tag,
+  .pdp-cert-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .pdp-main-title {
+    font-size: clamp(20px, 5.2vw, 26px);
+    line-height: 1.25;
+    margin: 0 0 6px;
+    word-break: break-word;
+  }
+
+  .pdp-tagline-text {
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  .pdp-location-row {
+    font-size: 12px;
+    gap: 6px;
+    line-height: 1.4;
+  }
+
+  .pdp-map-link {
+    font-size: 11.5px;
+  }
+
+  .pdp-price-col {
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-price-label {
+    font-size: 10.5px;
+  }
+
+  .pdp-price-amount {
+    font-size: 24px;
+    line-height: 1.15;
+    margin-bottom: 2px;
+  }
+
+  .pdp-price-sqft {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .pdp-approval-code {
+    font-size: 10px;
+    flex-direction: row;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+
+  /* 3. Key Stats Ribbon */
+  .pdp-stats-ribbon {
+    padding: 10px 0;
+    width: 100%;
+  }
+
+  .pdp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-stat-cell {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 8px 6px;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pdp-stat-lbl {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pdp-stat-val {
+    font-size: 12.5px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  /* 4. Visual Gallery */
+  .pdp-gallery-section {
+    padding: 14px 0 6px;
+    width: 100%;
+  }
+
+  .pdp-gallery-card {
+    padding: 8px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-main-stage {
+    height: clamp(190px, 52vw, 280px);
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  .pdp-verified-watermark {
+    font-size: 10px;
+    padding: 4px 8px;
+    bottom: 8px;
+    left: 8px;
+    max-width: calc(100% - 16px);
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pdp-filmstrip-row {
+    gap: 6px;
+    margin-top: 8px;
+    padding-bottom: 2px;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pdp-filmstrip-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pdp-filmstrip-thumb {
+    flex: 0 0 70px;
+    height: 48px;
+    border-radius: 4px;
+  }
+
+  /* 5. Sticky Section Jump Tabs */
+  .pdp-section-jump-tabs {
+    position: sticky;
+    top: 60px;
+    z-index: 95;
+    margin: 0 0 14px;
+    padding: 4px 2px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-section-jump-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pdp-tab-item {
+    padding: 6px 11px;
+    font-size: 11.5px;
+    flex-shrink: 0;
+  }
+
+  /* Section Blocks */
+  .pdp-section-block {
+    padding: 18px 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    scroll-margin-top: 105px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-section-header {
+    margin-bottom: 12px;
+  }
+
+  .pdp-gold-eyebrow {
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .pdp-section-heading {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .pdp-narrative-text p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .pdp-highlights-grid {
+    grid-template-columns: 100%;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .pdp-highlight-item {
+    padding: 8px 10px;
+    gap: 8px;
+    font-size: 12.5px;
+  }
+
+  .pdp-highlight-text {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .pdp-why-cards-grid {
+    grid-template-columns: 100%;
+    gap: 10px;
+  }
+
+  .pdp-why-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .pdp-why-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  .pdp-why-card-body h4 {
+    font-size: 13.5px;
+    margin-bottom: 2px;
+  }
+
+  .pdp-why-card-body p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Specifications Table -> Mobile Cards */
+  .pdp-specs-table-wrap {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+  }
+
+  .pdp-specs-table {
+    display: block;
+    width: 100% !important;
+    border-collapse: collapse;
+  }
+
+  .pdp-specs-table tbody {
+    display: block;
+    width: 100% !important;
+  }
+
+  .pdp-specs-table tr {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    border-bottom: 1px solid #edf2f7;
+    padding: 4px 0;
+    box-sizing: border-box;
+  }
+
+  .pdp-specs-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .pdp-specs-table td {
+    display: block;
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 3px 12px !important;
+    border: none !important;
+  }
+
+  .pdp-table-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: #8c733e;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: transparent !important;
+  }
+
+  .pdp-table-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: #163057;
+    margin-bottom: 3px;
+  }
+
+  /* Amenities Grid */
+  .pdp-amenities-grid {
+    grid-template-columns: 100%;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pdp-amenity-card {
+    padding: 10px;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-amenity-icon-circle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .pdp-amenity-info h5 {
+    font-size: 13.5px;
+    margin-bottom: 2px;
+  }
+
+  .pdp-amenity-info p {
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+
+  /* Master Plan Layout */
+  .pdp-master-plan-box {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-plan-visual-wrap {
+    height: clamp(180px, 48vw, 220px);
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .pdp-plan-overlay {
+    padding: 10px;
+    background: linear-gradient(180deg, transparent 35%, rgba(10, 28, 56, 0.85) 100%);
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .pdp-plan-download-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    width: 100%;
+    max-width: 300px;
+    height: 38px;
+    justify-content: center;
+  }
+
+  .pdp-plot-sizes-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-plot-size-card {
+    padding: 8px 6px;
+    box-sizing: border-box;
+  }
+
+  .pdp-size-badge {
+    font-size: 9.5px;
+    margin-bottom: 2px;
+  }
+
+  .pdp-size-sqft {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .pdp-size-ideal {
+    font-size: 9.5px;
+    line-height: 1.25;
+  }
+
+  /* Location Proximity */
+  .pdp-connectivity-grid {
+    grid-template-columns: 100%;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pdp-proximity-card {
+    padding: 10px 12px;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-prox-category {
+    font-size: 9px;
+  }
+
+  .pdp-prox-name {
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+
+  .pdp-prox-right {
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+
+  .pdp-prox-time {
+    font-size: 12px;
+  }
+
+  .pdp-prox-dist {
+    font-size: 10.5px;
+  }
+
+  /* EMI Calculator */
+  .pdp-bank-partners-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+
+  .pdp-bank-card {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 6px;
+    font-size: 11px;
+    box-sizing: border-box;
+  }
+
+  .pdp-emi-calculator-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 14px 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-calc-controls {
+    width: 100%;
+  }
+
+  .pdp-slider-group {
+    margin-bottom: 12px;
+    width: 100%;
+  }
+
+  .pdp-slider-labels {
+    font-size: 11.5px;
+    margin-bottom: 6px;
+  }
+
+  .pdp-slider-labels strong {
+    font-size: 13px;
+  }
+
+  .pdp-range-input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-tenure-pills {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+  }
+
+  .pdp-tenure-pill {
+    width: 100%;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .pdp-calc-results-box {
+    width: 100%;
+    padding: 14px 10px;
+    box-sizing: border-box;
+  }
+
+  .pdp-emi-amount {
+    font-size: 24px;
+  }
+
+  .pdp-calc-row {
+    font-size: 11.5px;
+  }
+
+  .pdp-loan-assistance-callout {
+    padding: 14px 12px;
+    gap: 10px;
+    margin-top: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-loan-text h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .pdp-loan-text p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* FAQs */
+  .pdp-faqs-accordion {
+    width: 100%;
+  }
+
+  .pdp-faq-card {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+  }
+
+  .pdp-faq-question-btn {
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .pdp-faq-answer {
+    padding: 0 14px 12px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  /* Sidebar Consultation Desk */
+  .pdp-sticky-card {
+    padding: 16px 12px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-card-header {
+    margin-bottom: 12px;
+  }
+
+  .pdp-card-header h3 {
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+
+  .pdp-card-header p {
+    font-size: 12px;
+  }
+
+  .pdp-sidebar-form {
+    gap: 10px;
+    width: 100%;
+  }
+
+  .pdp-input-group label {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+
+  .pdp-input-group input {
+    height: 44px;
+    font-size: 14px;
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pdp-submit-btn {
+    height: 44px;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .pdp-direct-contact-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    width: 100%;
+  }
+
+  .pdp-whatsapp-btn,
+  .pdp-call-btn {
+    height: 40px;
+    font-size: 11.5px;
+    width: 100%;
+  }
+
+  /* 6. Similar Projects Section */
+  .pdp-similar-section {
+    padding: 30px 0 16px;
+    width: 100%;
+  }
+
+  .pdp-similar-section .section-header {
+    margin-bottom: 20px !important;
+  }
+
+  .pdp-similar-section .projects-responsive-grid {
+    grid-template-columns: 100%;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .pdp-similar-section .projects-responsive-grid .classic-project-card {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* 7. Mobile Sticky Bottom Action Bar */
   .pdp-mobile-bottom-bar {
     display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding: 6px 14px env(safe-area-inset-bottom, 6px);
+    background: #0a1c38;
+    border-top: 1px solid rgba(223, 183, 67, 0.4);
+    z-index: 1200;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
   }
 
-  .project-details-page {
-    padding-bottom: 90px;
+  .pdp-mobile-price {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pdp-mobile-price .lbl {
+    font-size: 9px;
+    color: #dfb743;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 1px;
+  }
+
+  .pdp-mobile-price .val {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+  }
+
+  .pdp-mobile-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pdp-mob-btn.whatsapp {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    background: #25d366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .pdp-mob-btn.book {
+    background: linear-gradient(135deg, #dfb743 0%, #c59b27 100%);
+    color: #0a1c38;
+    border: none;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cpc-pricing-box {
@@ -5724,37 +6535,93 @@ ol {
     text-align: left;
     width: 100%;
   }
-
-  .pdp-specs-table td {
-    display: block;
-    width: 100% !important;
-  }
-
-  .pdp-table-lbl {
-    background: #edf2f7;
-    border-bottom: none;
-  }
-
-  .pdp-table-val {
-    border-bottom: 1px solid #e2e8f0;
-  }
 }
 
 @media (max-width: 480px) {
+  .pdp-back-text-full {
+    display: none !important;
+  }
+
+  .pdp-back-text-short {
+    display: inline !important;
+  }
+
+  .pdp-btn-text-full {
+    display: none !important;
+  }
+
+  .pdp-btn-text-short {
+    display: inline !important;
+  }
+
+  .pdp-wm-brand {
+    display: none !important;
+  }
+
+  .pdp-crumb-current {
+    max-width: 110px;
+  }
+
   .pdp-main-title {
-    font-size: 24px;
+    font-size: 21px;
+  }
+
+  .pdp-section-heading {
+    font-size: 17px;
+  }
+
+  .pdp-section-block {
+    padding: 16px 10px;
   }
 
   .cpc-actions-row {
     flex-direction: column;
   }
 
-  .pdp-plot-sizes-strip {
-    grid-template-columns: 1fr;
+  .pdp-amenity-card {
+    padding: 8px;
+    gap: 8px;
   }
 
-  .pdp-section-block {
-    padding: 20px 16px;
+  .pdp-amenity-icon-circle {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .pdp-amenity-info h5 {
+    font-size: 12.5px;
+  }
+
+  .pdp-amenity-info p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .project-details-page .crestora-container {
+    padding: 0 10px;
+  }
+
+  .pdp-main-title {
+    font-size: 19px;
+  }
+
+  .pdp-price-amount {
+    font-size: 21px;
+  }
+
+  .pdp-crumb-current {
+    max-width: 90px;
+  }
+
+  .pdp-stat-val {
+    font-size: 11.5px;
+  }
+
+  .pdp-mob-btn.book {
+    padding: 0 10px;
+    font-size: 10.5px;
   }
 }
 

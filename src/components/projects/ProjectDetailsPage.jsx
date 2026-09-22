@@ -41,7 +41,6 @@ export default function ProjectDetailsPage({
     phone: "",
     email: "",
     date: "",
-    pickup: true,
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -237,7 +236,8 @@ export default function ProjectDetailsPage({
             aria-label="Back to all developments"
           >
             <ArrowLeft size={16} />
-            <span>BACK TO DEVELOPMENTS</span>
+            <span className="pdp-back-text-full">BACK TO DEVELOPMENTS</span>
+            <span className="pdp-back-text-short">BACK</span>
           </button>
 
           <nav className="pdp-breadcrumbs-trail" aria-label="Breadcrumb">
@@ -406,7 +406,7 @@ export default function ProjectDetailsPage({
               {/* Watermark Seal */}
               <div className="pdp-verified-watermark">
                 <ShieldCheck size={18} color="#dfb743" />
-                <span>OFFICIAL VERIFIED SANCTION • CRESTORA PROPERTIES</span>
+                <span>OFFICIAL VERIFIED SANCTION <span className="pdp-wm-brand">• CRESTORA PROPERTIES</span></span>
               </div>
             </div>
 
@@ -703,11 +703,12 @@ export default function ProjectDetailsPage({
                   <div className="pdp-plan-overlay">
                     <button
                       type="button"
-                      className="crestora-btn crestora-btn-gold"
+                      className="crestora-btn crestora-btn-gold pdp-plan-download-btn"
                       onClick={handleDownloadBrochure}
                     >
                       <Download size={15} />
-                      <span>DOWNLOAD HIGH-RES MASTER PLAN (PDF)</span>
+                      <span className="pdp-btn-text-full">DOWNLOAD HIGH-RES MASTER PLAN (PDF)</span>
+                      <span className="pdp-btn-text-short">DOWNLOAD PLAN (PDF)</span>
                     </button>
                   </div>
                 </div>
@@ -808,6 +809,203 @@ export default function ProjectDetailsPage({
                 ))}
               </div>
             </section>
+
+            {/* SECTION 7: EMI Calculator */}
+            <section id="calculator" className="pdp-section-block">
+              <div className="pdp-section-header">
+                <span className="pdp-gold-eyebrow">FINANCIAL PLANNING</span>
+                <h2 className="pdp-section-heading">
+                  Estimated <span>EMI Calculator</span>
+                </h2>
+                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                  Calculate your monthly mortgage installments with pre-approved banking partner interest rates.
+                </p>
+              </div>
+
+              {/* Pre-Approved Banking Partners */}
+              <div className="pdp-bank-partners-strip">
+                <div className="pdp-bank-card">
+                  <Landmark size={20} color="#dfb743" />
+                  <span>State Bank of India</span>
+                </div>
+                <div className="pdp-bank-card">
+                  <Building2 size={20} color="#dfb743" />
+                  <span>HDFC Bank</span>
+                </div>
+                <div className="pdp-bank-card">
+                  <Building2 size={20} color="#dfb743" />
+                  <span>ICICI Bank</span>
+                </div>
+                <div className="pdp-bank-card">
+                  <Landmark size={20} color="#dfb743" />
+                  <span>Axis Bank</span>
+                </div>
+              </div>
+
+              <div className="pdp-emi-calculator-card">
+                <div className="pdp-calc-controls">
+                  {/* Property Value Slider */}
+                  <div className="pdp-slider-group">
+                    <div className="pdp-slider-labels">
+                      <span>Total Property Value</span>
+                      <strong>{formatINR(calcPrice)}</strong>
+                    </div>
+                    <input
+                      type="range"
+                      min={Math.max(1000000, (project.price || 4500000) * 0.5)}
+                      max={Math.max(15000000, (project.price || 4500000) * 2)}
+                      step={50000}
+                      value={calcPrice}
+                      onChange={(e) => setCalcPrice(Number(e.target.value))}
+                      className="pdp-range-input"
+                      aria-label="Total Property Value"
+                    />
+                  </div>
+
+                  {/* Down Payment Slider */}
+                  <div className="pdp-slider-group">
+                    <div className="pdp-slider-labels">
+                      <span>Down Payment ({downPaymentPercent}%)</span>
+                      <strong>{formatINR((calcPrice * downPaymentPercent) / 100)}</strong>
+                    </div>
+                    <input
+                      type="range"
+                      min="10"
+                      max="60"
+                      step="5"
+                      value={downPaymentPercent}
+                      onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
+                      className="pdp-range-input"
+                      aria-label="Down Payment Percentage"
+                    />
+                  </div>
+
+                  {/* Loan Tenure Pills */}
+                  <div className="pdp-slider-group">
+                    <div className="pdp-slider-labels">
+                      <span>Loan Tenure</span>
+                      <strong>{loanTenureYears} Years</strong>
+                    </div>
+                    <div className="pdp-tenure-pills">
+                      {[5, 10, 15, 20, 25, 30].map((yr) => (
+                        <button
+                          key={yr}
+                          type="button"
+                          className={`pdp-tenure-pill ${loanTenureYears === yr ? "active" : ""}`}
+                          onClick={() => setLoanTenureYears(yr)}
+                        >
+                          {yr} Yrs
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Interest Rate Slider */}
+                  <div className="pdp-slider-group">
+                    <div className="pdp-slider-labels">
+                      <span>Interest Rate (p.a.)</span>
+                      <strong>{interestRate}%</strong>
+                    </div>
+                    <input
+                      type="range"
+                      min="7.0"
+                      max="14.0"
+                      step="0.1"
+                      value={interestRate}
+                      onChange={(e) => setInterestRate(Number(e.target.value))}
+                      className="pdp-range-input"
+                      aria-label="Interest Rate"
+                    />
+                  </div>
+                </div>
+
+                {/* Calculation Summary Box */}
+                <div className="pdp-calc-results-box">
+                  <div className="pdp-emi-highlight">
+                    <span className="pdp-emi-small-lbl">Monthly Estimated EMI</span>
+                    <div className="pdp-emi-amount">
+                      ₹{emi.toLocaleString("en-IN")}{" "}
+                      <small>/ month</small>
+                    </div>
+                  </div>
+
+                  <div className="pdp-calc-breakdown-list">
+                    <div className="pdp-calc-row">
+                      <span>Principal Loan Amount</span>
+                      <strong>₹{principalLoan.toLocaleString("en-IN")}</strong>
+                    </div>
+                    <div className="pdp-calc-row">
+                      <span>Total Interest Payable</span>
+                      <strong>₹{totalInterest.toLocaleString("en-IN")}</strong>
+                    </div>
+                    <div className="pdp-calc-row total">
+                      <span>Total Amount (Loan + Interest)</span>
+                      <strong>₹{totalAmount.toLocaleString("en-IN")}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Loan Assistance Callout */}
+              <div className="pdp-loan-assistance-callout">
+                <div className="pdp-loan-icon">
+                  <ShieldCheck size={32} color="#dfb743" />
+                </div>
+                <div className="pdp-loan-text">
+                  <h4>Need Assistance With Pre-Approved Bank Loan?</h4>
+                  <p>
+                    Our dedicated banking desk facilitates swift documentation, door-step KYC verification, and expedited sanction with special concessional processing fees for Crestora buyers.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="crestora-btn crestora-btn-gold"
+                  onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+                >
+                  <span>REQUEST LOAN DESK</span>
+                </button>
+              </div>
+            </section>
+
+            {/* SECTION 8: Frequently Asked Questions */}
+            <section id="faqs" className="pdp-section-block">
+              <div className="pdp-section-header">
+                <span className="pdp-gold-eyebrow">COMMON INQUIRIES</span>
+                <h2 className="pdp-section-heading">
+                  Frequently Asked <span>Questions</span>
+                </h2>
+                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                  Clear, verified answers regarding legal documentation, bank approvals, and registry.
+                </p>
+              </div>
+
+              <div className="pdp-faqs-accordion">
+                {projectFaqs.map((faq, idx) => {
+                  const isOpen = openFaqIndex === idx;
+                  return (
+                    <div key={idx} className={`pdp-faq-card ${isOpen ? "is-open" : ""}`}>
+                      <button
+                        type="button"
+                        className="pdp-faq-question-btn"
+                        onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
+                        aria-expanded={isOpen}
+                      >
+                        <span>{faq.q}</span>
+                        <ChevronDown
+                          size={18}
+                          className={`pdp-faq-chevron ${isOpen ? "rotated" : ""}`}
+                        />
+                      </button>
+                      {isOpen && (
+                        <div className="pdp-faq-answer">
+                          <p>{faq.a}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           </div>
 
           {/* ================= RIGHT COLUMN: STICKY CONSULTATION DESK ================= */}
@@ -818,7 +1016,7 @@ export default function ProjectDetailsPage({
                 <span className="pdp-card-eyebrow">FREE SITE VISIT &amp; CONSULTATION</span>
                 <h3>Book a Complimentary Tour</h3>
                 <p>
-                  Experience {title} in person with free round-trip AC cab pick-up from anywhere in Coimbatore.
+                  Experience {title} in person.
                 </p>
               </div>
 
@@ -896,19 +1094,6 @@ export default function ProjectDetailsPage({
                     />
                   </div>
 
-                  <div className="pdp-checkbox-group">
-                    <input
-                      id="pdp-pickup"
-                      type="checkbox"
-                      checked={formData.pickup}
-                      onChange={(e) =>
-                        setFormData({ ...formData, pickup: e.target.checked })
-                      }
-                    />
-                    <label htmlFor="pdp-pickup">
-                      Request complimentary AC car pick-up &amp; drop
-                    </label>
-                  </div>
 
                   <button
                     type="submit"

@@ -526,75 +526,81 @@ export default function App() {
       <Footer onNavigate={handleNavigate} />
 
       {/* 9. Floating Side Action Rail */}
-      <div className="side-action-rail" aria-label="Quick Actions">
-        <button
-          type="button"
-          className="side-action-btn fill"
-          onClick={() => handleNavigate("projects")}
-        >
-          EXPLORE PROJECTS
-        </button>
-        <button
-          type="button"
-          className="side-action-btn outline"
-          onClick={() => handleOpenBookVisit()}
-        >
-          BOOK SITE VISIT
-        </button>
-      </div>
+      {activePage !== "project-details" && (
+        <div className="side-action-rail" aria-label="Quick Actions">
+          <button
+            type="button"
+            className="side-action-btn fill"
+            onClick={() => handleNavigate("projects")}
+          >
+            EXPLORE PROJECTS
+          </button>
+          <button
+            type="button"
+            className="side-action-btn outline"
+            onClick={() => handleOpenBookVisit()}
+          >
+            BOOK SITE VISIT
+          </button>
+        </div>
+      )}
 
       {/* 10. WhatsApp Floating Chat FAB */}
-      <a
-        href="https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots."
-        target="_blank"
-        rel="noopener noreferrer"
-        className="whatsapp-fab"
-        title="Chat on WhatsApp"
-        aria-label="Chat on WhatsApp"
-      >
-        <MessageCircle size={28} />
-      </a>
+      {activePage !== "project-details" && (
+        <a
+          href="https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="whatsapp-fab"
+          title="Chat on WhatsApp"
+          aria-label="Chat on WhatsApp"
+        >
+          <MessageCircle size={28} />
+        </a>
+      )}
 
       {/* 11. Mobile Bottom Action Bar */}
-      <nav className="mobile-bottom-bar" aria-label="Mobile Bottom Bar">
-        <button
-          type="button"
-          className="mbb-item"
-          onClick={() => handleOpenBookVisit()}
-        >
-          <Send size={18} />
-          <span>Enquiry</span>
-        </button>
-        <a href="tel:+919159066666" className="mbb-item">
-          <Phone size={18} />
-          <span>Call Us</span>
-        </a>
-        <button
-          type="button"
-          className="mbb-item"
-          onClick={() => handleNavigate("home")}
-        >
-          <div className="mbb-center-circle">
-            <img src={logoImg} alt="Crestora" />
-          </div>
-        </button>
-        <button
-          type="button"
-          className={`mbb-item ${activePage === "projects" || activePage === "project-details" ? "active" : ""}`}
-          onClick={() => handleNavigate("projects")}
-        >
-          <Building2 size={18} />
-          <span>Projects</span>
-        </button>
-        <button
-          type="button"
-          className="mbb-item"
-          onClick={() => setIsSidebarOpen(true)}
-        >
-          <MenuIcon size={18} />
-          <span>Menu</span>
-        </button>
-      </nav>
+      {activePage !== "project-details" && (
+        <nav className="mobile-bottom-bar" aria-label="Mobile Bottom Bar">
+          <button
+            type="button"
+            className="mbb-item"
+            onClick={() => handleOpenBookVisit()}
+          >
+            <Send size={18} />
+            <span>Enquiry</span>
+          </button>
+          <a href="tel:+919159066666" className="mbb-item">
+            <Phone size={18} />
+            <span>Call Us</span>
+          </a>
+          <button
+            type="button"
+            className="mbb-item"
+            onClick={() => handleNavigate("home")}
+          >
+            <div className="mbb-center-circle">
+              <img src={logoImg} alt="Crestora" />
+            </div>
+          </button>
+          <button
+            type="button"
+            className={`mbb-item ${activePage === "projects" ? "active" : ""}`}
+            onClick={() => handleNavigate("projects")}
+          >
+            <Building2 size={18} />
+            <span>Projects</span>
+          </button>
+          <button
+            type="button"
+            className="mbb-item"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            <MenuIcon size={18} />
+            <span>Menu</span>
+          </button>
+        </nav>
+      )}
 
       {/* 12. Toast Feedback Notification */}
       {toastMessage && (
