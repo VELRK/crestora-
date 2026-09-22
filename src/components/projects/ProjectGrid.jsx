@@ -12,6 +12,7 @@ export default function ProjectGrid({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
+  viewMode = "list",
 }) {
   if (projects.length === 0) {
     return (
@@ -62,8 +63,8 @@ export default function ProjectGrid({
 
   return (
     <>
-      {/* Project Cards Grid */}
-      <div className="projects-responsive-grid">
+      {/* Project Cards Grid / List */}
+      <div className={viewMode === "list" ? "projects-list-container" : "projects-responsive-grid"}>
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
@@ -72,6 +73,7 @@ export default function ProjectGrid({
             onToggleFavorite={onToggleFavorite}
             onSelectProject={onSelectProject}
             onBookSiteVisit={onBookSiteVisit}
+            viewMode={viewMode}
           />
         ))}
       </div>

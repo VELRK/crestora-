@@ -5,7 +5,7 @@ import {
   MAX_PRICES,
   SORT_OPTIONS,
 } from "../../data/projectsData";
-import { Search, RotateCcw, Filter } from "lucide-react";
+import { Search, RotateCcw, Filter, LayoutGrid, List } from "lucide-react";
 
 export default function ProjectFilters({
   filters,
@@ -15,6 +15,8 @@ export default function ProjectFilters({
   filteredCount,
   sortBy,
   onSortChange,
+  viewMode = "list",
+  onViewModeChange,
 }) {
   const handleInputChange = (field, value) => {
     onFilterChange({
@@ -138,6 +140,63 @@ export default function ProjectFilters({
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              border: "1px solid #cbd5e1",
+              borderRadius: "3px",
+              overflow: "hidden",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => onViewModeChange && onViewModeChange("list")}
+              style={{
+                height: "36px",
+                padding: "0 13px",
+                border: "none",
+                background: viewMode === "list" ? "#163057" : "#ffffff",
+                color: viewMode === "list" ? "#ffffff" : "#475569",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontSize: "12.5px",
+                fontWeight: "700",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              title="List View (Classic Portal)"
+            >
+              <List size={15} />
+              <span>List</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onViewModeChange && onViewModeChange("grid")}
+              style={{
+                height: "36px",
+                padding: "0 13px",
+                border: "none",
+                borderLeft: "1px solid #cbd5e1",
+                background: viewMode === "grid" ? "#163057" : "#ffffff",
+                color: viewMode === "grid" ? "#ffffff" : "#475569",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontSize: "12.5px",
+                fontWeight: "700",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              title="Grid View (3 Columns)"
+            >
+              <LayoutGrid size={14} />
+              <span>Grid</span>
+            </button>
           </div>
 
           {/* Reset Filters */}

@@ -2373,11 +2373,31 @@ ul, ol {
    ========================================================================== */
 
 .properties-responsive-grid,
-.projects-responsive-grid,
 .blogs-responsive-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 28px;
+}
+
+/* Projects Grid: Uses auto-fill so a single card project never expands across the screen */
+.projects-responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 380px));
+  gap: 28px;
+  justify-content: start;
+}
+
+.projects-responsive-grid .classic-project-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* Projects List Container */
+.projects-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
 }
 
 .partners-responsive-grid {
@@ -3778,6 +3798,397 @@ ul, ol {
 .cpc-btn-details:hover {
   background: #163057;
   color: #ffffff;
+}
+
+/* ==========================================================================
+   PORTAL PROJECT CARD (Reference UI Layout - Horizontal List & Clean Classic)
+   ========================================================================== */
+
+.portal-list-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  box-shadow: 0 4px 18px rgba(10, 28, 56, 0.04);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
+}
+
+.portal-list-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 35px rgba(10, 28, 56, 0.10);
+  border-color: rgba(223, 183, 67, 0.45);
+}
+
+.plc-media-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0a1c38;
+}
+
+.plc-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.portal-list-card:hover .plc-thumb-img {
+  transform: scale(1.06);
+}
+
+.plc-media-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 28, 56, 0.5) 0%,
+    transparent 35%,
+    transparent 65%,
+    rgba(10, 28, 56, 0.7) 100%
+  );
+  pointer-events: none;
+}
+
+.plc-media-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.plc-media-bottom {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.plc-price-badge {
+  background: rgba(10, 28, 56, 0.92);
+  backdrop-filter: blur(6px);
+  color: #dfb743;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(223, 183, 67, 0.35);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.plc-price-badge small {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+}
+
+/* Right Content Body */
+.plc-content {
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.plc-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.plc-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: #163057;
+  text-transform: uppercase;
+  letter-spacing: -0.2px;
+  margin: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1.25;
+}
+
+.plc-title:hover {
+  color: #c59b27;
+}
+
+/* Green RERA Approved Badge */
+.plc-rera-badge {
+  border: 1px solid #16a34a;
+  color: #15803d;
+  background: #ffffff;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.plc-check-icon {
+  color: #16a34a;
+}
+
+/* Location */
+.plc-location-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.plc-pin-icon {
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.plc-location-text {
+  font-size: 13.5px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Subtitle */
+.plc-subtitle-text {
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Thin Dividers */
+.plc-divider {
+  height: 1px;
+  background: #edf2f7;
+  width: 100%;
+  margin: 14px 0;
+}
+
+/* Specs Row */
+.plc-specs-row {
+  display: flex;
+  align-items: center;
+}
+
+.plc-spec-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.plc-spec-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 3px;
+}
+
+.plc-spec-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #163057;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.plc-spec-vdivider {
+  width: 1px;
+  height: 38px;
+  background: #edf2f7;
+  margin: 0 36px;
+}
+
+/* Bottom Row */
+.plc-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.plc-meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+  flex-wrap: wrap;
+}
+
+.plc-meta-lbl {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.plc-dot-sep {
+  color: #cbd5e1;
+}
+
+/* Details Action Button */
+.plc-btn-details {
+  border: 1px solid #163057;
+  color: #163057;
+  background: transparent;
+  padding: 8px 20px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.plc-btn-details:hover {
+  background: #163057;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.plc-btn-arrow {
+  transition: transform 0.2s ease;
+}
+
+.plc-btn-details:hover .plc-btn-arrow {
+  transform: translateX(3px);
+}
+
+/* Grid Card Specifics matching Reference UI */
+.cpc-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.cpc-header-row .cpc-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.cpc-header-row .plc-rera-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+}
+
+.cpc-subtitle-text {
+  font-size: 12.5px;
+  color: #64748b;
+  margin: 4px 0 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cpc-meta-bottom-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #64748b;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.cpc-meta-bottom-line strong {
+  color: #1e293b;
+}
+
+.cpc-media-price {
+  color: #dfb743;
+  font-size: 13.5px;
+  font-weight: 800;
+  background: rgba(10, 28, 56, 0.92);
+  backdrop-filter: blur(6px);
+  padding: 3px 8px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.cpc-media-price small {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cpc-media-sqft {
+  background: rgba(255, 255, 255, 0.92);
+  color: #163057;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+@media (max-width: 900px) {
+  .portal-list-card {
+    grid-template-columns: 260px 1fr;
+  }
+  .plc-content {
+    padding: 18px 20px;
+  }
+  .plc-title {
+    font-size: 18px;
+  }
+  .plc-spec-vdivider {
+    margin: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .portal-list-card {
+    grid-template-columns: 1fr;
+  }
+  .plc-media-wrap {
+    height: 210px;
+  }
+  .plc-content {
+    padding: 18px 16px;
+  }
+  .plc-bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .plc-btn-details {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* ==========================================================================

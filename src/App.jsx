@@ -48,6 +48,7 @@ export default function App() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [sortBy, setSortBy] = useState("featured");
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState("list");
 
   // Favorites state persisted in localStorage
   const [favorites, setFavorites] = useState(() => {
@@ -426,6 +427,8 @@ export default function App() {
                   filteredCount={filteredAndSortedProjects.length}
                   sortBy={sortBy}
                   onSortChange={setSortBy}
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
                 />
 
                 {/* Projects Grid with Pagination */}
@@ -439,6 +442,7 @@ export default function App() {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
+                  viewMode={viewMode}
                 />
               </div>
             </div>
