@@ -121,7 +121,7 @@ export default function ProjectDetailsPage({
             onClick={onBackToProjects}
           >
             <span className="btn-arrow-normal">←</span>
-            <span className="btn-text">RETURN TO DEVELOPMENTS</span>
+            <span className="btn-text">RETURN TO ALL PROJECTS</span>
             <span className="btn-arrow-hover">←</span>
           </button>
         </div>
@@ -233,10 +233,10 @@ export default function ProjectDetailsPage({
             type="button"
             className="pdp-back-btn"
             onClick={onBackToProjects}
-            aria-label="Back to all developments"
+            aria-label="Back to all projects"
           >
             <ArrowLeft size={16} />
-            <span className="pdp-back-text-full">BACK TO DEVELOPMENTS</span>
+            <span className="pdp-back-text-full">BACK TO ALL PROJECTS</span>
             <span className="pdp-back-text-short">BACK</span>
           </button>
 
@@ -245,7 +245,7 @@ export default function ProjectDetailsPage({
               className="pdp-crumb-link"
               onClick={onBackToProjects}
             >
-              Developments
+              Projects
             </span>
             <span className="pdp-crumb-sep">/</span>
             <span className="pdp-crumb-link">
@@ -875,17 +875,7 @@ export default function ProjectDetailsPage({
                     />
                   </div>
 
-                  <div className="pdp-input-group">
-                    <label htmlFor="pdp-date">Preferred Visit Date</label>
-                    <input
-                      id="pdp-date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) =>
-                        setFormData({ ...formData, date: e.target.value })
-                      }
-                    />
-                  </div>
+
 
 
                   <button
@@ -936,7 +926,7 @@ export default function ProjectDetailsPage({
             <div className="section-header" style={{ marginBottom: "40px" }}>
               <h5>EXPLORE MORE</h5>
               <h2>
-                Similar <span>Developments You May Like</span>
+                Similar <span>Projects You May Like</span>
               </h2>
               <p>Discover other DTCP &amp; RERA sanctioned plotted communities nearby.</p>
             </div>

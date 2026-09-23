@@ -372,7 +372,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                   onClick={() => onNavigate && onNavigate("projects")}
                 >
                   <span className="btn-arrow-normal">→</span>
-                  <span className="btn-text">EXPLORE ALL DEVELOPMENTS</span>
+                  <span className="btn-text">EXPLORE ALL PROJECTS</span>
                   <span className="btn-arrow-hover">→</span>
                 </button>
 

@@ -116,7 +116,7 @@ export default function App() {
         showToast("Removed from saved favorites");
       } else {
         updated.add(id);
-        showToast("Added to your saved Crestora developments!");
+        showToast("Added to your saved Crestora projects!");
       }
       return updated;
     });
@@ -506,8 +506,8 @@ export default function App() {
           <div className="projects-view-wrapper">
             {/* Breadcrumb Banner */}
             <Breadcrumb
-              title="All Developments"
-              pageName="Coimbatore"
+              title="All Projects"
+              pageName="All Projects"
               onHomeClick={() => handleNavigate("home")}
             />
 

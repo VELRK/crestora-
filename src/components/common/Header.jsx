@@ -161,7 +161,7 @@ export default function Header({
                     onNavigate && onNavigate("projects", { status: "ongoing", type: "all", location: "all" });
                   }}
                 >
-                  Ongoing Developments
+                  Ongoing Projects
                 </a>
                 <a
                   href="#upcoming"

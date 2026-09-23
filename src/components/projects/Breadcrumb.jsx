@@ -2,8 +2,8 @@ import React from "react";
 import { ChevronRight } from "lucide-react";
 
 export default function Breadcrumb({
-  title = "Our Developments",
-  pageName = "All Developments",
+  title = "All Projects",
+  pageName = "All Projects",
   onHomeClick,
 }) {
   return (

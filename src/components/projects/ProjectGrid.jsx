@@ -45,7 +45,7 @@ export default function ProjectGrid({
           No Properties Found
         </h3>
         <p style={{ color: "#718096", fontSize: "14.5px", marginBottom: "20px" }}>
-          We could not find any developments matching your current filter criteria.
+          We could not find any projects matching your current filter criteria.
         </p>
         <button
           type="button"

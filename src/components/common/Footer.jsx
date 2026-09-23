@@ -135,7 +135,7 @@ export default function Footer({ onNavigate }) {
 
           {/* Ongoing & Upcoming Projects */}
           <div className="footer-col">
-            <h4>FEATURED DEVELOPMENTS</h4>
+            <h4>FEATURED PROJECTS</h4>
             <ul>
               <li>
                 <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "neelambur" }); }}>

@@ -48,7 +48,7 @@ export default function AboutAdissia({ onExplore, onBookSiteVisit, onReadMore })
                 onClick={onExplore}
               >
                 <span className="btn-arrow-normal">→</span>
-                <span className="btn-text">EXPLORE DEVELOPMENTS</span>
+                <span className="btn-text">EXPLORE ALL PROJECTS</span>
                 <span className="btn-arrow-hover">→</span>
               </button>
 

@@ -16,7 +16,7 @@ export default function HomeFeaturedProperties({
         {/* Header with Title and 'View All' */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "45px" }}>
           <div>
-            <div className="section-subtitle-badge">PRESTIGIOUS DEVELOPMENTS</div>
+            <div className="section-subtitle-badge">PRESTIGIOUS PROJECTS</div>
             <h2 className="section-title" style={{ margin: 0 }}>
               Featured Prime <span>Residences & Plots</span>
             </h2>
@@ -29,7 +29,7 @@ export default function HomeFeaturedProperties({
             onClick={onViewAll}
           >
             <span className="btn-arrow-normal">→</span>
-            <span className="btn-text">VIEW ALL DEVELOPMENTS</span>
+            <span className="btn-text">VIEW ALL PROJECTS</span>
             <span className="btn-arrow-hover">→</span>
           </button>
         </div>

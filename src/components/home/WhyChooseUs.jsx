@@ -34,7 +34,7 @@ export default function WhyChooseUs({ onExplore, onBookSiteVisit }) {
                 className="adissia-btn adissia-btn-gold"
                 onClick={onExplore}
               >
-                <span>VIEW ALL DEVELOPMENTS</span>
+                <span>VIEW ALL PROJECTS</span>
                 <span className="btn-arrow-hover">→</span>
               </button>
 

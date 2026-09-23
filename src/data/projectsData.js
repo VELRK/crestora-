@@ -78,7 +78,7 @@ export const GARAGES_OPTIONS = [
 ];
 
 export const SORT_OPTIONS = [
-  { label: "Featured Developments", value: "featured" },
+  { label: "Featured Projects", value: "featured" },
   { label: "Price: Low to High", value: "price-asc" },
   { label: "Price: High to Low", value: "price-desc" },
   { label: "Highest Rated", value: "rating" },
@@ -1042,7 +1042,7 @@ export const NAV_LINKS = [
   {
     title: "Projects",
     subItems: [
-      { title: "Ongoing Developments", status: "ongoing" },
+      { title: "Ongoing Projects", status: "ongoing" },
       { title: "Upcoming Projects", status: "upcoming" },
       { title: "Completed Landmarks", status: "completed" },
     ],

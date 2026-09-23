@@ -81,7 +81,7 @@ export default function HeroSearchFilter({ onSearch }) {
               className="filter-select"
             >
               <option value="all">All Stages</option>
-              <option value="ongoing">Ongoing Developments</option>
+              <option value="ongoing">Ongoing Projects</option>
               <option value="upcoming">Upcoming Projects</option>
               <option value="completed">Completed Landmarks</option>
             </select>

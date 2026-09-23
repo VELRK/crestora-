@@ -230,7 +230,7 @@ export default function Sidebar({
                     border: "none",
                   }}
                 >
-                  Ongoing Developments
+                  Ongoing Projects
                 </button>
                 <button
                   type="button"
