@@ -14,6 +14,7 @@ import {
 
 export default function Header({
   activePage = "home",
+  filters = {},
   onNavigate,
   onOpenSidebar,
   onOpenSearch,
@@ -21,6 +22,19 @@ export default function Header({
   favoritesCount = 0,
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Determine active highlights based on active page and active filters
+  const isHomeActive = activePage === "home";
+  const isAboutActive = activePage === "about";
+  const isCategoriesActive =
+    activePage === "projects" && filters?.type && filters.type !== "all";
+  const isLocationsActive =
+    activePage === "projects" && filters?.location && filters.location !== "all";
+  const isProjectsActive =
+    (activePage === "projects" && !isCategoriesActive && !isLocationsActive) ||
+    activePage === "project-details";
+  const isBlogsActive = activePage === "blogs" || activePage === "blog-details";
+  const isContactActive = activePage === "contact";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,7 +126,7 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className={`nav-link-btn ${activePage === "home" ? "active" : ""}`}
+                className={`nav-link-btn ${isHomeActive ? "active" : ""}`}
                 onClick={() => onNavigate && onNavigate("home")}
               >
                 HOME
@@ -122,7 +136,7 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className={`nav-link-btn ${activePage === "about" ? "active" : ""}`}
+                className={`nav-link-btn ${isAboutActive ? "active" : ""}`}
                 onClick={() => onNavigate && onNavigate("about")}
               >
                 ABOUT US
@@ -133,7 +147,7 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className={`nav-link-btn ${activePage === "projects" || activePage === "project-details" ? "active" : ""}`}
+                className={`nav-link-btn ${isProjectsActive ? "active" : ""}`}
                 onClick={() => onNavigate && onNavigate("projects")}
               >
                 PROJECTS <ChevronDown className="nav-chevron" size={13} />
@@ -141,30 +155,30 @@ export default function Header({
               <div className="nav-dropdown-menu">
                 <a
                   href="#ongoing"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.status === "ongoing" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "ongoing" });
+                    onNavigate && onNavigate("projects", { status: "ongoing", type: "all", location: "all" });
                   }}
                 >
                   Ongoing Developments
                 </a>
                 <a
                   href="#upcoming"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.status === "upcoming" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "upcoming" });
+                    onNavigate && onNavigate("projects", { status: "upcoming", type: "all", location: "all" });
                   }}
                 >
                   Upcoming Projects
                 </a>
                 <a
                   href="#completed"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.status === "completed" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "completed" });
+                    onNavigate && onNavigate("projects", { status: "completed", type: "all", location: "all" });
                   }}
                 >
                   Completed Landmarks
@@ -176,7 +190,7 @@ export default function Header({
             <div className="nav-link-item">
               <button
                 type="button"
-                className="nav-link-btn"
+                className={`nav-link-btn ${isCategoriesActive ? "active" : ""}`}
                 onClick={() => {
                   onNavigate && onNavigate("home");
                   setTimeout(() => {
@@ -191,10 +205,10 @@ export default function Header({
               <div className="nav-dropdown-menu">
                 <a
                   href="#plots"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.type === "plots" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "plots" });
+                    onNavigate && onNavigate("projects", { type: "plots", location: "all" });
                   }}
                 >
                   <span className="dropdown-link-title">Plots</span>
@@ -202,10 +216,10 @@ export default function Header({
                 </a>
                 <a
                   href="#villas"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.type === "villa" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "villa" });
+                    onNavigate && onNavigate("projects", { type: "villa", location: "all" });
                   }}
                 >
                   <span className="dropdown-link-title">Villas</span>
@@ -213,10 +227,10 @@ export default function Header({
                 </a>
                 <a
                   href="#farmlands"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.type === "farmlands" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "farmlands" });
+                    onNavigate && onNavigate("projects", { type: "farmlands", location: "all" });
                   }}
                 >
                   <span className="dropdown-link-title">Farmlands</span>
@@ -224,10 +238,10 @@ export default function Header({
                 </a>
                 <a
                   href="#commercial"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.type === "commercial" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "commercial" });
+                    onNavigate && onNavigate("projects", { type: "commercial", location: "all" });
                   }}
                 >
                   <span className="dropdown-link-title">Commercial Lands</span>
@@ -235,10 +249,10 @@ export default function Header({
                 </a>
                 <a
                   href="#communities"
-                  className="dropdown-link"
+                  className={`dropdown-link ${activePage === "projects" && filters?.type === "gated-community" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "gated-community" });
+                    onNavigate && onNavigate("projects", { type: "gated-community", location: "all" });
                   }}
                 >
                   <span className="dropdown-link-title">Gated Communities</span>
@@ -248,139 +262,106 @@ export default function Header({
             </div>
 
             {/* Locations Dropdown */}
-            {/* <div className="nav-link-item"> */}
-            {/* <button
-              type="button"
-              className="nav-link-btn"
-              onClick={() => {
-                onNavigate && onNavigate("home");
-                setTimeout(() => {
-                  document
-                    .getElementById("city-locations-section")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }, 100);
-              }}
-            >
-              LOCATIONS <ChevronDown className="nav-chevron" size={13} />
-            </button>
-            <div className="nav-dropdown-menu">
-              <a
-                href="#neelambur"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "neelambur" });
-                }}
-              >
-                Neelambur (Avinashi Bypass)
-              </a>
-              <a
-                href="#saravanampatti"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "saravanampatti" });
-                }}
-              >
-                Saravanampatti (IT Corridor)
-              </a>
-              <a
-                href="#avinashi-road"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "avinashi-road" });
-                }}
-              >
-                Avinashi Road / Airport
-              </a>
-              <a
-                href="#kovaipudur"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "kovaipudur" });
-                }}
-              >
-                Kovaipudur (Western Foothills)
-              </a>
-              <a
-                href="#vadavalli"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "vadavalli" });
-                }}
-              >
-                Vadavalli (Marudhamalai)
-              </a>
-              <a
-                href="#peelamedu"
-                className="dropdown-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate && onNavigate("projects", { location: "peelamedu" });
-                }}
-              >
-                Peelamedu (Airport Corridor)
-              </a>
-            </div> */}
-            {/* </div> */}
-
-            {/* Services Dropdown */}
-            {/* <div className="nav-link-item">
+            <div className="nav-link-item">
               <button
                 type="button"
-                className="nav-link-btn"
+                className={`nav-link-btn ${isLocationsActive ? "active" : ""}`}
                 onClick={() => {
                   onNavigate && onNavigate("home");
                   setTimeout(() => {
                     document
-                      .getElementById("build-companion-section")
+                      .getElementById("locations-section")
                       ?.scrollIntoView({ behavior: "smooth" });
                   }, 100);
                 }}
               >
-                SERVICES <ChevronDown className="nav-chevron" size={13} />
+                LOCATIONS <ChevronDown className="nav-chevron" size={13} />
               </button>
               <div className="nav-dropdown-menu">
                 <a
-                  href="#build-companion"
-                  className="dropdown-link"
+                  href="#kovilpalayam"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kovilpalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("home");
-                    setTimeout(() => {
-                      document
-                        .getElementById("build-companion-section")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }, 100);
+                    onNavigate && onNavigate("projects", { location: "kovilpalayam", type: "all" });
                   }}
                 >
-                  Crestora Build Companion
+                  <span className="dropdown-link-title">Kovilpalayam</span>
+                  <span className="dropdown-link-desc">Sathy Road Corridor</span>
                 </a>
                 <a
-                  href="#nri-corner"
-                  className="dropdown-link"
+                  href="#kurumbapalayam"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kurumbapalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate && onNavigate("home");
-                    setTimeout(() => {
-                      document
-                        .getElementById("nri-benefits-section")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }, 100);
+                    onNavigate && onNavigate("projects", { location: "kurumbapalayam", type: "all" });
                   }}
                 >
-                  Crestora for NRI
+                  <span className="dropdown-link-title">Kurumbapalayam</span>
+                  <span className="dropdown-link-desc">Sathy Road</span>
+                </a>
+                <a
+                  href="#kariyampalayam"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kariyampalayam" ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate && onNavigate("projects", { location: "kariyampalayam", type: "all" });
+                  }}
+                >
+                  <span className="dropdown-link-title">Kariyampalayam</span>
+                  <span className="dropdown-link-desc">Annur Bypass</span>
+                </a>
+                <a
+                  href="#kunnathur"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kunnathur" ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate && onNavigate("projects", { location: "kunnathur", type: "all" });
+                  }}
+                >
+                  <span className="dropdown-link-title">Kunnathur</span>
+                  <span className="dropdown-link-desc">Kongu Green Belt</span>
+                </a>
+                <a
+                  href="#narasimhanaickenpalayam"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "narasimhanaickenpalayam" ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate && onNavigate("projects", { location: "narasimhanaickenpalayam", type: "all" });
+                  }}
+                >
+                  <span className="dropdown-link-title">Narasimhanaickenpalayam</span>
+                  <span className="dropdown-link-desc">Mettupalayam Highway</span>
+                </a>
+                <a
+                  href="#ganeshpuram"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "ganeshpuram" ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate && onNavigate("projects", { location: "ganeshpuram", type: "all" });
+                  }}
+                >
+                  <span className="dropdown-link-title">Ganeshpuram</span>
+                  <span className="dropdown-link-desc">Arterial Expressway</span>
+                </a>
+                <a
+                  href="#ponnegounden-pudur"
+                  className={`dropdown-link ${activePage === "projects" && filters?.location === "ponnegounden-pudur" ? "active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate && onNavigate("projects", { location: "ponnegounden-pudur", type: "all" });
+                  }}
+                >
+                  <span className="dropdown-link-title">Ponnegounden pudur</span>
+                  <span className="dropdown-link-desc">Suburban Enclave</span>
                 </a>
               </div>
-            </div> */}
+            </div>
 
             <div className="nav-link-item">
               <button
                 type="button"
-                className={`nav-link-btn ${activePage === "blogs" || activePage === "blog-details" ? "active" : ""}`}
+                className={`nav-link-btn ${isBlogsActive ? "active" : ""}`}
                 onClick={() => {
                   onNavigate && onNavigate("blogs");
                 }}
@@ -388,8 +369,6 @@ export default function Header({
                 BLOGS
               </button>
             </div>
-
-
           </nav>
 
           {/* Right Header Actions */}

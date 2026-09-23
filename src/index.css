@@ -602,19 +602,21 @@ ol {
   transition: all 0.2s ease;
 }
 
-.dropdown-link:hover {
+.dropdown-link:hover,
+.dropdown-link.active {
   background: var(--bg-ice);
-  color: var(--crestora-blue-accent);
+  color: var(--crestora-gold);
   padding-left: 24px;
 }
 
-.dropdown-link:hover::before {
+.dropdown-link:hover::before,
+.dropdown-link.active::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 3px;
+  width: 3.5px;
   background: var(--crestora-gold);
 }
 
@@ -624,6 +626,7 @@ ol {
   font-size: 13.5px;
   color: var(--crestora-navy);
   line-height: 1.2;
+  transition: color 0.2s ease;
 }
 
 .dropdown-link-desc {
@@ -635,8 +638,13 @@ ol {
   line-height: 1.2;
 }
 
-.dropdown-link:hover .dropdown-link-title {
+.dropdown-link:hover .dropdown-link-title,
+.dropdown-link.active .dropdown-link-title {
   color: var(--crestora-gold);
+}
+
+.dropdown-link.active .dropdown-link-desc {
+  color: #b8860b;
 }
 
 /* Header Actions */
@@ -1291,6 +1299,239 @@ ol {
 
 .category-classic-card:hover .category-classic-bottom-line {
   width: 100%;
+}
+
+/* ==========================================================================
+   Locations Showcase - Modern Rounded Card Layout (Matching Reference UI)
+   ========================================================================== */
+
+.locations-section {
+  background: #ffffff;
+  padding: 60px 0 85px;
+  position: relative;
+}
+
+.locations-modern-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 24px;
+}
+
+.location-modern-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: transform 0.3s ease;
+  user-select: none;
+}
+
+.location-modern-card.span-wide {
+  grid-column: span 2;
+}
+
+.location-modern-img-wrap {
+  width: 100%;
+  height: 225px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f1f5f9;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.location-modern-card.span-wide .location-modern-img-wrap {
+  height: 225px;
+}
+
+.location-modern-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.location-modern-card:hover .location-modern-img-wrap img {
+  transform: scale(1.05);
+}
+
+.location-modern-info {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.location-modern-title {
+  font-family: var(--font-heading, "Montserrat", sans-serif);
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+  margin: 0 0 3px 0;
+  transition: color 0.25s ease;
+}
+
+.location-modern-card:hover .location-modern-title {
+  color: #274f9a;
+}
+
+.location-modern-count {
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+  .locations-modern-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 20px;
+  }
+
+  .location-modern-card.span-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .locations-modern-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 16px;
+  }
+
+  .location-modern-card.span-wide {
+    grid-column: span 2;
+  }
+
+  .location-modern-img-wrap,
+  .location-modern-card.span-wide .location-modern-img-wrap {
+    height: 180px;
+    border-radius: 14px;
+  }
+
+  .location-modern-title {
+    font-size: 15px;
+  }
+
+  .location-modern-count {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .locations-modern-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .location-modern-card.span-wide {
+    grid-column: span 1;
+  }
+
+  .location-modern-img-wrap,
+  .location-modern-card.span-wide .location-modern-img-wrap {
+    height: 200px;
+  }
+}
+
+/* Sidebar Location Items */
+.sidebar-location-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  transition: all 0.25s ease;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  color: #ffffff;
+}
+
+.sidebar-location-card:hover,
+.sidebar-location-card.active {
+  background: rgba(197, 155, 39, 0.16);
+  border-color: #dfb743;
+  transform: translateX(4px);
+}
+
+.sidebar-location-card.active .sidebar-loc-name {
+  color: #dfb743;
+}
+
+.sidebar-loc-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-loc-pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(197, 155, 39, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dfb743;
+  flex-shrink: 0;
+}
+
+.sidebar-loc-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+}
+
+.sidebar-loc-desc {
+  font-size: 11px;
+  color: #94a3b8;
+  display: block;
+}
+
+.sidebar-loc-count {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #dfb743;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(223, 183, 67, 0.25);
+  white-space: nowrap;
+}
+
+.sidebar-explore-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.2) 0%, rgba(223, 183, 67, 0.1) 100%);
+  border: 1px dashed rgba(223, 183, 67, 0.5);
+  border-radius: 6px;
+  color: #dfb743;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 4px;
+}
+
+.sidebar-explore-all-btn:hover {
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.35) 0%, rgba(223, 183, 67, 0.2) 100%);
+  border-color: #dfb743;
+  color: #ffffff;
 }
 
 /* ==========================================================================

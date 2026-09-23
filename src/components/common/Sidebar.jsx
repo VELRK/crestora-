@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
-import { X, ChevronDown, Phone, Mail, MapPin } from "lucide-react";
+import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight } from "lucide-react";
+import { POPULAR_CITIES } from "../../data/homeData";
 
 export default function Sidebar({
   isOpen,
   onClose,
+  activePage = "home",
+  filters = {},
   onNavigate,
 }) {
-  const [openSubmenus, setOpenSubmenus] = useState({ projects: true, categories: false, locations: false });
+  const isCategoriesActive =
+    activePage === "projects" && filters?.type && filters.type !== "all";
+  const isLocationsActive =
+    activePage === "projects" && filters?.location && filters.location !== "all";
+  const isProjectsActive =
+    (activePage === "projects" && !isCategoriesActive && !isLocationsActive) ||
+    activePage === "project-details";
+  const isBlogsActive = activePage === "blogs" || activePage === "blog-details";
+  const isContactActive = activePage === "contact";
+
+  const [openSubmenus, setOpenSubmenus] = useState({
+    projects: true,
+    categories: isCategoriesActive,
+    locations: isLocationsActive,
+  });
 
   // Close on Escape key
   useEffect(() => {
@@ -138,7 +155,7 @@ export default function Sidebar({
               padding: "12px 0",
               fontSize: "15px",
               fontWeight: "700",
-              color: "#ffffff",
+              color: activePage === "home" ? "#dfb743" : "#ffffff",
               borderBottom: "1px solid rgba(255,255,255,0.08)",
               background: "none",
               border: "none",
@@ -158,53 +175,13 @@ export default function Sidebar({
               padding: "12px 0",
               fontSize: "15px",
               fontWeight: "700",
-              color: "#ffffff",
+              color: activePage === "about" ? "#dfb743" : "#ffffff",
               borderBottom: "1px solid rgba(255,255,255,0.08)",
               background: "none",
               border: "none",
             }}
           >
             ABOUT US
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              onNavigate && onNavigate("blogs");
-              onClose();
-            }}
-            style={{
-              textAlign: "left",
-              padding: "12px 0",
-              fontSize: "15px",
-              fontWeight: "700",
-              color: "#ffffff",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
-              background: "none",
-              border: "none",
-            }}
-          >
-            BLOGS & INSIGHTS
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              onNavigate && onNavigate("contact");
-              onClose();
-            }}
-            style={{
-              textAlign: "left",
-              padding: "12px 0",
-              fontSize: "15px",
-              fontWeight: "700",
-              color: "#dfb743",
-              borderBottom: "1px solid rgba(255,255,255,0.08)",
-              background: "none",
-              border: "none",
-            }}
-          >
-            CONTACT US
           </button>
 
           {/* Collapsible Projects */}
@@ -220,7 +197,7 @@ export default function Sidebar({
                 padding: "12px 0",
                 fontSize: "15px",
                 fontWeight: "700",
-                color: "#ffffff",
+                color: isProjectsActive ? "#dfb743" : "#ffffff",
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
                 background: "none",
                 border: "none",
@@ -240,30 +217,54 @@ export default function Sidebar({
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "ongoing" });
+                    onNavigate && onNavigate("projects", { status: "ongoing", type: "all", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.status === "ongoing" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.status === "ongoing" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "6px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   Ongoing Developments
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "upcoming" });
+                    onNavigate && onNavigate("projects", { status: "upcoming", type: "all", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.status === "upcoming" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.status === "upcoming" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "6px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   Upcoming Projects
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "completed" });
+                    onNavigate && onNavigate("projects", { status: "completed", type: "all", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.status === "completed" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.status === "completed" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "6px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   Completed Landmarks
                 </button>
@@ -284,7 +285,7 @@ export default function Sidebar({
                 padding: "12px 0",
                 fontSize: "15px",
                 fontWeight: "700",
-                color: "#ffffff",
+                color: isCategoriesActive ? "#dfb743" : "#ffffff",
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
                 background: "none",
                 border: "none",
@@ -304,50 +305,90 @@ export default function Sidebar({
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "plots" });
+                    onNavigate && onNavigate("projects", { type: "plots", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "4px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.type === "plots" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.type === "plots" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   <span style={{ color: "#dfb743", fontWeight: "700" }}>Plots</span> – DTCP Villa Plots
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "villa" });
+                    onNavigate && onNavigate("projects", { type: "villa", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "4px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.type === "villa" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.type === "villa" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   <span style={{ color: "#dfb743", fontWeight: "700" }}>Villas</span> – Luxury Gated Villas
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "farmlands" });
+                    onNavigate && onNavigate("projects", { type: "farmlands", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "4px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.type === "farmlands" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.type === "farmlands" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   <span style={{ color: "#dfb743", fontWeight: "700" }}>Farmlands</span> – Hillside &amp; Eco Lands
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "commercial" });
+                    onNavigate && onNavigate("projects", { type: "commercial", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "4px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.type === "commercial" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.type === "commercial" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   <span style={{ color: "#dfb743", fontWeight: "700" }}>Commercial Lands</span> – Retail &amp; Highway
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "gated-community" });
+                    onNavigate && onNavigate("projects", { type: "gated-community", location: "all" });
                     onClose();
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "4px 0", background: "none", border: "none" }}
+                  style={{
+                    textAlign: "left",
+                    color: activePage === "projects" && filters?.type === "gated-community" ? "#dfb743" : "#cbd5e1",
+                    fontWeight: activePage === "projects" && filters?.type === "gated-community" ? "700" : "400",
+                    fontSize: "14px",
+                    padding: "4px 0",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
                   <span style={{ color: "#dfb743", fontWeight: "700" }}>Gated Communities</span> – Master Townships
                 </button>
@@ -355,7 +396,7 @@ export default function Sidebar({
             )}
           </div>
 
-          {/* Collapsible Locations */}
+          {/* Collapsible Locations - Enhanced Rich UI */}
           <div>
             <button
               type="button"
@@ -368,13 +409,28 @@ export default function Sidebar({
                 padding: "12px 0",
                 fontSize: "15px",
                 fontWeight: "700",
-                color: "#ffffff",
+                color: isLocationsActive ? "#dfb743" : "#ffffff",
                 borderBottom: "1px solid rgba(255,255,255,0.08)",
                 background: "none",
                 border: "none",
               }}
             >
-              <span>LOCATIONS</span>
+              <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span>LOCATIONS</span>
+                <span
+                  style={{
+                    fontSize: "10px",
+                    fontWeight: "800",
+                    background: "rgba(197, 155, 39, 0.2)",
+                    color: "#dfb743",
+                    padding: "1px 6px",
+                    borderRadius: "4px",
+                    border: "1px solid rgba(197, 155, 39, 0.4)",
+                  }}
+                >
+                  7 Locations
+                </span>
+              </span>
               <ChevronDown
                 size={16}
                 style={{
@@ -384,60 +440,95 @@ export default function Sidebar({
               />
             </button>
             {openSubmenus.locations && (
-              <div style={{ padding: "8px 0 12px 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ padding: "10px 0 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                {POPULAR_CITIES.map((city) => {
+                  const isSelected = activePage === "projects" && filters?.location === city.cityKey;
+                  return (
+                    <button
+                      key={city.id}
+                      type="button"
+                      className={`sidebar-location-card ${isSelected ? "active" : ""}`}
+                      onClick={() => {
+                        onNavigate && onNavigate("projects", { location: city.cityKey, type: "all" });
+                        onClose();
+                      }}
+                    >
+                      <div className="sidebar-loc-left">
+                        <div className="sidebar-loc-pin">
+                          <MapPin size={14} />
+                        </div>
+                        <div>
+                          <span className="sidebar-loc-name">{city.name}</span>
+                          <span className="sidebar-loc-desc">{city.state}</span>
+                        </div>
+                      </div>
+                      <span className="sidebar-loc-count">
+                        {city.count} {city.count === 1 ? "Property" : "Properties"}
+                      </span>
+                    </button>
+                  );
+                })}
+
                 <button
                   type="button"
+                  className="sidebar-explore-all-btn"
                   onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "neelambur" });
+                    onNavigate && onNavigate("home");
                     onClose();
+                    setTimeout(() => {
+                      document
+                        .getElementById("locations-section")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }, 150);
                   }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
                 >
-                  Neelambur (Avinashi Bypass)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "saravanampatti" });
-                    onClose();
-                  }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
-                >
-                  Saravanampatti (IT Corridor)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "avinashi-road" });
-                    onClose();
-                  }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
-                >
-                  Avinashi Road / Airport
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "kovaipudur" });
-                    onClose();
-                  }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
-                >
-                  Kovaipudur (Western Foothills)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { location: "peelamedu" });
-                    onClose();
-                  }}
-                  style={{ textAlign: "left", color: "#cbd5e1", fontSize: "14px", padding: "6px 0", background: "none", border: "none" }}
-                >
-                  Peelamedu (Airport Corridor)
+                  <Compass size={14} />
+                  <span>Explore Prime Locations</span>
+                  <ArrowRight size={13} />
                 </button>
               </div>
             )}
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate && onNavigate("blogs");
+              onClose();
+            }}
+            style={{
+              textAlign: "left",
+              padding: "12px 0",
+              fontSize: "15px",
+              fontWeight: "700",
+              color: isBlogsActive ? "#dfb743" : "#ffffff",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "none",
+              border: "none",
+            }}
+          >
+            BLOGS & INSIGHTS
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate && onNavigate("contact");
+              onClose();
+            }}
+            style={{
+              textAlign: "left",
+              padding: "12px 0",
+              fontSize: "15px",
+              fontWeight: "700",
+              color: isContactActive ? "#dfb743" : "#dfb743",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "none",
+              border: "none",
+            }}
+          >
+            CONTACT US
+          </button>
         </nav>
 
         {/* Direct Contact Details */}

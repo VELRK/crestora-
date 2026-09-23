@@ -12,6 +12,7 @@ import HeroSearchFilter from "./components/home/HeroSearchFilter";
 import MarqueeTicker from "./components/home/MarqueeTicker";
 import AboutAdissia from "./components/home/AboutUs";
 import CategoriesShowcase from "./components/home/CategoriesShowcase";
+import LocationsShowcase from "./components/home/LocationsShowcase";
 import AdissiaProjectsShowcase from "./components/home/AdissiaProjectsShowcase";
 import WhyCoimbatore from "./components/home/WhyCoimbatore";
 import BuildCompanion from "./components/home/BuildCompanion";
@@ -160,6 +161,12 @@ export default function App() {
         return;
       } else if (hash.startsWith("#about")) {
         setActivePage("about");
+        return;
+      } else if (hash.startsWith("#locations")) {
+        setActivePage("home");
+        setTimeout(() => {
+          document.getElementById("locations-section")?.scrollIntoView({ behavior: "smooth" });
+        }, 150);
         return;
       } else if (hash.startsWith("#home")) {
         setActivePage("home");
@@ -347,6 +354,7 @@ export default function App() {
       {/* 2. Classic Sticky Header */}
       <Header
         activePage={activePage}
+        filters={filters}
         onNavigate={handleNavigate}
         onOpenSidebar={() => setIsSidebarOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
@@ -358,6 +366,8 @@ export default function App() {
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        activePage={activePage}
+        filters={filters}
         onNavigate={handleNavigate}
       />
 
@@ -391,6 +401,9 @@ export default function App() {
             {/* <HeroSearchFilter onSearch={handleHeroSearch} /> */}
             {/* 5. Explore by Property Category (User Requested) */}
             <CategoriesShowcase onSelectCategory={handleSelectCategory} />
+
+            {/* 5b. Explore Prime Locations (User Requested) */}
+            <LocationsShowcase onSelectLocation={handleSelectLocation} />
 
 
             {/* 4. All About Crestora Properties & 5-Column Stats */}
