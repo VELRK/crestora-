@@ -60,7 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	$crestoraHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+	$crestoraEnv = (stripos($crestoraHost, 'crestoraproperties.in') !== false) ? 'production' : 'development';
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : $crestoraEnv);
 
 /*
  *---------------------------------------------------------------
@@ -73,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 switch (ENVIRONMENT)
 {
 	case 'development':
-		error_reporting(-1);
+		error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 		ini_set('display_errors', 1);
 	break;
 
