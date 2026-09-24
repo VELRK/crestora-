@@ -1,0 +1,152 @@
+name: Auto Deploy Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Build site
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Assemble public_html
+        run: |
+          set -e
+          rm -rf deploy/release
+          mkdir -p deploy/release/crestora-api
+          cp -a dist/. deploy/release/
+          tar -C crestora-api \
+            --exclude=seed/cookies.txt \
+            --exclude=seed/cookies-clean.txt \
+            --exclude=seed/cookies-ui.txt \
+            --exclude=application/logs \
+            --exclude=application/cache \
+            -cf - . | tar -C deploy/release/crestora-api -xf -
+          mkdir -p deploy/release/crestora-api/application/logs deploy/release/crestora-api/application/cache deploy/release/crestora-api/uploads
+          printf '%s\n' '<html><body></body></html>' > deploy/release/crestora-api/application/logs/index.html
+          printf '%s\n' '<html><body></body></html>' > deploy/release/crestora-api/application/cache/index.html
+          printf '%s\n' \
+            'RewriteEngine On' \
+            'RewriteRule ^crestora-api(/|$) - [L]' \
+            'RewriteCond %{REQUEST_FILENAME} !-f' \
+            'RewriteCond %{REQUEST_FILENAME} !-d' \
+            'RewriteRule . /index.html [L]' \
+            > deploy/release/.htaccess
+          printf '%s\n' \
+            'RewriteEngine On' \
+            'RewriteBase /crestora-api/' \
+            'RewriteCond %{REQUEST_FILENAME} !-f' \
+            'RewriteCond %{REQUEST_FILENAME} !-d' \
+            'RewriteRule ^(.*)$ index.php/$1 [L,QSA]' \
+            > deploy/release/crestora-api/.htaccess
+          if [ -d deploy/release/node_modules ] || [ -d deploy/release/crestora-api/node_modules ]; then
+            echo "Refusing to upload node_modules." >&2
+            exit 1
+          fi
+
+      - name: Configure SSH for deploy
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY_ILF }}
+          DEPLOY_HOST: ${{ secrets.HOST }}
+          DEPLOY_USER: ${{ secrets.USERNAME }}
+        run: |
+          set -e
+          SSH_DIR="${HOME}/.ssh"
+          mkdir -p "$SSH_DIR"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "${SSH_DIR}/deploy_key"
+          chmod 600 "${SSH_DIR}/deploy_key"
+          {
+            echo 'Host hostinger-deploy'
+            echo "  HostName ${DEPLOY_HOST}"
+            echo "  User ${DEPLOY_USER}"
+            echo '  Port 65002'
+            echo "  IdentityFile ${SSH_DIR}/deploy_key"
+            echo '  StrictHostKeyChecking no'
+            echo '  ConnectTimeout 60'
+            echo '  ServerAliveInterval 30'
+            echo '  ServerAliveCountMax 3'
+          } > "${SSH_DIR}/config"
+          chmod 600 "${SSH_DIR}/config"
+          echo "SSH_DIR=${SSH_DIR}" >> "$GITHUB_ENV"
+          echo "RSYNC_SSH=ssh -F ${SSH_DIR}/config" >> "$GITHUB_ENV"
+          echo "DEPLOY_USER=${DEPLOY_USER}" >> "$GITHUB_ENV"
+
+      - name: Backup server database and uploads
+        run: |
+          set -e
+          TARGET="/home/${DEPLOY_USER}/domains/crestoraproperties.in/public_html"
+          for attempt in 1 2 3; do
+            echo "SSH backup attempt $attempt/3..."
+            if ssh -F "${SSH_DIR}/config" hostinger-deploy "set -e
+              TARGET='${TARGET}'
+              BACKUP_DIR=/tmp/crestora-deploy-backup-latest
+              rm -rf \"\$BACKUP_DIR\"
+              mkdir -p \"\$BACKUP_DIR\"
+              mkdir -p \"\$TARGET\"
+              if [ -f \"\$TARGET/crestora-api/application/config/database.php\" ]; then cp \"\$TARGET/crestora-api/application/config/database.php\" \"\$BACKUP_DIR/database.php\"; fi
+              if [ -f \"\$TARGET/crestora-api/deploy.local.php\" ]; then cp \"\$TARGET/crestora-api/deploy.local.php\" \"\$BACKUP_DIR/deploy.local.php\"; fi
+              if [ -d \"\$TARGET/crestora-api/uploads\" ]; then mkdir -p \"\$BACKUP_DIR/uploads\"; cp -a \"\$TARGET/crestora-api/uploads/.\" \"\$BACKUP_DIR/uploads/\"; fi
+              echo \"Secrets backed up\""; then
+              exit 0
+            fi
+            echo "SSH failed, waiting 45s before retry..."
+            sleep 45
+          done
+          echo "Could not connect to Hostinger SSH on port 65002 after 3 attempts."
+          exit 1
+
+      - name: Rsync release to server
+        run: |
+          set -e
+          TARGET="/home/${DEPLOY_USER}/domains/crestoraproperties.in/public_html"
+          for attempt in 1 2 3; do
+            echo "Rsync attempt $attempt/3..."
+            if rsync -avz --delete \
+              -e "${RSYNC_SSH}" \
+              --exclude-from=deploy/rsync-exclude.txt \
+              deploy/release/ \
+              "hostinger-deploy:${TARGET}/"; then
+              exit 0
+            fi
+            echo "Rsync failed, waiting 45s before retry..."
+            sleep 45
+          done
+          exit 1
+
+      - name: Restore database and uploads
+        run: |
+          set -e
+          TARGET="/home/${DEPLOY_USER}/domains/crestoraproperties.in/public_html"
+          for attempt in 1 2 3; do
+            echo "SSH restore attempt $attempt/3..."
+            if ssh -F "${SSH_DIR}/config" hostinger-deploy "set -e
+              TARGET='${TARGET}'
+              BACKUP_DIR=/tmp/crestora-deploy-backup-latest
+              mkdir -p \"\$TARGET/crestora-api/application/config\" \"\$TARGET/crestora-api/uploads\"
+              if [ -f \"\$BACKUP_DIR/database.php\" ]; then cp \"\$BACKUP_DIR/database.php\" \"\$TARGET/crestora-api/application/config/database.php\"; fi
+              if [ -f \"\$BACKUP_DIR/deploy.local.php\" ]; then cp \"\$BACKUP_DIR/deploy.local.php\" \"\$TARGET/crestora-api/deploy.local.php\"; fi
+              if [ -d \"\$BACKUP_DIR/uploads\" ]; then cp -a \"\$BACKUP_DIR/uploads/.\" \"\$TARGET/crestora-api/uploads/\"; fi
+              rm -rf \"\$BACKUP_DIR\"
+              echo \"Deployed to \$TARGET\""; then
+              exit 0
+            fi
+            echo "SSH failed, waiting 45s before retry..."
+            sleep 45
+          done
+          exit 1

@@ -39,7 +39,7 @@ function fieldform_walk($data, $name)
 			foreach ($data as $index => $value) {
 				echo '<div class="item-row">';
 				fieldform_input($name . '[' . $index . ']', $value, 'Item ' . ($index + 1));
-				echo '<label class="delete-flag"><input type="checkbox" name="' . html_escape(fieldform_delete_name($name . '[' . $index . ']')) . '" value="1" style="width:auto" /> Delete</label>';
+				echo fieldform_delete_button($name . '[' . $index . ']');
 				echo '</div>';
 			}
 			if ($is_gallery) {
@@ -52,8 +52,12 @@ function fieldform_walk($data, $name)
 		if ($is_list) {
 			echo '<fieldset class="group"><legend>' . html_escape(fieldform_label($name)) . ' (' . count($data) . ')</legend>';
 			foreach ($data as $index => $item) {
-				echo '<fieldset class="item"><legend>Item ' . ($index + 1) . '</legend>';
-				echo '<label class="delete-flag"><input type="checkbox" name="' . html_escape(fieldform_delete_name($name . '[' . $index . ']')) . '" value="1" style="width:auto" /> Delete this item</label>';
+				$legend = 'Item ' . ($index + 1);
+				if (is_array($item) && ! empty($item['title'])) {
+					$legend .= ' — ' . $item['title'];
+				}
+				echo '<fieldset class="item"><legend>' . html_escape($legend) . '</legend>';
+				echo fieldform_delete_button($name . '[' . $index . ']');
 				fieldform_walk($item, $name . '[' . $index . ']');
 				echo '</fieldset>';
 			}
@@ -92,6 +96,11 @@ function fieldform_upload_name($name)
 function fieldform_delete_name($name)
 {
 	return preg_replace('/^payload/', 'payload_delete', $name, 1);
+}
+
+function fieldform_delete_button($name)
+{
+	return '<p><button type="submit" class="btn-delete" name="' . html_escape(fieldform_delete_name($name)) . '" value="1" onclick="return confirm(\'Delete this item?\');">Delete this item</button></p>';
 }
 
 function fieldform_blank($sample)

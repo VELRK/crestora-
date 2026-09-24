@@ -1,4 +1,6 @@
-const API = "http://localhost:8080/crestora-properties/crestora-api/api";
+const API = import.meta.env.PROD
+  ? "https://crestoraproperties.in/crestora-api/api"
+  : "http://localhost:8080/crestora-properties/crestora-api/api";
 
 async function get(path) {
   const res = await fetch(`${API}${path}`);

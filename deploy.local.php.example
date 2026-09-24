@@ -1,0 +1,30 @@
+<?php
+/**
+ * Local deploy config — copy to deploy.local.php (gitignored).
+ *
+ * GitHub auto deploy (same pattern as the cp site):
+ *   git push origin main
+ *   GitHub Actions builds the site and rsyncs to Hostinger.
+ *
+ * Repo secrets (Settings → Secrets → Actions), same names as cp:
+ *   SSH_KEY_ILF   private SSH key
+ *   HOST          Hostinger SSH host
+ *   USERNAME      Hostinger SSH user
+ *
+ * Server token: upload deploy.local.php to
+ *   public_html/crestora-api/deploy.local.php
+ * and set deploy_token there. Do not commit that file.
+ */
+return [
+    'ssh_host'  => 'YOUR_HOSTINGER_SSH_HOST',
+    'ssh_user'  => 'YOUR_HOSTINGER_USER',
+    'ssh_port'  => 65002,
+    'ssh_key'   => 'C:/Users/YOUR_USER/.ssh/deploy_ilf',
+
+    'target_path' => '/home/YOUR_HOSTINGER_USER/domains/crestoraproperties.in/public_html',
+
+    'git_repo'   => 'https://github.com/VELRK/crestora-.git',
+    'git_branch' => 'main',
+
+    'deploy_token' => 'CHANGE_ME',
+];

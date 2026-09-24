@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/echo "Crestora frontend is built in GitHub Actions. Only the built files are uploaded. node_modules is not deployed."

@@ -23,7 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:8080/crestora-properties/crestora-api/';
+$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8080';
+if (strpos($host, 'crestoraproperties.in') !== FALSE) {
+	$config['base_url'] = 'https://crestoraproperties.in/crestora-api/';
+} else {
+	$config['base_url'] = 'http://localhost:8080/crestora-properties/crestora-api/';
+}
 
 /*
 |--------------------------------------------------------------------------
