@@ -295,8 +295,8 @@ export default function App() {
       const q = filters.keyword.toLowerCase().trim();
       result = result.filter(
         (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.location.toLowerCase().includes(q) ||
+          (p.title || "").toLowerCase().includes(q) ||
+          (p.location || "").toLowerCase().includes(q) ||
           p.locality?.toLowerCase().includes(q) ||
           p.description?.toLowerCase().includes(q) ||
           p.typeName?.toLowerCase().includes(q)

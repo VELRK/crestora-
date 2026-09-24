@@ -3,6 +3,7 @@ import logoImg from "../../assets/logo.jpeg";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight } from "lucide-react";
 import { POPULAR_CITIES } from "../../data/homeData";
+import { CATEGORIES } from "../../data/projectsData";
 
 export default function Sidebar({
   isOpen,
@@ -18,6 +19,7 @@ export default function Sidebar({
   const email = settings.email || "info@crestoraproperties.com";
   const office = settings.corporate_office || "Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
   const cities = sectionItems(site.home?.locations) || POPULAR_CITIES;
+  const menuCategories = (site.filters?.categories?.length ? site.filters.categories : CATEGORIES).filter((item) => item.value && item.value !== "all");
   const isCategoriesActive =
     activePage === "projects" && filters?.type && filters.type !== "all";
   const isLocationsActive =
@@ -310,96 +312,28 @@ export default function Sidebar({
             </button>
             {openSubmenus.categories && (
               <div style={{ padding: "8px 0 12px 14px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "plots", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.type === "plots" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.type === "plots" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  <span style={{ color: "#dfb743", fontWeight: "700" }}>Plots</span> – DTCP Villa Plots
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "villa", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.type === "villa" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.type === "villa" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  <span style={{ color: "#dfb743", fontWeight: "700" }}>Villas</span> – Luxury Gated Villas
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "farmlands", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.type === "farmlands" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.type === "farmlands" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  <span style={{ color: "#dfb743", fontWeight: "700" }}>Farmlands</span> – Hillside &amp; Eco Lands
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "commercial", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.type === "commercial" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.type === "commercial" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  <span style={{ color: "#dfb743", fontWeight: "700" }}>Commercial Lands</span> – Retail &amp; Highway
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { type: "gated-community", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.type === "gated-community" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.type === "gated-community" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "4px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  <span style={{ color: "#dfb743", fontWeight: "700" }}>Gated Communities</span> – Master Townships
-                </button>
+                {menuCategories.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => {
+                      onNavigate && onNavigate("projects", { type: item.value, location: "all" });
+                      onClose();
+                    }}
+                    style={{
+                      textAlign: "left",
+                      color: activePage === "projects" && filters?.type === item.value ? "#dfb743" : "#cbd5e1",
+                      fontWeight: activePage === "projects" && filters?.type === item.value ? "700" : "400",
+                      fontSize: "14px",
+                      padding: "4px 0",
+                      background: "none",
+                      border: "none",
+                    }}
+                  >
+                    <span style={{ color: "#dfb743", fontWeight: "700" }}>{item.label}</span>
+                    {item.subtitle ? ` – ${item.subtitle}` : ""}
+                  </button>
+                ))}
               </div>
             )}
           </div>

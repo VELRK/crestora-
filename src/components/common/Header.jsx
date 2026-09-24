@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
 import { useSite } from "../../services/SiteData.jsx";
+import { CATEGORIES, LOCATIONS } from "../../data/projectsData";
 import {
   Phone,
   Mail,
@@ -29,6 +30,8 @@ export default function Header({
   const email = settings.email || "info@crestoraproperties.com";
   const cityLabel = "Coimbatore";
   const logo = settings.logo || logoImg;
+  const menuCategories = (site.filters?.categories?.length ? site.filters.categories : CATEGORIES).filter((item) => item.value && item.value !== "all");
+  const menuLocations = (site.filters?.localities?.length ? site.filters.localities : LOCATIONS).filter((item) => item.value && item.value !== "all");
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Determine active highlights based on active page and active filters
@@ -211,61 +214,20 @@ export default function Header({
                 CATEGORIES <ChevronDown className="nav-chevron" size={13} />
               </button>
               <div className="nav-dropdown-menu">
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.type === "plots" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "plots", location: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Plots</span>
-                  <span className="dropdown-link-desc">DTCP &amp; RERA Villa Plots</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.type === "villa" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "villa", location: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Villas</span>
-                  <span className="dropdown-link-desc">Luxury Gated Villas</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.type === "farmlands" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "farmlands", location: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Farmlands</span>
-                  <span className="dropdown-link-desc">Hillside &amp; Eco Agro Lands</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.type === "commercial" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "commercial", location: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Commercial Lands</span>
-                  <span className="dropdown-link-desc">Retail &amp; Highway Frontage</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.type === "gated-community" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { type: "gated-community", location: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Gated Communities</span>
-                  <span className="dropdown-link-desc">Integrated Master Townships</span>
-                </a>
+                {menuCategories.map((item) => (
+                  <a
+                    key={item.value}
+                    href="/projects"
+                    className={`dropdown-link ${activePage === "projects" && filters?.type === item.value ? "active" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate && onNavigate("projects", { type: item.value, location: "all" });
+                    }}
+                  >
+                    <span className="dropdown-link-title">{item.label}</span>
+                    {item.subtitle ? <span className="dropdown-link-desc">{item.subtitle}</span> : null}
+                  </a>
+                ))}
               </div>
             </div>
 
@@ -286,83 +248,19 @@ export default function Header({
                 LOCATIONS <ChevronDown className="nav-chevron" size={13} />
               </button>
               <div className="nav-dropdown-menu">
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kovilpalayam" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "kovilpalayam", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Kovilpalayam</span>
-                  <span className="dropdown-link-desc">Sathy Road Corridor</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kurumbapalayam" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "kurumbapalayam", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Kurumbapalayam</span>
-                  <span className="dropdown-link-desc">Sathy Road</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kariyampalayam" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "kariyampalayam", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Kariyampalayam</span>
-                  <span className="dropdown-link-desc">Annur Bypass</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "kunnathur" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "kunnathur", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Kunnathur</span>
-                  <span className="dropdown-link-desc">Kongu Green Belt</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "narasimhanaickenpalayam" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "narasimhanaickenpalayam", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Narasimhanaickenpalayam</span>
-                  <span className="dropdown-link-desc">Mettupalayam Highway</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "ganeshpuram" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "ganeshpuram", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Ganeshpuram</span>
-                  <span className="dropdown-link-desc">Arterial Expressway</span>
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.location === "ponnegounden-pudur" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { location: "ponnegounden-pudur", type: "all" });
-                  }}
-                >
-                  <span className="dropdown-link-title">Ponnegounden pudur</span>
-                  <span className="dropdown-link-desc">Suburban Enclave</span>
-                </a>
+                {menuLocations.map((item) => (
+                  <a
+                    key={item.value}
+                    href="/projects"
+                    className={`dropdown-link ${activePage === "projects" && filters?.location === item.value ? "active" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate && onNavigate("projects", { location: item.value, type: "all" });
+                    }}
+                  >
+                    <span className="dropdown-link-title">{item.label}</span>
+                  </a>
+                ))}
               </div>
             </div>
 

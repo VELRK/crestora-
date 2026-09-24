@@ -53,7 +53,7 @@ export default function BlogListPage({
         (post.tags && post.tags.some((t) => t.toLowerCase().includes(q)));
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [posts, selectedCategory, searchQuery]);
 
   // Featured Hero Blog (defaults to first featured or first in list)
   const featuredBlog = useMemo(() => {

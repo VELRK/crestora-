@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { PROPERTY_TYPES, LOCATIONS, MAX_PRICES } from "../../data/projectsData";
-import { Search } from "lucide-react";
+import { useSite } from "../../services/SiteData.jsx";
 
 export default function HeroSearchFilter({ onSearch }) {
+  const site = useSite();
+  const propertyTypes = site.filters?.propertyTypes?.length ? site.filters.propertyTypes : PROPERTY_TYPES;
+  const locations = site.filters?.localities?.length ? site.filters.localities : LOCATIONS;
+  const maxPrices = site.filters?.budgets?.length ? site.filters.budgets : MAX_PRICES;
   const [searchParams, setSearchParams] = useState({
     location: "all",
     type: "all",
@@ -32,7 +36,7 @@ export default function HeroSearchFilter({ onSearch }) {
               className="filter-select"
             >
               <option value="all">All Locations in Coimbatore</option>
-              {LOCATIONS.filter((l) => l.value !== "all").map((loc) => (
+              {locations.filter((l) => l.value !== "all").map((loc) => (
                 <option key={loc.id} value={loc.value}>
                   {loc.label}
                 </option>
@@ -48,7 +52,7 @@ export default function HeroSearchFilter({ onSearch }) {
               onChange={(e) => handleChange("type", e.target.value)}
               className="filter-select"
             >
-              {PROPERTY_TYPES.map((type) => (
+              {propertyTypes.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
                 </option>
@@ -64,7 +68,7 @@ export default function HeroSearchFilter({ onSearch }) {
               onChange={(e) => handleChange("maxPrice", e.target.value)}
               className="filter-select"
             >
-              {MAX_PRICES.map((price) => (
+              {maxPrices.map((price) => (
                 <option key={price.label} value={price.value}>
                   {price.label}
                 </option>
