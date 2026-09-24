@@ -61,6 +61,8 @@ EOF
 
 cat > "$DEPLOYPATH/.htaccess" <<'EOF'
 RewriteEngine On
+RewriteRule ^admin/?$ /crestora-api/admin [R=302,L]
+RewriteRule ^admin/(.*)$ /crestora-api/admin/$1 [R=302,L]
 RewriteRule ^crestora-api(/|$) - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

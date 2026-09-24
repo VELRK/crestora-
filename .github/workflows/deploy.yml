@@ -43,6 +43,8 @@ jobs:
           printf '%s\n' '<html><body></body></html>' > deploy/release/crestora-api/application/cache/index.html
           printf '%s\n' \
             'RewriteEngine On' \
+            'RewriteRule ^admin/?$ /crestora-api/admin [R=302,L]' \
+            'RewriteRule ^admin/(.*)$ /crestora-api/admin/$1 [R=302,L]' \
             'RewriteRule ^crestora-api(/|$) - [L]' \
             'RewriteCond %{REQUEST_FILENAME} !-f' \
             'RewriteCond %{REQUEST_FILENAME} !-d' \
