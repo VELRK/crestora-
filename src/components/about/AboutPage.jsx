@@ -7,6 +7,7 @@ import {
   ACCREDITATIONS,
 } from "../../data/aboutData";
 import { STATS_DATA } from "../../data/homeData";
+import { useSite } from "../../services/SiteData.jsx";
 import aboutImg from "../../assets/about/about.png";
 import whyCbeImg from "../../assets/whycbe.png";
 import banner1 from "../../assets/banner/banner-1.png";
@@ -35,6 +36,48 @@ import {
 } from "lucide-react";
 
 export default function AboutPage({ onNavigate, onBookSiteVisit }) {
+  const site = useSite();
+  const about = site.about || {};
+  const text = (key, fallback) => {
+    const value = about[key];
+    return typeof value === "string" && value.trim() ? value : fallback;
+  };
+  const ABOUT_MILESTONES_LIVE = about.milestones?.length ? about.milestones : ABOUT_MILESTONES;
+  const CORE_PILLARS_LIVE = about.pillars?.length ? about.pillars : CORE_PILLARS;
+  const PHILOSOPHY_LIVE = about.philosophy?.length ? about.philosophy : PHILOSOPHY_CARDS;
+  const ACCREDITATIONS_LIVE = about.accreditations?.length ? about.accreditations : ACCREDITATIONS;
+  const heroMetrics = about.heroMetrics?.length
+    ? about.heroMetrics
+    : [
+        { value: "6+", label: "Years of Excellence" },
+        { value: "8+", label: "Landmark Enclaves" },
+        { value: "100+", label: "Sanctioned Plots" },
+        { value: "100%", label: "Title Transparency" },
+      ];
+  const anchors = about.anchors?.length
+    ? about.anchors
+    : [
+        {
+          title: "100% DTCP & RERA Registered",
+          text: "Every single layout is verified and registered with TN RERA before launch.",
+        },
+        {
+          title: "Spotless 30-Year Title Pedigree",
+          text: "Scrutinized by senior legal advocates for instant registry and peaceful patta transfer.",
+        },
+        {
+          title: "Signature British Architecture",
+          text: "Classical neoclassical entry arches and timeless European design aesthetics.",
+        },
+        {
+          title: "100% Vasthu & Natural Harmony",
+          text: "Carefully oriented street grids and sweet groundwater reserves for family prosperity.",
+        },
+      ];
+  const anchorIcons = [FileCheck2, Award, Building2, Compass];
+  const mainImage = text("mainImage", aboutImg);
+  const secondaryImage = text("secondaryImage", banner1);
+  const phoneTel = text("ctaPhone", site.settings?.phone_tel || "+919159066666");
   const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("all");
 
@@ -43,7 +86,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const activeMilestone = ABOUT_MILESTONES[activeMilestoneIndex];
+  const activeMilestone = ABOUT_MILESTONES_LIVE[activeMilestoneIndex];
 
   return (
     <div className="about-page-container">
@@ -64,47 +107,41 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
               <span>HOME</span>
             </button>
             <ChevronRight size={13} className="about-breadcrumb-sep" />
-            <span className="about-breadcrumb-current">ABOUT US</span>
+            <span className="about-breadcrumb-current">{text("breadcrumb", "ABOUT US")}</span>
           </nav>
 
           {/* Luxury Badge */}
           <div className="about-hero-badge-wrap">
             <div className="about-hero-badge">
               <Sparkles size={14} className="gold-sparkle-icon" />
-              <span>ESTABLISHED 2012 • CRAFTING TIMELESS LANDMARKS</span>
+              <span>{text("heroBadge", "ESTABLISHED 2012 • CRAFTING TIMELESS LANDMARKS")}</span>
             </div>
           </div>
 
           {/* Main Display Headline with Gold Foil Shimmer */}
           <h1 className="about-hero-title">
-            Architecting Generational <span className="gold-foil-shimmer">Wealth &amp; Trust</span>
+            {text("heroTitleLead", "Architecting Generational")}{" "}
+            <span className="gold-foil-shimmer">{text("heroTitleHighlight", "Wealth & Trust")}</span>
           </h1>
 
           <p className="about-hero-lead">
-            Crestora Properties is Tamil Nadu's benchmark developer for DTCP and RERA-approved gated plotted communities and bespoke residences. We bridge pristine legal transparency with enduring classical architecture.
+            {text(
+              "heroLead",
+              "Crestora Properties is Tamil Nadu's benchmark developer for DTCP and RERA-approved gated plotted communities and bespoke residences. We bridge pristine legal transparency with enduring classical architecture."
+            )}
           </p>
 
           {/* Quick Metrics Header Bar */}
           <div className="about-hero-metrics-bar">
-            <div className="about-hero-metric-item">
-              <span className="ah-metric-num">6+</span>
-              <span className="ah-metric-lbl">Years of Excellence</span>
-            </div>
-            <div className="ah-metric-divider" />
-            <div className="about-hero-metric-item">
-              <span className="ah-metric-num">8+</span>
-              <span className="ah-metric-lbl">Landmark Enclaves</span>
-            </div>
-            <div className="ah-metric-divider" />
-            <div className="about-hero-metric-item">
-              <span className="ah-metric-num">100+</span>
-              <span className="ah-metric-lbl">Sanctioned Plots</span>
-            </div>
-            <div className="ah-metric-divider" />
-            <div className="about-hero-metric-item">
-              <span className="ah-metric-num">100%</span>
-              <span className="ah-metric-lbl">Title Transparency</span>
-            </div>
+            {heroMetrics.map((metric, idx) => (
+              <React.Fragment key={`${metric.label}-${idx}`}>
+                {idx > 0 ? <div className="ah-metric-divider" /> : null}
+                <div className="about-hero-metric-item">
+                  <span className="ah-metric-num">{metric.value}</span>
+                  <span className="ah-metric-lbl">{metric.label}</span>
+                </div>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </section>
@@ -117,70 +154,52 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
             <div className="about-heritage-text-col">
               <div className="about-eyebrow-pill">
                 <ShieldCheck size={14} />
-                <span>THE CRESTORA HERITAGE</span>
+                <span>{text("heritageEyebrow", "THE CRESTORA HERITAGE")}</span>
               </div>
               <h2 className="about-section-heading">
-                Where Visionary Planning Meets <span className="gold-accent-text">Unshakeable Integrity</span>
+                {text("heritageTitleLead", "Where Visionary Planning Meets")}{" "}
+                <span className="gold-accent-text">{text("heritageTitleHighlight", "Unshakeable Integrity")}</span>
               </h2>
               <p className="about-paragraph-lead">
-                Headquartered in Coimbatore, Crestora Properties was founded with an uncompromising philosophy: to rid the plotted real estate sector of speculation and deliver communities built on 100% sanctioned legal foundations.
+                {text(
+                  "heritageLead",
+                  "Headquartered in Coimbatore, Crestora Properties was founded with an uncompromising philosophy: to rid the plotted real estate sector of speculation and deliver communities built on 100% sanctioned legal foundations."
+                )}
               </p>
               <p className="about-paragraph">
-                Over the past 12+ years, we have meticulously surveyed, developed, and handed over thousands of premium DTCP &amp; RERA villa plots and master-planned residences across Coimbatore. Every layout is engineered with wide bitumen boulevards, landscaped parks, underground conduits, and natural rainwater harvesting systems.
+                {text(
+                  "heritageBody",
+                  "Over the past 12+ years, we have meticulously surveyed, developed, and handed over thousands of premium DTCP & RERA villa plots and master-planned residences across Coimbatore. Every layout is engineered with wide bitumen boulevards, landscaped parks, underground conduits, and natural rainwater harvesting systems."
+                )}
               </p>
 
               {/* Four Value Anchors */}
               <div className="about-anchors-grid">
-                <div className="about-anchor-card">
-                  <div className="about-anchor-icon-wrap">
-                    <FileCheck2 size={20} />
-                  </div>
-                  <div>
-                    <h4>100% DTCP &amp; RERA Registered</h4>
-                    <p>Every single layout is verified and registered with TN RERA before launch.</p>
-                  </div>
-                </div>
-
-                <div className="about-anchor-card">
-                  <div className="about-anchor-icon-wrap">
-                    <Award size={20} />
-                  </div>
-                  <div>
-                    <h4>Spotless 30-Year Title Pedigree</h4>
-                    <p>Scrutinized by senior legal advocates for instant registry and peaceful patta transfer.</p>
-                  </div>
-                </div>
-
-                <div className="about-anchor-card">
-                  <div className="about-anchor-icon-wrap">
-                    <Building2 size={20} />
-                  </div>
-                  <div>
-                    <h4>Signature British Architecture</h4>
-                    <p>Classical neoclassical entry arches and timeless European design aesthetics.</p>
-                  </div>
-                </div>
-
-                <div className="about-anchor-card">
-                  <div className="about-anchor-icon-wrap">
-                    <Compass size={20} />
-                  </div>
-                  <div>
-                    <h4>100% Vasthu &amp; Natural Harmony</h4>
-                    <p>Carefully oriented street grids and sweet groundwater reserves for family prosperity.</p>
-                  </div>
-                </div>
+                {anchors.map((anchor, idx) => {
+                  const Icon = anchorIcons[idx % anchorIcons.length];
+                  return (
+                    <div className="about-anchor-card" key={`${anchor.title}-${idx}`}>
+                      <div className="about-anchor-icon-wrap">
+                        <Icon size={20} />
+                      </div>
+                      <div>
+                        <h4>{anchor.title}</h4>
+                        <p>{anchor.text}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* MD Quote Block */}
               <div className="about-quote-box">
                 <div className="quote-mark">“</div>
                 <blockquote className="quote-text">
-                  Land is the cornerstone of every family’s generational legacy. When you invest with Crestora, you are not merely purchasing square footage; you are anchoring your family’s future in undisputed certainty.
+                  {about.founderQuote || "Land is the cornerstone of every family’s generational legacy. When you invest with Crestora, you are not merely purchasing square footage; you are anchoring your family’s future in undisputed certainty."}
                 </blockquote>
                 <div className="quote-author-wrap">
-                  <div className="quote-author-name">Dr. K. Ravindran</div>
-                  <div className="quote-author-title">Founder &amp; Managing Director • Crestora Properties</div>
+                  <div className="quote-author-name">{about.founderName || "Dr. K. Ravindran"}</div>
+                  <div className="quote-author-title">{about.founderRole || "Founder & Managing Director • Crestora Properties"}</div>
                 </div>
               </div>
             </div>
@@ -191,7 +210,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                 {/* Main Large Classical Arch */}
                 <div className="about-main-arch">
                   <img
-                    src={aboutImg}
+                    src={mainImage}
                     alt="Crestora Properties Classical Architecture"
                     className="about-arch-img"
                   />
@@ -201,13 +220,13 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                 {/* Secondary Inset Arch Visual */}
                 <div className="about-secondary-arch d-none-mobile">
                   <img
-                    src={banner1}
+                    src={secondaryImage}
                     alt="Crestora British Gateways"
                     className="about-secondary-img"
                   />
                   <div className="about-secondary-badge">
-                    <span className="asb-tag">Neoclassical Facade</span>
-                    <span className="asb-name">Regal Arch Gateway</span>
+                    <span className="asb-tag">{text("secondaryBadgeTag", "Neoclassical Facade")}</span>
+                    <span className="asb-name">{text("secondaryBadgeName", "Regal Arch Gateway")}</span>
                   </div>
                 </div>
 
@@ -217,8 +236,8 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                     <Award size={24} className="seal-icon" />
                   </div>
                   <div className="seal-text-wrap">
-                    <span className="seal-number">6+</span>
-                    <span className="seal-desc">YEARS OF ETHICAL EXCELLENCE</span>
+                    <span className="seal-number">{text("sealNumber", "6+")}</span>
+                    <span className="seal-desc">{text("sealText", "YEARS OF ETHICAL EXCELLENCE")}</span>
                   </div>
                 </div>
 
@@ -226,8 +245,8 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                 <div className="about-floating-rera-badge">
                   <ShieldCheck size={18} className="rera-icon" />
                   <div>
-                    <span className="rera-badge-title">100% TN-RERA APPROVED</span>
-                    <span className="rera-badge-sub">Fully Sanctioned Plots</span>
+                    <span className="rera-badge-title">{text("reraTitle", "100% TN-RERA APPROVED")}</span>
+                    <span className="rera-badge-sub">{text("reraSubtitle", "Fully Sanctioned Plots")}</span>
                   </div>
                 </div>
               </div>
@@ -244,18 +263,22 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
           <div className="section-header-center">
             <div className="about-eyebrow-pill">
               <Compass size={14} />
-              <span>GUIDING PRINCIPLES</span>
+              <span>{text("philosophyEyebrow", "GUIDING PRINCIPLES")}</span>
             </div>
             <h2 className="about-section-heading">
-              Our Vision, Mission &amp; <span className="gold-accent-text">Core Philosophy</span>
+              {text("philosophyTitleLead", "Our Vision, Mission &")}{" "}
+              <span className="gold-accent-text">{text("philosophyTitleHighlight", "Core Philosophy")}</span>
             </h2>
             <p className="about-section-subheading">
-              The foundational pillars that guide every land acquisition, master layout design, and customer partnership.
+              {text(
+                "philosophyIntro",
+                "The foundational pillars that guide every land acquisition, master layout design, and customer partnership."
+              )}
             </p>
           </div>
 
           <div className="about-philosophy-cards-grid">
-            {PHILOSOPHY_CARDS.map((card, idx) => {
+            {PHILOSOPHY_LIVE.map((card, idx) => {
               const IconComponent =
                 card.id === "vision" ? Compass : card.id === "mission" ? Target : Shield;
               return (
@@ -289,18 +312,22 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
           <div className="section-header-center">
             <div className="about-eyebrow-pill">
               <Layers size={14} />
-              <span>THE CRESTORA BENCHMARK</span>
+              <span>{text("pillarsEyebrow", "THE CRESTORA BENCHMARK")}</span>
             </div>
             <h2 className="about-section-heading">
-              The 6 Pillars of <span className="gold-accent-text">Crestora Excellence</span>
+              {text("pillarsTitleLead", "The 6 Pillars of")}{" "}
+              <span className="gold-accent-text">{text("pillarsTitleHighlight", "Crestora Excellence")}</span>
             </h2>
             <p className="about-section-subheading">
-              Why thousands of discerning property buyers, NRI families, and investors place their trust in Crestora developments.
+              {text(
+                "pillarsIntro",
+                "Why thousands of discerning property buyers, NRI families, and investors place their trust in Crestora developments."
+              )}
             </p>
           </div>
 
           <div className="about-pillars-grid">
-            {CORE_PILLARS.map((pillar) => (
+            {CORE_PILLARS_LIVE.map((pillar) => (
               <div key={pillar.id} className="about-pillar-card">
                 <div className="pillar-num-badge">{pillar.num}</div>
                 <h3 className="pillar-title">{pillar.title}</h3>
@@ -328,13 +355,15 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
           <div className="accreditations-header">
             <div className="about-eyebrow-pill">
               <ShieldCheck size={14} />
-              <span>CERTIFICATIONS &amp; REGISTRATIONS</span>
+              <span>{text("accreditationsEyebrow", "CERTIFICATIONS & REGISTRATIONS")}</span>
             </div>
-            <h3 className="accreditations-title">Institutional Accreditations &amp; Legal Assurances</h3>
+            <h3 className="accreditations-title">
+              {text("accreditationsTitle", "Institutional Accreditations & Legal Assurances")}
+            </h3>
           </div>
 
           <div className="accreditations-grid">
-            {ACCREDITATIONS.map((item, idx) => (
+            {ACCREDITATIONS_LIVE.map((item, idx) => (
               <div key={idx} className="accreditation-card">
                 <div className="acc-card-top">
                   <ShieldCheck size={20} className="acc-icon" />
@@ -356,13 +385,18 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
             <div className="about-cta-content">
               <div className="about-eyebrow-pill light-pill">
                 <Sparkles size={14} />
-                <span>START YOUR PROPERTY JOURNEY</span>
+                <span>{text("ctaEyebrow", "START YOUR PROPERTY JOURNEY")}</span>
               </div>
               <h2 className="about-cta-title">
-                Ready to Experience <span className="gold-foil-shimmer">Crestora Excellence</span> In Person?
+                {text("ctaTitleLead", "Ready to Experience")}{" "}
+                <span className="gold-foil-shimmer">{text("ctaTitleHighlight", "Crestora Excellence")}</span>{" "}
+                {text("ctaTitleTrail", "In Person?")}
               </h2>
               <p className="about-cta-sub">
-                Schedule a complimentary private chauffeur-driven site visit to any of our DTCP and RERA-approved gated communities across Coimbatore.
+                {text(
+                  "ctaText",
+                  "Schedule a complimentary private chauffeur-driven site visit to any of our DTCP and RERA-approved gated communities across Coimbatore."
+                )}
               </p>
 
               <div className="about-cta-actions">
@@ -372,7 +406,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                   onClick={() => onNavigate && onNavigate("projects")}
                 >
                   <span className="btn-arrow-normal">→</span>
-                  <span className="btn-text">EXPLORE ALL PROJECTS</span>
+                  <span className="btn-text">{text("ctaProjectsLabel", "EXPLORE ALL PROJECTS")}</span>
                   <span className="btn-arrow-hover">→</span>
                 </button>
 
@@ -382,16 +416,16 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                   onClick={onBookSiteVisit}
                 >
                   <span className="btn-arrow-normal">✓</span>
-                  <span className="btn-text">SCHEDULE SITE VISIT</span>
+                  <span className="btn-text">{text("ctaVisitLabel", "SCHEDULE SITE VISIT")}</span>
                   <span className="btn-arrow-hover">→</span>
                 </button>
 
                 <a
-                  href="tel:+919159066666"
+                  href={`tel:${phoneTel}`}
                   className="crestora-btn crestora-btn-outline"
                 >
                   <Phone size={15} />
-                  <span>CALL DIRECT HELPLINE</span>
+                  <span>{text("ctaPhoneLabel", "CALL DIRECT HELPLINE")}</span>
                 </a>
               </div>
             </div>

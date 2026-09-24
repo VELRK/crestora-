@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight } from "lucide-react";
 import { POPULAR_CITIES } from "../../data/homeData";
 
@@ -10,6 +11,13 @@ export default function Sidebar({
   filters = {},
   onNavigate,
 }) {
+  const site = useSite();
+  const settings = site.settings || {};
+  const phone = settings.phone || "+91 91590 66666";
+  const phoneTel = settings.phone_tel || "+919159066666";
+  const email = settings.email || "info@crestoraproperties.com";
+  const office = settings.corporate_office || "Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
+  const cities = sectionItems(site.home?.locations) || POPULAR_CITIES;
   const isCategoriesActive =
     activePage === "projects" && filters?.type && filters.type !== "all";
   const isLocationsActive =
@@ -428,7 +436,7 @@ export default function Sidebar({
                     border: "1px solid rgba(197, 155, 39, 0.4)",
                   }}
                 >
-                  7 Locations
+                  {cities.length} Locations
                 </span>
               </span>
               <ChevronDown
@@ -441,7 +449,7 @@ export default function Sidebar({
             </button>
             {openSubmenus.locations && (
               <div style={{ padding: "10px 0 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                {POPULAR_CITIES.map((city) => {
+                {cities.map((city) => {
                   const isSelected = activePage === "projects" && filters?.location === city.cityKey;
                   return (
                     <button
@@ -535,15 +543,15 @@ export default function Sidebar({
         <div style={{ paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", fontSize: "13.5px", color: "#cbd5e1" }}>
             <Phone size={16} color="#dfb743" />
-            <a href="tel:+919159066666" style={{ color: "#ffffff", fontWeight: "700" }}>+91 91590 66666</a>
+            <a href={`tel:${phoneTel}`} style={{ color: "#ffffff", fontWeight: "700" }}>{phone}</a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", fontSize: "13.5px", color: "#cbd5e1" }}>
             <Mail size={16} color="#dfb743" />
-            <a href="mailto:info@crestoraproperties.com" style={{ color: "#cbd5e1" }}>info@crestoraproperties.com</a>
+            <a href={`mailto:${email}`} style={{ color: "#cbd5e1" }}>{email}</a>
           </div>
           <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "12.5px", color: "#94a3b8", lineHeight: "1.5" }}>
             <MapPin size={16} color="#dfb743" style={{ flexShrink: 0, marginTop: "2px" }} />
-            <span>Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037</span>
+            <span>{office}</span>
           </div>
         </div>
       </aside>

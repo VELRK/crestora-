@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { CITY_SPOTLIGHT, POPULAR_CITIES } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import whyCbeImg from "../../assets/whycbe.png";
 
 import { MapPin, ArrowRight } from "lucide-react";
 
 export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
+  const site = useSite();
   const [activeCityKey, setActiveCityKey] = useState("coimbatore");
-  const cityData = CITY_SPOTLIGHT[activeCityKey] || CITY_SPOTLIGHT.coimbatore;
+  const cityData = site.home?.whyCoimbatore || CITY_SPOTLIGHT[activeCityKey] || CITY_SPOTLIGHT.coimbatore;
+  const corridors = sectionItems(site.home?.locations) || POPULAR_CITIES;
 
   return (
     <section id="city-locations-section" className="city-spotlight-section">
@@ -18,7 +21,7 @@ export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
             className={`city-tab-chip ${activeCityKey === "coimbatore" ? "active" : ""}`}
             onClick={() => setActiveCityKey("coimbatore")}
           >
-            COIMBATORE SPOTLIGHT
+            {cityData.chipLabel || "COIMBATORE SPOTLIGHT"}
           </button>
         </div>
 
@@ -45,7 +48,7 @@ export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
 
           {/* Center Column: Landmark Architectural Visual */}
           <div className="city-center-visual">
-            <img src={whyCbeImg} alt={cityData.title} />
+            <img src={cityData.image || whyCbeImg} alt={cityData.title} />
           </div>
 
           {/* Right Column (3 Points with Left Accent Border) */}
@@ -62,10 +65,10 @@ export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
         {/* Growth Corridors Location Explorer */}
         <div style={{ marginTop: "40px", textAlign: "center" }}>
           <h4 style={{ fontSize: "16px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "1.5px", color: "#163057", marginBottom: "20px" }}>
-            Explore Properties by High-Growth Corridors
+            {cityData.corridorsTitle || "Explore Properties by High-Growth Corridors"}
           </h4>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px" }}>
-            {POPULAR_CITIES.map((corridor) => (
+            {corridors.map((corridor) => (
               <button
                 key={corridor.id}
                 type="button"

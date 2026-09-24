@@ -1,8 +1,19 @@
 import React from "react";
 import logoImg from "../../assets/logo.jpeg";
+import { useSite } from "../../services/SiteData.jsx";
 import { Phone, Mail, MapPin, ShieldCheck, Award, CheckCircle2 } from "lucide-react";
 
 export default function Footer({ onNavigate }) {
+  const site = useSite();
+  const settings = site.settings || {};
+  const phone = settings.phone || "+91 91590 66666";
+  const phoneTel = settings.phone_tel || "+919159066666";
+  const email = settings.email || "info@crestoraproperties.com";
+  const logo = settings.logo || logoImg;
+  const about = settings.footer_about || "Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.";
+  const registeredOffice = settings.registered_office || "16 A 1, 2nd Floor, Huzur Road, Behind Taj Vivanta, Gopalapuram, Coimbatore - 641 018";
+  const corporateOffice = settings.corporate_office || "3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
+  const siteName = settings.site_name || "Crestora Properties";
   return (
     <footer className="crestora-footer">
       <div className="crestora-container">
@@ -12,7 +23,7 @@ export default function Footer({ onNavigate }) {
           <div className="footer-col">
             <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "18px" }}>
               <img
-                src={logoImg}
+                src={logo}
                 alt="Crestora Properties"
                 style={{ width: "52px", height: "52px", borderRadius: "8px", objectFit: "cover", border: "1px solid #c59b27" }}
               />
@@ -26,7 +37,7 @@ export default function Footer({ onNavigate }) {
               </div>
             </div>
             <p>
-              Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.
+              {about}
             </p>
             <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "14px" }}>
               <button
@@ -105,11 +116,11 @@ export default function Footer({ onNavigate }) {
             <h4>COIMBATORE OFFICES</h4>
             <div style={{ marginBottom: "16px" }}>
               <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Registered Office:</p>
-              <p>16 A 1, 2nd Floor, Huzur Road, Behind Taj Vivanta, Gopalapuram, Coimbatore - 641 018</p>
+              <p>{registeredOffice}</p>
             </div>
             <div>
               <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Corporate Office:</p>
-              <p>3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037</p>
+              <p>{corporateOffice}</p>
             </div>
             <div style={{ marginTop: "12px" }}>
               <button
@@ -138,32 +149,32 @@ export default function Footer({ onNavigate }) {
             <h4>FEATURED PROJECTS</h4>
             <ul>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "neelambur" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "neelambur" }); }}>
                   Crestora Regal Arch (Neelambur)
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "saravanampatti" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "saravanampatti" }); }}>
                   Crestora The Crown (Saravanampatti)
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "avinashi-road" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "avinashi-road" }); }}>
                   Crestora Vivaana (Avinashi Road)
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "vadavalli" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "vadavalli" }); }}>
                   Crestora One World (Vadavalli)
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "kovaipudur" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "kovaipudur" }); }}>
                   Crestora New Meadows (Kovaipudur)
                 </a>
               </li>
               <li>
-                <a href="#projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "peelamedu" }); }}>
+                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "peelamedu" }); }}>
                   Crestora Commercial Hub (Peelamedu)
                 </a>
               </li>
@@ -175,12 +186,12 @@ export default function Footer({ onNavigate }) {
             <h4>CONTACT & ASSISTANCE</h4>
             <div style={{ marginTop: "12px" }}>
               <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#a0aec0", letterSpacing: "1px" }}>Customer Support</span>
-              <a href="tel:+919159066666" className="footer-contact-link">+91 91590 66666</a>
+              <a href={`tel:${phoneTel}`} className="footer-contact-link">{phone}</a>
             </div>
             <div style={{ marginTop: "14px" }}>
               <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#a0aec0", letterSpacing: "1px" }}>Official Inquiries</span>
-              <a href="mailto:info@crestoraproperties.com" className="footer-contact-link" style={{ fontSize: "14px" }}>
-                info@crestoraproperties.com
+              <a href={`mailto:${email}`} className="footer-contact-link" style={{ fontSize: "14px" }}>
+                {email}
               </a>
             </div>
             <div style={{ marginTop: "18px" }}>
@@ -201,19 +212,19 @@ export default function Footer({ onNavigate }) {
         {/* Bottom Strip */}
         <div className="footer-bottom-row">
           <div className="footer-copyright">
-            © {new Date().getFullYear()} Crestora Properties Pvt. Ltd. All Rights Reserved. Building Trust. Creating Value.
+            © {new Date().getFullYear()} {siteName} Pvt. Ltd. All Rights Reserved. Building Trust. Creating Value.
           </div>
           <div className="footer-social-links">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="Instagram">
+            <a href={settings.instagram || "https://instagram.com"} target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="Instagram">
               ig
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="LinkedIn">
+            <a href={settings.linkedin || "https://linkedin.com"} target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="LinkedIn">
               in
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="Facebook">
+            <a href={settings.facebook || "https://facebook.com"} target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="Facebook">
               fb
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="YouTube">
+            <a href={settings.youtube || "https://youtube.com"} target="_blank" rel="noopener noreferrer" className="social-circle-btn" aria-label="YouTube">
               yt
             </a>
           </div>

@@ -1,7 +1,9 @@
 import React from "react";
+import { useSite } from "../../services/SiteData.jsx";
 
 export default function MarqueeTicker() {
-  const items = [
+  const site = useSite();
+  const fallback = [
     { text: "THINK REAL ESTATE", highlight: false },
     { text: "THINK CRESTORA PROPERTIES", highlight: true },
     { text: "DTCP & RERA APPROVED", highlight: false },
@@ -10,6 +12,7 @@ export default function MarqueeTicker() {
     { text: "1,500+ LUXURY PLOTS & VILLAS", highlight: true },
     { text: "100% VASTHU COMPLIANT LAYOUTS", highlight: false },
   ];
+  const items = site.home?.ticker?.length ? site.home.ticker : fallback;
 
   // Repeat items for seamless infinite scroll
   const displayItems = [...items, ...items, ...items, ...items];

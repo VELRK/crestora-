@@ -1,9 +1,18 @@
 import React from "react";
 import { BLOGS_DATA } from "../../data/homeData";
+import { useSite } from "../../services/SiteData.jsx";
 import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 
 export default function LatestBlogs({ onSelectBlog, onNavigate }) {
-  const displayBlogs = BLOGS_DATA.slice(0, 3);
+  const site = useSite();
+  const copy = site.home?.insights || {};
+  const source = site.home?.latestBlogs?.length ? site.home.latestBlogs : BLOGS_DATA;
+  const displayBlogs = source.slice(0, 3);
+  const eyebrow = copy.eyebrow || "INSIGHT HUB";
+  const titleLead = copy.titleLead || "Market Insights &";
+  const titleHighlight = copy.titleHighlight || "Advisory";
+  const intro = copy.intro || "Stay informed with expert analysis on Coimbatore infrastructure projects, Avinashi road elevated expressway, DTCP legal procedures, and high-yield real estate investments.";
+  const buttonText = copy.buttonText || "Explore All Insights & Blogs";
 
   const handlePostClick = (post) => {
     if (onSelectBlog) {
@@ -27,12 +36,12 @@ export default function LatestBlogs({ onSelectBlog, onNavigate }) {
           }}
         >
           <div className="section-header" style={{ textAlign: "left", margin: 0, maxWidth: "700px" }}>
-            <h5>INSIGHT HUB</h5>
+            <h5>{eyebrow}</h5>
             <h2>
-              Market Insights &amp; <span>Advisory</span>
+              {titleLead} <span>{titleHighlight}</span>
             </h2>
             <p style={{ margin: 0 }}>
-              Stay informed with expert analysis on Coimbatore infrastructure projects, Avinashi road elevated expressway, DTCP legal procedures, and high-yield real estate investments.
+              {intro}
             </p>
           </div>
 
@@ -43,7 +52,7 @@ export default function LatestBlogs({ onSelectBlog, onNavigate }) {
               onClick={() => onNavigate && onNavigate("blogs")}
               style={{ padding: "12px 24px", fontSize: "13px" }}
             >
-              <span>Explore All Insights &amp; Blogs</span>
+              <span>{buttonText}</span>
               <ArrowRight size={14} />
             </button>
           </div>

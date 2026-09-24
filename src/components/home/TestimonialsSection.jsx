@@ -1,8 +1,17 @@
 import React from "react";
 import { TESTIMONIALS_DATA, GOOGLE_REVIEWS_META } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { Star, Quote } from "lucide-react";
 
 export default function TestimonialsSection() {
+  const site = useSite();
+  const reviews = site.home?.googleReviews || GOOGLE_REVIEWS_META;
+  const block = site.home?.testimonials;
+  const testimonials = sectionItems(block) || TESTIMONIALS_DATA;
+  const eyebrow = block?.eyebrow || "HAPPY INVESTORS";
+  const titleLead = block?.titleLead || "Client Stories &";
+  const titleHighlight = block?.titleHighlight || "Testimonials";
+  const intro = block?.intro || "Hear from families and NRI investors who trusted Crestora Properties for secure, DTCP & RERA-approved plotted developments and luxury residences.";
   return (
     <section className="testimonials-section">
       <div className="crestora-container">
@@ -19,15 +28,15 @@ export default function TestimonialsSection() {
           </div>
 
           <div className="google-score-col">
-            <span className="google-number">{GOOGLE_REVIEWS_META.rating}</span>
+            <span className="google-number">{reviews.rating}</span>
             <div>
               <div className="google-stars">★★★★★</div>
-              <div className="google-count-text">({GOOGLE_REVIEWS_META.totalReviews}+ Verified Reviews)</div>
+              <div className="google-count-text">({reviews.totalReviews}+ Verified Reviews)</div>
             </div>
           </div>
 
           <a
-            href={GOOGLE_REVIEWS_META.badgeUrl}
+            href={reviews.badgeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="crestora-btn crestora-btn-fill"
@@ -41,18 +50,18 @@ export default function TestimonialsSection() {
 
         {/* Section Heading */}
         <div className="section-header" style={{ color: "#ffffff" }}>
-          <h5 style={{ color: "#dfb743" }}>HAPPY INVESTORS</h5>
+          <h5 style={{ color: "#dfb743" }}>{eyebrow}</h5>
           <h2 style={{ color: "#ffffff" }}>
-            Client Stories & <span>Testimonials</span>
+            {titleLead} <span>{titleHighlight}</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.75)" }}>
-            Hear from families and NRI investors who trusted Crestora Properties for secure, DTCP & RERA-approved plotted developments and luxury residences.
+            {intro}
           </p>
         </div>
 
         {/* Testimonials Cards Grid */}
         <div className="testimonial-cards-grid">
-          {TESTIMONIALS_DATA.map((t) => (
+          {testimonials.map((t) => (
             <div key={t.id} className="testimonial-card-item">
               <div>
                 <div className="testi-stars-row">

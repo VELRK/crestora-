@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { crestoraApi } from "../../services/api";
+import { useSite } from "../../services/SiteData.jsx";
 import {
   Phone,
   Mail,
@@ -15,6 +17,18 @@ import {
 } from "lucide-react";
 
 export default function ContactPage({ onNavigate, showToast }) {
+  const site = useSite();
+  const page = site.contact?.page || {};
+  const settings = site.settings || {};
+  const phone = page.phone || settings.phone || "+91 91590 66666";
+  const phoneTel = page.phoneTel || settings.phone_tel || "+919159066666";
+  const email = page.email || settings.email || "info@crestoraproperties.com";
+  const address = page.address || settings.corporate_office || "3rd Floor, Harita Center, Avinashi Road, Opposite to GKNM Hospital, Coimbatore - 641 037";
+  const hours = page.hours || settings.hours || "Monday – Sunday, 9:00 AM – 7:30 PM";
+  const whatsapp = page.whatsapp || settings.whatsapp || "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.";
+  const whatsappLabel = page.whatsappLabel || `Chat on WhatsApp (${phone})`;
+  const mapUrl = page.mapUrl || "https://maps.google.com/?q=GKNM+Hospital+Avinashi+Road+Coimbatore";
+  const mapEmbed = page.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.353368297072!2d76.9822452!3d11.0120893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859b867c2d829%3A0x7d6f51f49615a13c!2sGKNM%20Hospital%2C%20Avinashi%20Rd%2C%20Pappanaickenpalayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641037!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin";
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -52,11 +66,23 @@ export default function ContactPage({ onNavigate, showToast }) {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      showToast && showToast("Thank you! Your message has been sent successfully.");
-    }, 600);
+    crestoraApi
+      .submitEnquiry({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        message: `${formData.subject || ""} ${formData.message || ""}`.trim(),
+        source: "contact",
+      })
+      .then(() => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        showToast && showToast("Thank you! Your message has been sent successfully.");
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+        showToast && showToast("Could not send your message. Please try again.");
+      });
   };
 
   const handleReset = () => {
@@ -88,12 +114,18 @@ export default function ContactPage({ onNavigate, showToast }) {
             <span className="sc-bread-current">CONTACT US</span>
           </nav>
 
-          <div className="sc-hero-badge">CRESTORA PROPERTIES</div>
+          <div className="sc-hero-badge">{page.heroBadge || "CRESTORA PROPERTIES"}</div>
           <h1 className="sc-hero-title">
-            Get in <span className="gold-foil-shimmer">Touch</span>
+            {page.heroTitle && page.heroTitle !== "Get in Touch" ? (
+              page.heroTitle
+            ) : (
+              <>
+                Get in <span className="gold-foil-shimmer">Touch</span>
+              </>
+            )}
           </h1>
           <p className="sc-hero-sub">
-            We would love to hear from you. Speak directly with our team or send us a message below.
+            {page.heroSubtitle || "We would love to hear from you. Speak directly with our team or send us a message below."}
           </p>
         </div>
       </section>
@@ -105,9 +137,9 @@ export default function ContactPage({ onNavigate, showToast }) {
             {/* Left: Contact Info & Direct Channels */}
             <div className="simple-contact-info-card">
               <div className="sc-info-header">
-                <h2 className="sc-info-heading">Contact Information</h2>
+                <h2 className="sc-info-heading">{page.infoHeading || "Contact Information"}</h2>
                 <p className="sc-info-lead">
-                  Reach out to us directly for enquiries about DTCP &amp; RERA villa plots and residences across Coimbatore.
+                  {page.infoLead || "Reach out to us directly for enquiries about DTCP & RERA villa plots and residences across Coimbatore."}
                 </p>
               </div>
 
@@ -119,10 +151,10 @@ export default function ContactPage({ onNavigate, showToast }) {
                   </div>
                   <div className="sc-info-content">
                     <span className="sc-label">Call Us Directly</span>
-                    <a href="tel:+919159066666" className="sc-link-primary">
-                      +91 91590 66666
+                    <a href={`tel:${phoneTel}`} className="sc-link-primary">
+                      {phone}
                     </a>
-                    <div className="sc-sub-note">Monday – Sunday, 9:00 AM – 7:30 PM</div>
+                    <div className="sc-sub-note">{hours}</div>
                   </div>
                 </div>
 
@@ -134,12 +166,12 @@ export default function ContactPage({ onNavigate, showToast }) {
                   <div className="sc-info-content">
                     <span className="sc-label">WhatsApp Chat</span>
                     <a
-                      href="https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects."
+                      href={whatsapp}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="sc-link-whatsapp"
                     >
-                      Chat on WhatsApp (+91 91590 66666) →
+                      {whatsappLabel} →
                     </a>
                     <div className="sc-sub-note">Instant assistance on mobile</div>
                   </div>
@@ -152,8 +184,8 @@ export default function ContactPage({ onNavigate, showToast }) {
                   </div>
                   <div className="sc-info-content">
                     <span className="sc-label">Email Us</span>
-                    <a href="mailto:info@crestoraproperties.com" className="sc-link-primary">
-                      info@crestoraproperties.com
+                    <a href={`mailto:${email}`} className="sc-link-primary">
+                      {email}
                     </a>
                     <div className="sc-sub-note">We typically reply within a few hours</div>
                   </div>
@@ -167,10 +199,10 @@ export default function ContactPage({ onNavigate, showToast }) {
                   <div className="sc-info-content">
                     <span className="sc-label">Office Address</span>
                     <div className="sc-text-main">
-                      3rd Floor, Harita Center, Avinashi Road, Opposite to GKNM Hospital, Coimbatore - 641 037
+                      {address}
                     </div>
                     <a
-                      href="https://maps.google.com/?q=GKNM+Hospital+Avinashi+Road+Coimbatore"
+                      href={mapUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="sc-link-map"
@@ -186,7 +218,7 @@ export default function ContactPage({ onNavigate, showToast }) {
               <div className="sc-map-frame">
                 <iframe
                   title="Crestora Properties Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.353368297072!2d76.9822452!3d11.0120893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859b867c2d829%3A0x7d6f51f49615a13c!2sGKNM%20Hospital%2C%20Avinashi%20Rd%2C%20Pappanaickenpalayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641037!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin"
+                  src={mapEmbed}
                   width="100%"
                   height="170"
                   style={{ border: 0, display: "block" }}
@@ -210,7 +242,7 @@ export default function ContactPage({ onNavigate, showToast }) {
                   </p>
                   <div className="sc-success-actions">
                     <a
-                      href={`https://wa.me/919159066666?text=Hi%20Crestora,%20I%20have%20sent%20a%20message%20regarding%20${encodeURIComponent(formData.subject)}.`}
+                      href={`https://wa.me/${String(phoneTel).replace(/\D/g, "")}?text=Hi%20Crestora,%20I%20have%20sent%20a%20message%20regarding%20${encodeURIComponent(formData.subject)}.`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="crestora-btn crestora-btn-fill"

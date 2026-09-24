@@ -1,5 +1,6 @@
 import React from "react";
 import ProjectCard from "../projects/ProjectCard";
+import { useSite } from "../../services/SiteData.jsx";
 import { ArrowRight } from "lucide-react";
 
 export default function HomeFeaturedProperties({
@@ -10,15 +11,17 @@ export default function HomeFeaturedProperties({
   onBookSiteVisit,
   onViewAll,
 }) {
+  const site = useSite();
+  const copy = site.home?.featured || {};
   return (
     <section className="comTitle" style={{ background: "#ffffff", padding: "80px 0" }}>
       <div className="crestora-container">
         {/* Header with Title and 'View All' */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "45px" }}>
           <div>
-            <div className="section-subtitle-badge">PRESTIGIOUS PROJECTS</div>
+            <div className="section-subtitle-badge">{copy.eyebrow || "PRESTIGIOUS PROJECTS"}</div>
             <h2 className="section-title" style={{ margin: 0 }}>
-              Featured Prime <span>Residences & Plots</span>
+              {copy.titleLead || "Featured Prime"} <span>{copy.titleHighlight || "Residences & Plots"}</span>
             </h2>
           </div>
 
@@ -29,7 +32,7 @@ export default function HomeFeaturedProperties({
             onClick={onViewAll}
           >
             <span className="btn-arrow-normal">→</span>
-            <span className="btn-text">VIEW ALL PROJECTS</span>
+            <span className="btn-text">{copy.buttonText || "VIEW ALL PROJECTS"}</span>
             <span className="btn-arrow-hover">→</span>
           </button>
         </div>

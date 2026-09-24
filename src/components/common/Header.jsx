@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
+import { useSite } from "../../services/SiteData.jsx";
 import {
   Phone,
   Mail,
@@ -21,6 +22,13 @@ export default function Header({
   onOpenBookVisit,
   favoritesCount = 0,
 }) {
+  const site = useSite();
+  const settings = site.settings || {};
+  const phone = settings.phone || "+91 91590 66666";
+  const phoneTel = settings.phone_tel || "+919159066666";
+  const email = settings.email || "info@crestoraproperties.com";
+  const cityLabel = "Coimbatore";
+  const logo = settings.logo || logoImg;
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Determine active highlights based on active page and active filters
@@ -55,26 +63,26 @@ export default function Header({
         <div className="topbar-container">
           <div className="topbar-left">
             <a
-              href="tel:+919159066666"
+              href={`tel:${phoneTel}`}
               className="topbar-item"
               title="Direct Telephone line to Crestora Properties"
             >
               <Phone size={12.5} className="topbar-icon" />
-              <span>+91 91590 66666</span>
+              <span>{phone}</span>
             </a>
             <span className="topbar-separator">|</span>
             <a
-              href="mailto:info@crestoraproperties.com"
+              href={`mailto:${email}`}
               className="topbar-item"
               title="Official Enquiry Mail"
             >
               <Mail size={12.5} className="topbar-icon" />
-              <span>info@crestoraproperties.com</span>
+              <span>{email}</span>
             </a>
             <span className="topbar-separator d-none-tablet">|</span>
             <div className="topbar-item d-none-tablet">
               <MapPin size={12.5} className="topbar-icon" />
-              <span>Coimbatore</span>
+              <span>{cityLabel}</span>
             </div>
           </div>
 
@@ -84,8 +92,8 @@ export default function Header({
               <span>DTCP &amp; RERA Approved Projects</span>
             </div>
             <span className="topbar-separator d-none-mobile">|</span>
-            <span className="topbar-hours d-none-mobile">
-              <Clock size={12} className="topbar-icon" /> 9:00 AM – 7:30 PM
+              <span className="topbar-hours d-none-mobile">
+              <Clock size={12} className="topbar-icon" /> {settings.hours || "9:00 AM – 7:30 PM"}
             </span>
           </div>
         </div>
@@ -96,7 +104,7 @@ export default function Header({
         <div className="header-container">
           {/* Brand Logo with Classic Crestora Identity */}
           <a
-            href="#home"
+            href="/"
             onClick={(e) => {
               e.preventDefault();
               onNavigate && onNavigate("home");
@@ -106,7 +114,7 @@ export default function Header({
           >
             <div className="brand-emblem-wrap">
               <img
-                src={logoImg}
+                src={logo}
                 alt="Crestora Emblem"
                 className="brand-emblem-img"
               />
@@ -154,7 +162,7 @@ export default function Header({
               </button>
               <div className="nav-dropdown-menu">
                 <a
-                  href="#ongoing"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.status === "ongoing" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -164,7 +172,7 @@ export default function Header({
                   Ongoing Projects
                 </a>
                 <a
-                  href="#upcoming"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.status === "upcoming" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -174,7 +182,7 @@ export default function Header({
                   Upcoming Projects
                 </a>
                 <a
-                  href="#completed"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.status === "completed" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -204,7 +212,7 @@ export default function Header({
               </button>
               <div className="nav-dropdown-menu">
                 <a
-                  href="#plots"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.type === "plots" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -215,7 +223,7 @@ export default function Header({
                   <span className="dropdown-link-desc">DTCP &amp; RERA Villa Plots</span>
                 </a>
                 <a
-                  href="#villas"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.type === "villa" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -226,7 +234,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Luxury Gated Villas</span>
                 </a>
                 <a
-                  href="#farmlands"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.type === "farmlands" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -237,7 +245,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Hillside &amp; Eco Agro Lands</span>
                 </a>
                 <a
-                  href="#commercial"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.type === "commercial" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -248,7 +256,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Retail &amp; Highway Frontage</span>
                 </a>
                 <a
-                  href="#communities"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.type === "gated-community" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -279,7 +287,7 @@ export default function Header({
               </button>
               <div className="nav-dropdown-menu">
                 <a
-                  href="#kovilpalayam"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "kovilpalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -290,7 +298,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Sathy Road Corridor</span>
                 </a>
                 <a
-                  href="#kurumbapalayam"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "kurumbapalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -301,7 +309,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Sathy Road</span>
                 </a>
                 <a
-                  href="#kariyampalayam"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "kariyampalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -312,7 +320,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Annur Bypass</span>
                 </a>
                 <a
-                  href="#kunnathur"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "kunnathur" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -323,7 +331,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Kongu Green Belt</span>
                 </a>
                 <a
-                  href="#narasimhanaickenpalayam"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "narasimhanaickenpalayam" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -334,7 +342,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Mettupalayam Highway</span>
                 </a>
                 <a
-                  href="#ganeshpuram"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "ganeshpuram" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -345,7 +353,7 @@ export default function Header({
                   <span className="dropdown-link-desc">Arterial Expressway</span>
                 </a>
                 <a
-                  href="#ponnegounden-pudur"
+                  href="/projects"
                   className={`dropdown-link ${activePage === "projects" && filters?.location === "ponnegounden-pudur" ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();

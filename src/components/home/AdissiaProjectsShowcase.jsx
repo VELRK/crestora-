@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import aboutImg from "../../assets/about/about.png";
+import { useSite } from "../../services/SiteData.jsx";
 import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star } from "lucide-react";
 
 export default function AdissiaProjectsShowcase({
@@ -8,6 +9,8 @@ export default function AdissiaProjectsShowcase({
   onBookSiteVisit,
   onExploreAll,
 }) {
+  const site = useSite();
+  const copy = site.home?.landmark || {};
   const [activeTab, setActiveTab] = useState("ongoing"); // "ongoing" | "upcoming" | "completed"
 
   // Filter projects based on active tab
@@ -56,12 +59,12 @@ export default function AdissiaProjectsShowcase({
       <div className="crestora-container">
         {/* Section Header */}
         <div className="section-header">
-          <h5>FEATURED DEVELOPMENTS</h5>
+          <h5>{copy.eyebrow || "FEATURED DEVELOPMENTS"}</h5>
           <h2>
-            Discover Landmark <span>Properties</span>
+            {copy.titleLead || "Discover Landmark"} <span>{copy.titleHighlight || "Properties"}</span>
           </h2>
           <p>
-            Explore Crestora Properties' plotted developments across Coimbatore and Tamil Nadu offering strategic locations, clear DTCP & RERA titles, and master layouts engineered for long-term appreciation.
+            {copy.intro || "Explore Crestora Properties' plotted developments across Coimbatore and Tamil Nadu offering strategic locations, clear DTCP & RERA titles, and master layouts engineered for long-term appreciation."}
           </p>
         </div>
 

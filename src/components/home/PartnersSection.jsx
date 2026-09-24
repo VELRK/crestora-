@@ -1,25 +1,32 @@
 import React from "react";
 import { BANK_PARTNERS } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { Landmark } from "lucide-react";
 
 export default function PartnersSection() {
+  const site = useSite();
+  const block = site.home?.partners;
+  const partners = sectionItems(block) || BANK_PARTNERS;
+  const eyebrow = block?.eyebrow || "INSTITUTIONAL PRE-APPROVALS";
+  const title = block?.titleLead || "Banking & Home Loan Partners";
+  const intro = block?.intro || "All Crestora Properties projects are pre-sanctioned for hassle-free home and plot loans.";
   return (
     <section style={{ background: "#ffffff", padding: "60px 0", borderTop: "1px solid #edf2f7" }}>
       <div className="crestora-container">
         <div style={{ textAlign: "center", marginBottom: "35px" }}>
           <span style={{ fontSize: "12px", fontWeight: "700", textTransform: "uppercase", letterSpacing: "1.5px", color: "#c59b27" }}>
-            INSTITUTIONAL PRE-APPROVALS
+            {eyebrow}
           </span>
           <h3 style={{ fontFamily: "Montserrat, sans-serif", fontSize: "24px", fontWeight: "600", color: "#163057", marginTop: "6px" }}>
-            Banking & Home Loan Partners
+            {title}
           </h3>
           <p style={{ color: "#718096", fontSize: "14px", marginTop: "4px" }}>
-            All Crestora Properties projects are pre-sanctioned for hassle-free home and plot loans.
+            {intro}
           </p>
         </div>
 
         <div className="partners-responsive-grid">
-          {BANK_PARTNERS.map((bank, idx) => (
+          {partners.map((bank, idx) => (
             <div
               key={idx}
               style={{

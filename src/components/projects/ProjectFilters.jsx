@@ -5,6 +5,7 @@ import {
   MAX_PRICES,
   SORT_OPTIONS,
 } from "../../data/projectsData";
+import { useSite } from "../../services/SiteData.jsx";
 import { Search, RotateCcw, Filter, LayoutGrid, List } from "lucide-react";
 
 export default function ProjectFilters({
@@ -18,6 +19,11 @@ export default function ProjectFilters({
   viewMode = "list",
   onViewModeChange,
 }) {
+  const site = useSite();
+  const propertyTypes = site.filters?.propertyTypes?.length ? site.filters.propertyTypes : PROPERTY_TYPES;
+  const locations = site.filters?.localities?.length ? site.filters.localities : LOCATIONS;
+  const maxPrices = site.filters?.budgets?.length ? site.filters.budgets : MAX_PRICES;
+  const sortOptions = site.filters?.sortOptions?.length ? site.filters.sortOptions : SORT_OPTIONS;
   const handleInputChange = (field, value) => {
     onFilterChange({
       ...filters,
@@ -57,7 +63,7 @@ export default function ProjectFilters({
             onChange={(e) => handleInputChange("location", e.target.value)}
           >
             <option value="all">All Prime Locations</option>
-            {LOCATIONS.filter((l) => l.value !== "all").map((loc) => (
+            {locations.filter((l) => l.value !== "all").map((loc) => (
               <option key={loc.id} value={loc.value}>
                 {loc.label}
               </option>
@@ -72,7 +78,7 @@ export default function ProjectFilters({
             value={filters.type || "all"}
             onChange={(e) => handleInputChange("type", e.target.value)}
           >
-            {PROPERTY_TYPES.map((t) => (
+            {propertyTypes.map((t) => (
               <option key={t.value} value={t.value}>
                 {t.label}
               </option>
@@ -87,7 +93,7 @@ export default function ProjectFilters({
             value={filters.maxPrice || "all"}
             onChange={(e) => handleInputChange("maxPrice", e.target.value)}
           >
-            {MAX_PRICES.map((p) => (
+            {maxPrices.map((p) => (
               <option key={p.label} value={p.value}>
                 {p.label}
               </option>
@@ -134,7 +140,7 @@ export default function ProjectFilters({
                 color: "#1e293b",
               }}
             >
-              {SORT_OPTIONS.map((opt) => (
+              {sortOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>

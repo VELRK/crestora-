@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { BLOGS_DATA, BLOGS_CATEGORIES, BLOG_NEWSLETTER_DATA } from "../../data/blogsData";
+import { useSite } from "../../services/SiteData.jsx";
 import {
   Search,
   Calendar,
@@ -23,6 +24,10 @@ export default function BlogListPage({
   onBookSiteVisit,
   showToast,
 }) {
+  const site = useSite();
+  const posts = site.blogs?.posts?.length ? site.blogs.posts : BLOGS_DATA;
+  const categories = site.blogs?.categories?.length ? site.blogs.categories : BLOGS_CATEGORIES;
+  const newsletter = site.blogs?.newsletter || BLOG_NEWSLETTER_DATA;
   const [selectedCategory, setSelectedCategory] = useState("All Articles");
   const [searchQuery, setSearchQuery] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -35,7 +40,7 @@ export default function BlogListPage({
 
   // Filtered blogs
   const filteredBlogs = useMemo(() => {
-    return BLOGS_DATA.filter((post) => {
+    return posts.filter((post) => {
       const matchesCategory =
         selectedCategory === "All Articles" || post.category === selectedCategory;
       const q = searchQuery.toLowerCase().trim();
@@ -52,7 +57,7 @@ export default function BlogListPage({
 
   // Featured Hero Blog (defaults to first featured or first in list)
   const featuredBlog = useMemo(() => {
-    return BLOGS_DATA.find((p) => p.featured) || BLOGS_DATA[0];
+    return posts.find((p) => p.featured) || posts[0];
   }, []);
 
   const handleNewsletterSubmit = (e) => {
@@ -201,7 +206,7 @@ export default function BlogListPage({
           <div className="blog-controls-bar">
             {/* Category Filter Pills */}
             <div className="blog-categories-scroll" role="tablist">
-              {BLOGS_CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <button
                   key={cat}
                   type="button"

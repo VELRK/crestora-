@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { formatINR } from "../../services/mockupApi";
+import { crestoraApi } from "../../services/api";
 import ProjectCard from "./ProjectCard";
 import {
   ArrowLeft,
@@ -90,19 +91,37 @@ export default function ProjectDetailsPage({
     };
   }, [calcPrice, downPaymentPercent, loanTenureYears, interestRate]);
 
-  // Similar Projects (unconditional hook)
-  const similarProjects = useMemo(() => {
+  const fallbackSimilar = useMemo(() => {
     if (!project) return [];
-    return allProjects
-      .filter(
-        (p) =>
-          p.id !== project.id &&
-          (p.locality === project.locality ||
-            p.city === project.city ||
-            p.type === project.type)
-      )
-      .slice(0, 3);
+    const matched = allProjects.filter(
+      (p) =>
+        p.id !== project.id &&
+        (p.locality === project.locality ||
+          p.city === project.city ||
+          p.type === project.type)
+    );
+    const rest = allProjects.filter((p) => p.id !== project.id && !matched.includes(p));
+    return [...matched, ...rest].slice(0, 3);
   }, [allProjects, project]);
+  const [similarProjects, setSimilarProjects] = useState(fallbackSimilar);
+
+  useEffect(() => {
+    setSimilarProjects(fallbackSimilar);
+    const key = project?.slug || project?.id;
+    if (!key) return undefined;
+    let cancelled = false;
+    crestoraApi
+      .similarProjects(key)
+      .then((res) => {
+        if (!cancelled && Array.isArray(res?.data)) {
+          setSimilarProjects(res.data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [project?.id, project?.slug, fallbackSimilar]);
 
   if (!project) {
     return (

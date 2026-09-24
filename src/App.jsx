@@ -34,7 +34,7 @@ import ContactPage from "./components/contact/ContactPage";
 
 import { INITIAL_PROJECTS } from "./data/projectsData";
 import { BLOGS_DATA } from "./data/blogsData";
-import { mockupApi } from "./services/mockupApi";
+import { useSite } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
 
@@ -49,6 +49,12 @@ const DEFAULT_FILTERS = {
 };
 
 export default function App() {
+  const site = useSite();
+  const settings = site.settings || {};
+  const phoneTel = settings.phone_tel || "+919159066666";
+  const whatsapp = settings.whatsapp || "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.";
+  const logo = settings.logo || logoImg;
+  const blogPosts = site.blogs?.posts?.length ? site.blogs.posts : BLOGS_DATA;
   const [activePage, setActivePage] = useState("home"); // "home" | "projects"
   const [projects, setProjects] = useState(INITIAL_PROJECTS);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
@@ -77,18 +83,10 @@ export default function App() {
 
   // Fetch projects from Mockup API on mount
   useEffect(() => {
-    async function loadProjects() {
-      try {
-        const res = await mockupApi.getProjects();
-        if (res.success && res.data.length > 0) {
-          setProjects(res.data);
-        }
-      } catch (err) {
-        console.warn("Using fallback initial data:", err);
-      }
+    if (site.projects?.length) {
+      setProjects(site.projects);
     }
-    loadProjects();
-  }, []);
+  }, [site.projects]);
 
   // Sync favorites with localStorage
   useEffect(() => {
@@ -122,66 +120,81 @@ export default function App() {
     });
   };
 
-  // Synchronize URL hash with page state for back/forward navigation
+  // Keep the address as a real path, and still open older # links.
   useEffect(() => {
     const handleLocationChange = () => {
       const hash = window.location.hash;
-      if (hash.startsWith("#project-details")) {
-        const query = hash.split("?")[1] || "";
-        const params = new URLSearchParams(query);
-        const id = params.get("id");
-        if (id) {
-          const match = projects.find((p) => p.id === id || p.slug === id);
-          if (match) {
-            setSelectedProject(match);
-            setActivePage("project-details");
-            return;
-          }
+      const legacy = hash.match(/^#(project-details|blog-details|projects|blogs|project|blog|about|contact-us|contact|home|locations)(.*)$/);
+      if (legacy) {
+        let next = "/";
+        if (legacy[1] === "project-details" || legacy[1] === "blog-details") {
+          const id = new URLSearchParams((legacy[2] || "").split("?")[1] || "").get("id");
+          next = id ? `/${legacy[1].startsWith("project") ? "project" : "blog"}/${id}` : `/${legacy[1].startsWith("project") ? "projects" : "blogs"}`;
+        } else if (legacy[1] === "home") {
+          next = "/";
+        } else if (legacy[1] === "locations") {
+          next = "/#locations";
+        } else if (legacy[1] === "contact-us") {
+          next = "/contact";
+        } else {
+          next = `/${legacy[1]}${legacy[2] || ""}`;
         }
-      } else if (hash.startsWith("#blog-details")) {
-        const query = hash.split("?")[1] || "";
-        const params = new URLSearchParams(query);
-        const id = params.get("id");
-        if (id) {
-          const match = BLOGS_DATA.find((b) => b.id === id || b.slug === id);
-          if (match) {
-            setSelectedBlog(match);
-            setActivePage("blog-details");
-            return;
-          }
+        window.history.replaceState({}, "", next);
+      }
+
+      const path = window.location.pathname.replace(/\/+$/, "") || "/";
+      const projectSlug = path.match(/^\/project\/([^/]+)/);
+      const blogSlug = path.match(/^\/blog\/([^/]+)/);
+      if (projectSlug) {
+        const id = decodeURIComponent(projectSlug[1]);
+        const match = projects.find((p) => p.slug === id || p.id === id);
+        if (match) {
+          setSelectedProject(match);
+          setActivePage("project-details");
+          return;
         }
-      } else if (hash.startsWith("#blogs")) {
+        setActivePage("project-details");
+        return;
+      }
+      if (blogSlug) {
+        const id = decodeURIComponent(blogSlug[1]);
+        const match = blogPosts.find((b) => b.slug === id || b.id === id);
+        if (match) {
+          setSelectedBlog(match);
+          setActivePage("blog-details");
+          return;
+        }
+        setActivePage("blog-details");
+        return;
+      }
+      if (path === "/blogs") {
         setActivePage("blogs");
         return;
-      } else if (hash.startsWith("#projects")) {
+      }
+      if (path === "/projects") {
         setActivePage("projects");
         return;
-      } else if (hash.startsWith("#contact-us") || hash.startsWith("#contact")) {
+      }
+      if (path === "/contact") {
         setActivePage("contact");
         return;
-      } else if (hash.startsWith("#about")) {
+      }
+      if (path === "/about") {
         setActivePage("about");
         return;
-      } else if (hash.startsWith("#locations")) {
-        setActivePage("home");
+      }
+      setActivePage("home");
+      if (window.location.hash === "#locations") {
         setTimeout(() => {
           document.getElementById("locations-section")?.scrollIntoView({ behavior: "smooth" });
         }, 150);
-        return;
-      } else if (hash.startsWith("#home")) {
-        setActivePage("home");
-        return;
       }
     };
 
     handleLocationChange();
     window.addEventListener("popstate", handleLocationChange);
-    window.addEventListener("hashchange", handleLocationChange);
-    return () => {
-      window.removeEventListener("popstate", handleLocationChange);
-      window.removeEventListener("hashchange", handleLocationChange);
-    };
-  }, [projects]);
+    return () => window.removeEventListener("popstate", handleLocationChange);
+  }, [projects, blogPosts]);
 
   // Project selection helper (Navigates to dedicated Project Details page)
   const handleSelectProject = (project) => {
@@ -189,11 +202,12 @@ export default function App() {
     setSelectedProject(project);
     setActivePage("project-details");
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (project.id) {
+    const key = project.slug || project.id;
+    if (key) {
       window.history.pushState(
-        { page: "project-details", id: project.id },
+        { page: "project-details", id: key },
         "",
-        `#project-details?id=${project.id}`
+        `/project/${encodeURIComponent(key)}`
       );
     }
   };
@@ -204,11 +218,12 @@ export default function App() {
     setSelectedBlog(blog);
     setActivePage("blog-details");
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (blog.id) {
+    const key = blog.slug || blog.id;
+    if (key) {
       window.history.pushState(
-        { page: "blog-details", id: blog.id },
+        { page: "blog-details", id: key },
         "",
-        `#blog-details?id=${blog.id}`
+        `/blog/${encodeURIComponent(key)}`
       );
     }
   };
@@ -226,16 +241,15 @@ export default function App() {
       setFilters((prev) => ({ ...prev, ...filterUpdates }));
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (page === "projects") {
-      window.history.pushState({ page: "projects" }, "", "#projects");
-    } else if (page === "about") {
-      window.history.pushState({ page: "about" }, "", "#about");
-    } else if (page === "blogs") {
-      window.history.pushState({ page: "blogs" }, "", "#blogs");
-    } else if (page === "contact") {
-      window.history.pushState({ page: "contact" }, "", "#contact");
-    } else if (page === "home") {
-      window.history.pushState({ page: "home" }, "", "#home");
+    const paths = {
+      projects: "/projects",
+      about: "/about",
+      blogs: "/blogs",
+      contact: "/contact",
+      home: "/",
+    };
+    if (paths[page]) {
+      window.history.pushState({ page }, "", paths[page]);
     }
   };
 
@@ -473,8 +487,8 @@ export default function App() {
         ) : activePage === "blog-details" ? (
           /* ==================== DEDICATED BLOG DETAILS VIEW ==================== */
           <BlogDetailsPage
-            post={selectedBlog || BLOGS_DATA[0]}
-            allPosts={BLOGS_DATA}
+            post={selectedBlog || blogPosts[0]}
+            allPosts={blogPosts}
             onBackToBlogs={() => handleNavigate("blogs")}
             onSelectBlog={handleSelectBlog}
             onSelectProject={handleSelectProject}
@@ -572,7 +586,7 @@ export default function App() {
       {/* 10. WhatsApp Floating Chat FAB */}
       {activePage !== "project-details" && (
         <a
-          href="https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots."
+          href={whatsapp}
           target="_blank"
           rel="noopener noreferrer"
           className="whatsapp-fab"
@@ -594,7 +608,7 @@ export default function App() {
             <Send size={18} />
             <span>Enquiry</span>
           </button>
-          <a href="tel:+919159066666" className="mbb-item">
+          <a href={`tel:${phoneTel}`} className="mbb-item">
             <Phone size={18} />
             <span>Call Us</span>
           </a>
@@ -604,7 +618,7 @@ export default function App() {
             onClick={() => handleNavigate("home")}
           >
             <div className="mbb-center-circle">
-              <img src={logoImg} alt="Crestora" />
+              <img src={logo} alt="Crestora" />
             </div>
           </button>
           <button

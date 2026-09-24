@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { mockupApi } from "../../services/mockupApi";
+import { crestoraApi } from "../../services/api";
 import { INITIAL_PROJECTS } from "../../data/projectsData";
+import { useSite } from "../../services/SiteData.jsx";
 import { X, Calendar, Clock, MapPin, CheckCircle, Car } from "lucide-react";
 
 export default function BookSiteVisitModal({
@@ -8,6 +9,8 @@ export default function BookSiteVisitModal({
   onClose,
   initialProject = null,
 }) {
+  const site = useSite();
+  const projectOptions = site.projects?.length ? site.projects : INITIAL_PROJECTS;
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -32,11 +35,11 @@ export default function BookSiteVisitModal({
         projectId: initialProject.id,
         projectName: initialProject.title,
       }));
-    } else if (INITIAL_PROJECTS.length > 0) {
+    } else if (projectOptions.length > 0) {
       setFormData((prev) => ({
         ...prev,
-        projectId: INITIAL_PROJECTS[0].id,
-        projectName: INITIAL_PROJECTS[0].title,
+        projectId: projectOptions[0].id,
+        projectName: projectOptions[0].title,
       }));
     }
   }, [initialProject, isOpen]);
@@ -67,7 +70,7 @@ export default function BookSiteVisitModal({
 
   const handleProjectSelect = (e) => {
     const projId = e.target.value;
-    const found = INITIAL_PROJECTS.find((p) => p.id === projId);
+    const found = projectOptions.find((p) => p.id === projId);
     setFormData((prev) => ({
       ...prev,
       projectId: projId,
@@ -85,7 +88,11 @@ export default function BookSiteVisitModal({
     setIsSubmitting(true);
 
     try {
-      const res = await mockupApi.bookSiteVisit(formData);
+      const res = await crestoraApi.bookSiteVisit({
+        ...formData,
+        visitDate: formData.preferredDate,
+        message: formData.pickupAddress,
+      });
       if (res.success) {
         setBookingResult(res);
       } else {
@@ -160,7 +167,7 @@ export default function BookSiteVisitModal({
                   className="crestora-input"
                   style={{ height: "46px" }}
                 >
-                  {INITIAL_PROJECTS.map((p) => (
+                  {projectOptions.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.title} ({p.location})
                     </option>

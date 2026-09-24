@@ -1,7 +1,15 @@
 import React from "react";
 import { POPULAR_CITIES } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 
 export default function LocationsShowcase({ onSelectLocation }) {
+  const site = useSite();
+  const block = site.home?.locations;
+  const cities = sectionItems(block) || POPULAR_CITIES;
+  const eyebrow = block?.eyebrow || "STRATEGIC GROWTH CORRIDORS";
+  const titleLead = block?.titleLead || "Explore Prime";
+  const titleHighlight = block?.titleHighlight || "Locations";
+  const intro = block?.intro || "Browse DTCP and RERA-approved plotted developments across Coimbatore's highest-appreciation residential and IT growth corridors.";
   return (
     <section id="locations-section" className="locations-section">
       <div className="crestora-container">
@@ -9,20 +17,20 @@ export default function LocationsShowcase({ onSelectLocation }) {
         <div className="section-header">
           <div className="section-badge-row">
             <span className="section-badge-pill">
-              STRATEGIC GROWTH CORRIDORS
+              {eyebrow}
             </span>
           </div>
           <h2>
-            Explore Prime <span>Locations</span>
+            {titleLead} <span>{titleHighlight}</span>
           </h2>
           <p>
-            Browse DTCP and RERA-approved plotted developments across Coimbatore's highest-appreciation residential and IT growth corridors.
+            {intro}
           </p>
         </div>
 
         {/* Modern Rounded Card Grid (Matching Reference UI) */}
         <div className="locations-modern-grid">
-          {POPULAR_CITIES.map((loc) => (
+          {cities.map((loc) => (
             <div
               key={loc.id}
               className={`location-modern-card ${loc.span === 2 ? "span-wide" : ""}`}

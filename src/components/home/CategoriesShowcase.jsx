@@ -1,23 +1,31 @@
 import React from "react";
 import { CATEGORIES_DATA } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { ArrowRight } from "lucide-react";
 
 export default function CategoriesShowcase({ onSelectCategory }) {
+  const site = useSite();
+  const block = site.home?.categories;
+  const categories = sectionItems(block) || CATEGORIES_DATA;
+  const eyebrow = block?.eyebrow || "PROPERTY CATEGORIES";
+  const titleLead = block?.titleLead || "Explore by";
+  const titleHighlight = block?.titleHighlight || "Category";
+  const intro = block?.intro || "Curated residential plots, luxury villas, eco farmlands, and commercial developments across prime corridors.";
   return (
     <section id="categories-section" className="categories-section">
       <div className="crestora-container">
         <div className="section-header">
-          <h5>PROPERTY CATEGORIES</h5>
+          <h5>{eyebrow}</h5>
           <h2>
-            Explore by <span>Category</span>
+            {titleLead} <span>{titleHighlight}</span>
           </h2>
           <p>
-            Curated residential plots, luxury villas, eco farmlands, and commercial developments across prime corridors.
+            {intro}
           </p>
         </div>
 
         <div className="categories-classic-grid">
-          {CATEGORIES_DATA.map((cat, idx) => (
+          {categories.map((cat, idx) => (
             <div
               key={cat.id}
               className="category-classic-card"
