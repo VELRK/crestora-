@@ -62,15 +62,37 @@ jobs:
 
       - name: Configure SSH for deploy
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY_ILF }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           DEPLOY_HOST: ${{ secrets.HOST }}
           DEPLOY_USER: ${{ secrets.USERNAME }}
         run: |
           set -e
           SSH_DIR="${HOME}/.ssh"
           mkdir -p "$SSH_DIR"
-          printf '%s\n' "$SSH_PRIVATE_KEY" > "${SSH_DIR}/deploy_key"
+          python3 - <<'PY'
+          import os
+          key = os.environ.get("SSH_PRIVATE_KEY", "")
+          key = key.replace("\r\n", "\n").replace("\r", "\n").strip().lstrip("\ufeff")
+          if len(key) >= 2 and key[0] == key[-1] and key[0] in ("'", '"'):
+              key = key[1:-1].strip()
+          if "\\n" in key and "\n" not in key:
+              key = key.replace("\\n", "\n").strip()
+          if not key.endswith("\n"):
+              key += "\n"
+          path = os.path.expanduser("~/.ssh/deploy_key")
+          with open(path, "w", newline="\n") as handle:
+              handle.write(key)
+          print(f"key_lines={key.count(chr(10))} key_bytes={len(key.encode())}")
+          if key.startswith("ssh-ed25519 ") or key.startswith("ssh-rsa "):
+              raise SystemExit("SSH_KEY is a public key. Paste the private key that starts with BEGIN OPENSSH PRIVATE KEY.")
+          if "BEGIN OPENSSH PRIVATE KEY" not in key and "BEGIN RSA PRIVATE KEY" not in key and "BEGIN PRIVATE KEY" not in key:
+              raise SystemExit("SSH_KEY is missing the BEGIN PRIVATE KEY line. Replace the secret with the full private key.")
+          PY
           chmod 600 "${SSH_DIR}/deploy_key"
+          if ! ssh-keygen -y -f "${SSH_DIR}/deploy_key" >/dev/null; then
+            echo "SSH_KEY secret is not a readable private key. Replace it with the crestora_deploy private key, including both BEGIN and END lines." >&2
+            exit 1
+          fi
           {
             echo 'Host hostinger-deploy'
             echo "  HostName ${DEPLOY_HOST}"
