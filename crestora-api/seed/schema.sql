@@ -1,0 +1,83 @@
+CREATE DATABASE IF NOT EXISTS crestora_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE crestora_db;
+
+DROP TABLE IF EXISTS site_visits;
+DROP TABLE IF EXISTS enquiries;
+DROP TABLE IF EXISTS blogs;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS sections;
+DROP TABLE IF EXISTS settings;
+DROP TABLE IF EXISTS admins;
+
+CREATE TABLE admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(80) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(120) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE settings (
+  setting_key VARCHAR(80) PRIMARY KEY,
+  setting_value TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sections (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  page VARCHAR(40) NOT NULL,
+  section_key VARCHAR(80) NOT NULL,
+  title VARCHAR(255) DEFAULT '',
+  payload LONGTEXT,
+  is_visible TINYINT NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  UNIQUE KEY page_section (page, section_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE projects (
+  code VARCHAR(64) PRIMARY KEY,
+  slug VARCHAR(180) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  category VARCHAR(64) DEFAULT '',
+  locality VARCHAR(80) DEFAULT '',
+  status VARCHAR(32) DEFAULT '',
+  price DECIMAL(14,2) DEFAULT 0,
+  is_featured TINYINT NOT NULL DEFAULT 0,
+  is_popular TINYINT NOT NULL DEFAULT 0,
+  is_active TINYINT NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  payload LONGTEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE blogs (
+  code VARCHAR(64) PRIMARY KEY,
+  slug VARCHAR(220) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  category VARCHAR(80) DEFAULT '',
+  featured TINYINT NOT NULL DEFAULT 0,
+  is_active TINYINT NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  payload LONGTEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE enquiries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) DEFAULT '',
+  phone VARCHAR(40) DEFAULT '',
+  email VARCHAR(160) DEFAULT '',
+  message TEXT,
+  project_name VARCHAR(200) DEFAULT '',
+  source VARCHAR(40) DEFAULT 'contact',
+  status VARCHAR(40) DEFAULT 'new',
+  created_at DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE site_visits (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) DEFAULT '',
+  phone VARCHAR(40) DEFAULT '',
+  email VARCHAR(160) DEFAULT '',
+  project_name VARCHAR(200) DEFAULT '',
+  visit_date VARCHAR(40) DEFAULT '',
+  message TEXT,
+  status VARCHAR(40) DEFAULT 'new',
+  created_at DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

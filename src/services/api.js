@@ -1,4 +1,4 @@
-const API = "http://localhost:8080/crestora-api/api";
+const API = "http://localhost:8080/crestora-properties/crestora-api/api";
 
 async function get(path) {
   const res = await fetch(`${API}${path}`);

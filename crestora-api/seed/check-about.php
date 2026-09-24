@@ -1,0 +1,27 @@
+<?php
+$api = json_decode(file_get_contents('http://localhost:8080/crestora-api/index.php/api/about'), true);
+$d = $api['data'];
+echo 'hero=' . $d['heroTitleLead'] . ' | ' . $d['heroTitleHighlight'] . "\n";
+echo 'metrics=' . count($d['heroMetrics']) . ' anchors=' . count($d['anchors']) . ' pillars=' . count($d['pillars']) . ' philosophy=' . count($d['philosophy']) . "\n";
+echo 'image=' . $d['mainImage'] . "\n";
+$img = @get_headers($d['mainImage']);
+echo 'imageStatus=' . (is_array($img) ? $img[0] : 'fail') . "\n";
+$html = file_get_contents('http://127.0.0.1:4173/');
+preg_match('#/assets/index-[^"]+\.js#', $html, $m);
+echo 'bundle=' . $m[0] . "\n";
+$js = file_get_contents('http://127.0.0.1:4173' . $m[0]);
+echo 'bundleHasHeroKey=' . (strpos($js, 'heroTitleLead') !== false ? 'yes' : 'no') . "\n";
+$cookie = 'c:/xampp/htdocs/crestora-api/seed/cookies.txt';
+$ch = curl_init('http://localhost:8080/crestora-api/index.php/admin/login');
+curl_setopt_array($ch, array(CURLOPT_POST => true, CURLOPT_POSTFIELDS => 'username=admin&password=admin123', CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_COOKIEJAR => $cookie, CURLOPT_COOKIEFILE => $cookie));
+curl_exec($ch);
+curl_close($ch);
+$db = new mysqli('localhost', 'root', '', 'crestora_db');
+$id = $db->query("SELECT id FROM sections WHERE page='about' AND section_key='page'")->fetch_assoc()['id'];
+$ch = curl_init('http://localhost:8080/crestora-api/index.php/admin/section/' . $id);
+curl_setopt_array($ch, array(CURLOPT_RETURNTRANSFER => true, CURLOPT_COOKIEFILE => $cookie));
+$admin = curl_exec($ch);
+curl_close($ch);
+echo 'adminHero=' . (strpos($admin, 'name="payload[heroTitleLead]"') !== false ? 'yes' : 'no') . "\n";
+echo 'adminAddAnchors=' . (strpos($admin, 'value="payload[anchors]"') !== false ? 'yes' : 'no') . "\n";
+echo 'adminImage=' . (substr_count($admin, 'type="file"')) . "\n";
