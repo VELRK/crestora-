@@ -176,6 +176,10 @@ class Admin extends CI_Controller {
 				'is_active' => $this->input->post('is_active') ? 1 : 0,
 				'payload' => fieldform_json($payload),
 			));
+			if ($this->form_stays_open()) {
+				$this->session->set_flashdata('msg', ! empty($_POST['add_list']) ? 'Item added' : 'Item removed');
+				redirect('admin/project/' . $code);
+			}
 			$this->session->set_flashdata('msg', 'Project saved');
 			redirect('admin/projects');
 		}
@@ -253,6 +257,10 @@ class Admin extends CI_Controller {
 				'is_active' => $this->input->post('is_active') ? 1 : 0,
 				'payload' => fieldform_json($payload),
 			));
+			if ($this->form_stays_open()) {
+				$this->session->set_flashdata('msg', ! empty($_POST['add_list']) ? 'Item added' : 'Item removed');
+				redirect('admin/blog/' . $code);
+			}
 			$this->session->set_flashdata('msg', 'Blog saved');
 			redirect('admin/blogs');
 		}
@@ -262,6 +270,11 @@ class Admin extends CI_Controller {
 		$data['heading'] = ($row['title'] === 'New blog') ? 'Add blog' : 'Edit blog';
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
+	}
+
+	private function form_stays_open()
+	{
+		return ! empty($_POST['add_list']) || ! empty($_POST['payload_delete']);
 	}
 
 	private function slugify($value, $fallback = '')
