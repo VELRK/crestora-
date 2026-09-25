@@ -8,7 +8,7 @@ if ($CI->session->userdata('admin_id')) {
 $home = array();
 $pages = array();
 foreach ($sections as $section) {
-	if ($section['page'] === 'home' && in_array($section['section_key'], array('categories', 'locations'), TRUE)) {
+	if ($section['page'] === 'home' && in_array($section['section_key'], array('categories', 'locations', 'hero'), TRUE)) {
 		continue;
 	}
 	if ($section['page'] === 'home') {
@@ -115,6 +115,7 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
   <nav class="nav">
     <a href="<?php echo site_url('admin'); ?>"<?php echo ($uri === 'admin') ? ' class="on"' : ''; ?>>Dashboard</a>
     <div class="group">Home</div>
+    <a href="<?php echo site_url('admin/slides'); ?>"<?php echo ($uri === 'admin/slides' || strpos($uri, 'admin/slide') === 0) ? ' class="on"' : ''; ?>>Slider</a>
     <?php foreach ($home as $section): ?>
       <a class="sub<?php echo ($uri === 'admin/section/'.$section['id']) ? ' on' : ''; ?>" href="<?php echo site_url('admin/section/'.$section['id']); ?>"><?php echo html_escape($section['title']); ?></a>
     <?php endforeach; ?>
@@ -142,5 +143,45 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 </main>
 </div>
 </div>
+<script>
+document.addEventListener('click', function (event) {
+  var add = event.target.closest('.js-add-item');
+  if (add) {
+    var group = add.closest('fieldset.group');
+    if (!group) return;
+    var rows = group.querySelectorAll(':scope > fieldset.item');
+    if (!rows.length) rows = group.querySelectorAll(':scope > .item-row');
+    if (!rows.length) return;
+    var last = rows[rows.length - 1];
+    var next = rows.length;
+    var clone = last.cloneNode(true);
+    var list = add.getAttribute('data-list') || '';
+    var tail = list.replace(/^payload/, '');
+    clone.querySelectorAll('[name]').forEach(function (el) {
+      ['payload', 'upload', 'payload_delete'].forEach(function (base) {
+        var from = base + tail + '[' + (next - 1) + ']';
+        if (el.name.indexOf(from) === 0) el.name = base + tail + '[' + next + ']' + el.name.slice(from.length);
+      });
+      if (el.type === 'checkbox') el.checked = false;
+      else if (el.type === 'file') el.value = '';
+      else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = '';
+    });
+    clone.querySelectorAll('.img-preview').forEach(function (img) { img.remove(); });
+    var legend = clone.querySelector('legend');
+    if (legend) legend.textContent = 'Item ' + (next + 1);
+    group.insertBefore(clone, add.closest('.add-row'));
+    var first = clone.querySelector('input, textarea, select');
+    if (first) first.focus();
+    return;
+  }
+  var remove = event.target.closest('.js-remove-item');
+  if (remove) {
+    if (!confirm('Remove this item?')) return;
+    var row = remove.closest('fieldset.item') || remove.closest('.item-row');
+    if (row) row.remove();
+  }
+});
+</script>
 </body>
 </html>

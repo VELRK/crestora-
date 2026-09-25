@@ -414,6 +414,119 @@ class Admin extends CI_Controller {
 		redirect('admin/locations');
 	}
 
+	public function slides()
+	{
+		$this->require_login();
+		list($row, $meta, $items) = $this->load_items('home', 'hero');
+		$data['ready'] = (bool) $row;
+		$data['rows'] = $items;
+		$data['msg'] = $this->session->flashdata('msg');
+		$this->load->view('admin/layout', array('title' => 'Slider', 'body' => $this->load->view('admin/slides', $data, TRUE)));
+	}
+
+	public function slide_create()
+	{
+		$this->slide_form('', array(
+			'id' => '',
+			'subtitle' => '',
+			'title' => '',
+			'titleHighlight1' => '',
+			'titleHighlight2' => '',
+			'description' => '',
+			'tagline' => '',
+			'projectName' => '',
+			'location' => '',
+			'price' => '',
+			'period' => 'Onwards',
+			'bgImage' => '',
+			'tag' => '',
+			'badge' => '',
+			'plotsCount' => '',
+			'landArea' => '',
+		), 'Add slide');
+	}
+
+	public function slide($id = '')
+	{
+		$this->slide_form($id, array(), 'Edit slide');
+	}
+
+	public function slide_delete($id = '')
+	{
+		$this->require_login();
+		if ($this->input->method() === 'post' && $id !== '') {
+			list($row, $meta, $items) = $this->load_items('home', 'hero');
+			$index = $this->find_item_index($items, $id);
+			if ($row && $index >= 0) {
+				array_splice($items, $index, 1);
+				$this->save_list('home', 'hero', $items);
+				$this->session->set_flashdata('msg', 'Slide deleted');
+			}
+		}
+		redirect('admin/slides');
+	}
+
+	private function slide_form($id, $blank, $heading)
+	{
+		$this->require_login();
+		list($row, $meta, $items) = $this->load_items('home', 'hero');
+		if ( ! $row) {
+			show_error('The slider section is missing.');
+		}
+		$index = ($id === '') ? -1 : $this->find_item_index($items, $id);
+		if ($id !== '' && $index < 0) {
+			show_404();
+		}
+		$item = ($index >= 0) ? $items[$index] : $blank;
+		$error = '';
+		if ($this->input->method() === 'post') {
+			$posted = $this->input->post('item');
+			if ( ! is_array($posted)) {
+				$posted = array();
+			}
+			$item = array_merge($item, $posted);
+			if (isset($_FILES['bgImage']['name']) && $_FILES['bgImage']['name'] !== '' && (int) $_FILES['bgImage']['error'] === UPLOAD_ERR_OK) {
+				$url = fieldform_store_upload($_FILES['bgImage']['tmp_name'], $_FILES['bgImage']['name']);
+				if ($url) {
+					$item['bgImage'] = $url;
+				}
+			}
+			$title = trim(isset($item['title']) ? $item['title'] : '');
+			if ($title === '') {
+				$error = 'Slide title is required';
+			} else {
+				$item['title'] = $title;
+				if ($item['id'] === '') {
+					$item['id'] = $this->unique_item_id($items, 's'.(count($items) + 1));
+				}
+				if ($index >= 0) {
+					$items[$index] = $item;
+				} else {
+					$items[] = $item;
+				}
+				$this->save_list('home', 'hero', $items);
+				$this->session->set_flashdata('msg', 'Slide saved');
+				redirect('admin/slides');
+			}
+		}
+		$defaults = array(
+			'id' => '', 'subtitle' => '', 'title' => '', 'titleHighlight1' => '', 'titleHighlight2' => '',
+			'description' => '', 'tagline' => '', 'projectName' => '', 'location' => '', 'price' => '',
+			'period' => '', 'bgImage' => '', 'tag' => '', 'badge' => '', 'plotsCount' => '', 'landArea' => '',
+		);
+		$data['item'] = array_merge($defaults, $item);
+		$data['heading'] = ($id === '') ? $heading : 'Edit slide';
+		$data['error'] = $error;
+		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/slide_form', $data, TRUE)));
+	}
+
+	private function save_list($page, $key, $items)
+	{
+		$this->db->where('page', $page)->where('section_key', $key)->update('sections', array(
+			'payload' => json_encode(array_values($items), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+		));
+	}
+
 	private function catalog_form($kind, $id, $blank, $heading, $list_url)
 	{
 		$this->require_login();

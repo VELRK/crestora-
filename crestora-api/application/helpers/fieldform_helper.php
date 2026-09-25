@@ -102,12 +102,12 @@ function fieldform_add_button($name)
 {
 	$label = fieldform_label($name);
 	$text = ($label === 'Content') ? 'Add item' : 'Add ' . strtolower($label);
-	return '<button type="submit" name="add_list" value="' . html_escape($name) . '" class="btn-plus" title="' . html_escape($text) . '"><span class="plus" aria-hidden="true">+</span><span>' . html_escape($text) . '</span></button>';
+	return '<button type="button" data-list="' . html_escape($name) . '" class="btn-plus js-add-item" title="' . html_escape($text) . '"><span class="plus" aria-hidden="true">+</span><span>' . html_escape($text) . '</span></button>';
 }
 
 function fieldform_delete_button($name)
 {
-	return '<button type="submit" class="btn-remove" name="' . html_escape(fieldform_delete_name($name)) . '" value="1" title="Remove" aria-label="Remove" onclick="return confirm(\'Remove this item?\');"><span aria-hidden="true">&times;</span></button>';
+	return '<button type="button" class="btn-remove js-remove-item" title="Remove" aria-label="Remove"><span aria-hidden="true">&times;</span></button>';
 }
 
 function fieldform_blank($sample)
@@ -331,6 +331,9 @@ function fieldform_apply($original, $posted)
 {
 	if (is_array($original)) {
 		$is_list = fieldform_is_list($original);
+		if ($is_list) {
+			return fieldform_apply_list($original, is_array($posted) ? $posted : array());
+		}
 		$out = array();
 		foreach ($original as $key => $value) {
 			$child = (is_array($posted) && array_key_exists($key, $posted)) ? $posted[$key] : NULL;
@@ -340,9 +343,36 @@ function fieldform_apply($original, $posted)
 				$out[$key] = fieldform_cast($value, $child);
 			}
 		}
-		return $is_list ? array_values($out) : $out;
+		return $out;
 	}
 	return fieldform_cast($original, $posted);
+}
+
+function fieldform_apply_list($original, $posted)
+{
+	$keys = array();
+	foreach ($original as $key => $value) {
+		if (array_key_exists($key, $posted)) {
+			$keys[] = $key;
+		}
+	}
+	foreach ($posted as $key => $value) {
+		if ( ! array_key_exists($key, $original) && ctype_digit((string) $key)) {
+			$keys[] = $key;
+		}
+	}
+	$template = $original ? $original[count($original) - 1] : '';
+	$out = array();
+	foreach ($keys as $key) {
+		$sample = array_key_exists($key, $original) ? $original[$key] : $template;
+		$child = $posted[$key];
+		if (is_array($sample)) {
+			$out[] = fieldform_apply($sample, is_array($child) ? $child : array());
+		} else {
+			$out[] = fieldform_cast($sample, $child);
+		}
+	}
+	return $out;
 }
 
 function fieldform_cast($original, $posted)
