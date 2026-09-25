@@ -153,13 +153,30 @@ document.addEventListener('click', function (event) {
     if (!rows.length) rows = group.querySelectorAll(':scope > .item-row');
     if (!rows.length) return;
     var last = rows[rows.length - 1];
-    var next = rows.length;
-    var clone = last.cloneNode(true);
     var list = add.getAttribute('data-list') || '';
     var tail = list.replace(/^payload/, '');
+    var escaped = tail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var indexMatch = (last.querySelector('[name]') || {}).name || '';
+    var found = indexMatch.match(new RegExp('(?:payload|upload|payload_delete)' + escaped + '\\[(\\d+)\\]'));
+    var fromIndex = found ? found[1] : String(rows.length - 1);
+    var maxIndex = parseInt(fromIndex, 10);
+    rows.forEach(function (row) {
+      var rowName = (row.querySelector('[name]') || {}).name || '';
+      var rowFound = rowName.match(new RegExp('(?:payload|upload|payload_delete)' + escaped + '\\[(\\d+)\\]'));
+      if (rowFound) maxIndex = Math.max(maxIndex, parseInt(rowFound[1], 10));
+    });
+    var next = maxIndex + 1;
+    var clone = last.cloneNode(true);
+    clone.querySelectorAll('fieldset.group').forEach(function (nested) {
+      var nestedRows = nested.querySelectorAll(':scope > fieldset.item');
+      if (!nestedRows.length) nestedRows = nested.querySelectorAll(':scope > .item-row');
+      for (var i = 1; i < nestedRows.length; i++) nestedRows[i].remove();
+      var nestedLegend = nestedRows[0] && nestedRows[0].querySelector('legend');
+      if (nestedLegend) nestedLegend.textContent = 'Item 1';
+    });
     clone.querySelectorAll('[name]').forEach(function (el) {
       ['payload', 'upload', 'payload_delete'].forEach(function (base) {
-        var from = base + tail + '[' + (next - 1) + ']';
+        var from = base + tail + '[' + fromIndex + ']';
         if (el.name.indexOf(from) === 0) el.name = base + tail + '[' + next + ']' + el.name.slice(from.length);
       });
       if (el.type === 'checkbox') el.checked = false;
@@ -168,7 +185,7 @@ document.addEventListener('click', function (event) {
       else el.value = '';
     });
     clone.querySelectorAll('.img-preview').forEach(function (img) { img.remove(); });
-    var legend = clone.querySelector('legend');
+    var legend = clone.querySelector(':scope > legend') || clone.querySelector('legend');
     if (legend) legend.textContent = 'Item ' + (next + 1);
     group.insertBefore(clone, add.closest('.add-row'));
     var first = clone.querySelector('input, textarea, select');
