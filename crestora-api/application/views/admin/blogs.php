@@ -1,6 +1,8 @@
-<h2>Blogs</h2>
+<div class="page-head">
+  <h2>Blogs</h2>
+  <a class="btn btn-plus" href="<?php echo site_url('admin/blog_create'); ?>"><span class="plus" aria-hidden="true">+</span><span>Add blog</span></a>
+</div>
 <?php if ( ! empty($msg)): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
-<p><a class="btn btn-add" href="<?php echo site_url('admin/blog_create'); ?>">Add blog</a></p>
 <div class="card">
 <table>
 <tr><th>Image</th><th>Title</th><th>Slug</th><th>Category</th><th>Featured</th><th>Active</th><th></th></tr>

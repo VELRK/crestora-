@@ -45,7 +45,7 @@ function fieldform_walk($data, $name)
 			if ($is_gallery) {
 				echo '<label>Add gallery image<input class="file-input" type="file" accept="image/jpeg,image/png,image/gif,image/webp" name="upload_extra[gallery][]" multiple /></label>';
 			}
-			echo '<p><button type="submit" name="add_list" value="' . html_escape($name) . '" class="btn-add">Add item</button></p>';
+			echo '<div class="add-row">' . fieldform_add_button($name) . '</div>';
 			echo '</fieldset>';
 			return;
 		}
@@ -61,7 +61,7 @@ function fieldform_walk($data, $name)
 				fieldform_walk($item, $name . '[' . $index . ']');
 				echo '</fieldset>';
 			}
-			echo '<p><button type="submit" name="add_list" value="' . html_escape($name) . '" class="btn-add">Add item</button></p>';
+			echo '<div class="add-row">' . fieldform_add_button($name) . '</div>';
 			echo '</fieldset>';
 			return;
 		}
@@ -98,9 +98,16 @@ function fieldform_delete_name($name)
 	return preg_replace('/^payload/', 'payload_delete', $name, 1);
 }
 
+function fieldform_add_button($name)
+{
+	$label = fieldform_label($name);
+	$text = ($label === 'Content') ? 'Add item' : 'Add ' . strtolower($label);
+	return '<button type="submit" name="add_list" value="' . html_escape($name) . '" class="btn-plus" title="' . html_escape($text) . '"><span class="plus" aria-hidden="true">+</span><span>' . html_escape($text) . '</span></button>';
+}
+
 function fieldform_delete_button($name)
 {
-	return '<p><button type="submit" class="btn-delete" name="' . html_escape(fieldform_delete_name($name)) . '" value="1" onclick="return confirm(\'Delete this item?\');">Delete this item</button></p>';
+	return '<button type="submit" class="btn-remove" name="' . html_escape(fieldform_delete_name($name)) . '" value="1" title="Remove" aria-label="Remove" onclick="return confirm(\'Remove this item?\');"><span aria-hidden="true">&times;</span></button>';
 }
 
 function fieldform_blank($sample)

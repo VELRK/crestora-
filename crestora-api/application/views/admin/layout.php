@@ -75,9 +75,20 @@ fieldset.group{border:1px solid var(--line);border-radius:14px;margin:16px 0;pad
 fieldset.item{border:1px dashed #e4dccb;border-radius:12px;margin:12px 0;padding:8px 12px;background:#fff}
 legend{font-size:13px;font-weight:700;color:#8a6a12;padding:0 6px}
 button,.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;font-size:14px}
-.btn-add{background:linear-gradient(180deg,#e2c36a,#b8923e);color:#1c1508}
+.page-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}
+.page-head h2{margin:0}
+.btn-add,.btn-plus{background:#fff;color:#1c1508;border:1px dashed #d7c28a;gap:8px;padding:6px 14px 6px 6px}
+.btn-plus:hover,.btn-add:hover{background:#fffaf0;border-style:solid}
+.plus{width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#e2c36a,#b8923e);display:grid;place-items:center;font-size:22px;line-height:1;font-weight:700}
+.add-row{margin:4px 0 8px}
+.item-row{display:flex;gap:10px;align-items:flex-end}
+.item-row > label{flex:1;margin:8px 0}
+fieldset.item{position:relative;padding-right:52px}
+fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .btn-delete{background:#fff;color:var(--danger);border:1px solid #f0d0d0;padding:7px 12px}
 .btn-delete:hover{background:#fff5f5}
+.btn-remove{width:32px;height:32px;min-width:32px;padding:0;border-radius:50%;background:#fff;color:var(--danger);border:1px solid #f0d0d0;font-size:20px;line-height:1}
+.btn-remove:hover{background:#fff5f5}
 .delete-flag{color:var(--danger);font-weight:600}
 .row-actions{display:flex;gap:10px;align-items:center}
 .row-actions form{margin:0}
