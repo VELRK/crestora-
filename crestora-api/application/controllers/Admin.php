@@ -177,12 +177,13 @@ class Admin extends CI_Controller {
 				'payload' => fieldform_json($payload),
 			));
 			$this->session->set_flashdata('msg', 'Project saved');
-			redirect('admin/project/' . $code);
+			redirect('admin/projects');
 		}
 		$data['row'] = $row;
 		$data['item'] = json_decode($row['payload'], TRUE);
+		$data['heading'] = ($row['title'] === 'New project') ? 'Add project' : 'Edit project';
 		$data['msg'] = $this->session->flashdata('msg');
-		$this->load->view('admin/layout', array('title' => 'Edit project', 'body' => $this->load->view('admin/project', $data, TRUE)));
+		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/project', $data, TRUE)));
 	}
 
 	public function blog_create()
@@ -253,13 +254,14 @@ class Admin extends CI_Controller {
 				'payload' => fieldform_json($payload),
 			));
 			$this->session->set_flashdata('msg', 'Blog saved');
-			redirect('admin/blog/' . $code);
+			redirect('admin/blogs');
 		}
 		$data['row'] = $row;
 		$data['item'] = json_decode($row['payload'], TRUE);
 		$data['projects'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
+		$data['heading'] = ($row['title'] === 'New blog') ? 'Add blog' : 'Edit blog';
 		$data['msg'] = $this->session->flashdata('msg');
-		$this->load->view('admin/layout', array('title' => 'Edit blog', 'body' => $this->load->view('admin/blog', $data, TRUE)));
+		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
 	}
 
 	private function slugify($value, $fallback = '')
@@ -291,9 +293,287 @@ class Admin extends CI_Controller {
 
 	public function leads()
 	{
+		redirect('admin/contacts');
+	}
+
+	public function contacts()
+	{
 		$this->require_login();
-		$data['enquiries'] = $this->db->order_by('id', 'DESC')->get('enquiries')->result_array();
-		$data['visits'] = $this->db->order_by('id', 'DESC')->get('site_visits')->result_array();
-		$this->load->view('admin/layout', array('title' => 'Leads', 'body' => $this->load->view('admin/leads', $data, TRUE)));
+		$data['rows'] = $this->db->order_by('id', 'DESC')->get('enquiries')->result_array();
+		$this->load->view('admin/layout', array('title' => 'Contact forms', 'body' => $this->load->view('admin/contacts', $data, TRUE)));
+	}
+
+	public function visits()
+	{
+		$this->require_login();
+		$data['rows'] = $this->db->order_by('id', 'DESC')->get('site_visits')->result_array();
+		$this->load->view('admin/layout', array('title' => 'Site visits', 'body' => $this->load->view('admin/visits', $data, TRUE)));
+	}
+
+	public function categories()
+	{
+		$this->require_login();
+		list($row, $meta, $items) = $this->load_items('home', 'categories');
+		$data['ready'] = (bool) $row;
+		$data['rows'] = $items;
+		$data['msg'] = $this->session->flashdata('msg');
+		$this->load->view('admin/layout', array('title' => 'Categories', 'body' => $this->load->view('admin/categories', $data, TRUE)));
+	}
+
+	public function category_create()
+	{
+		$this->catalog_form('categories', '', array(
+			'id' => '',
+			'categoryKey' => '',
+			'categoryName' => '',
+			'title' => '',
+			'subtitle' => '',
+			'description' => '',
+			'badge' => '',
+			'plotsCount' => '',
+			'startingPrice' => '',
+			'exampleText' => '',
+			'image' => '',
+			'icon' => 'LandPlot',
+		), 'Add category', 'admin/categories');
+	}
+
+	public function category($id = '')
+	{
+		$this->catalog_form('categories', $id, array(), 'Edit category', 'admin/categories');
+	}
+
+	public function category_delete($id = '')
+	{
+		$this->require_login();
+		if ($this->input->method() === 'post' && $id !== '') {
+			list($row, $meta, $items) = $this->load_items('home', 'categories');
+			$index = $this->find_item_index($items, $id);
+			if ($row && $index >= 0) {
+				array_splice($items, $index, 1);
+				$this->save_items('home', 'categories', $meta, $items);
+				$this->session->set_flashdata('msg', 'Category deleted');
+			}
+		}
+		redirect('admin/categories');
+	}
+
+	public function locations()
+	{
+		$this->require_login();
+		list($row, $meta, $items) = $this->load_items('home', 'locations');
+		$data['ready'] = (bool) $row;
+		$data['rows'] = $items;
+		$data['msg'] = $this->session->flashdata('msg');
+		$this->load->view('admin/layout', array('title' => 'Locations', 'body' => $this->load->view('admin/locations', $data, TRUE)));
+	}
+
+	public function location_create()
+	{
+		$this->catalog_form('locations', '', array(
+			'id' => '',
+			'name' => '',
+			'state' => '',
+			'count' => 0,
+			'cityKey' => '',
+			'image' => '',
+			'highlight' => '',
+		), 'Add location', 'admin/locations');
+	}
+
+	public function location($id = '')
+	{
+		$this->catalog_form('locations', $id, array(), 'Edit location', 'admin/locations');
+	}
+
+	public function location_delete($id = '')
+	{
+		$this->require_login();
+		if ($this->input->method() === 'post' && $id !== '') {
+			list($row, $meta, $items) = $this->load_items('home', 'locations');
+			$index = $this->find_item_index($items, $id);
+			if ($row && $index >= 0) {
+				array_splice($items, $index, 1);
+				$this->save_items('home', 'locations', $meta, $items);
+				$this->session->set_flashdata('msg', 'Location deleted');
+			}
+		}
+		redirect('admin/locations');
+	}
+
+	private function catalog_form($kind, $id, $blank, $heading, $list_url)
+	{
+		$this->require_login();
+		$page_key = ($kind === 'locations') ? 'locations' : 'categories';
+		list($row, $meta, $items) = $this->load_items('home', $page_key);
+		if ( ! $row) {
+			show_error('The '.$page_key.' section is missing.');
+		}
+		$index = ($id === '') ? -1 : $this->find_item_index($items, $id);
+		if ($id !== '' && $index < 0) {
+			show_404();
+		}
+		$item = ($index >= 0) ? $items[$index] : $blank;
+		$error = '';
+		if ($this->input->method() === 'post') {
+			$posted = $this->input->post('item');
+			if ( ! is_array($posted)) {
+				$posted = array();
+			}
+			$item = array_merge($item, $posted);
+			if (isset($_FILES['image']['name']) && $_FILES['image']['name'] !== '' && (int) $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+				$url = fieldform_store_upload($_FILES['image']['tmp_name'], $_FILES['image']['name']);
+				if ($url) {
+					$item['image'] = $url;
+				}
+			}
+			if ($kind === 'locations') {
+				$name = trim(isset($item['name']) ? $item['name'] : '');
+				$key = $this->slugify(isset($item['cityKey']) ? $item['cityKey'] : '', $name);
+				if ($name === '') {
+					$error = 'Location name is required';
+				} else {
+					$item['name'] = $name;
+					$item['cityKey'] = $key;
+					$item['count'] = (int) $item['count'];
+					if ($item['id'] === '') {
+						$item['id'] = $this->unique_item_id($items, $key);
+					}
+					if ($index >= 0) {
+						$items[$index] = $item;
+					} else {
+						$items[] = $item;
+					}
+					$this->save_items('home', 'locations', $meta, $items);
+					$this->upsert_filter('localities', $key, $name, array('city' => 'coimbatore'));
+					$this->session->set_flashdata('msg', 'Location saved');
+					redirect($list_url);
+				}
+			} else {
+				$name = trim(isset($item['categoryName']) ? $item['categoryName'] : '');
+				$key = $this->slugify(isset($item['categoryKey']) ? $item['categoryKey'] : '', $name);
+				if ($name === '') {
+					$error = 'Category name is required';
+				} else {
+					$item['categoryName'] = $name;
+					$item['categoryKey'] = $key;
+					$item['badge'] = $item['badge'] !== '' ? $item['badge'] : $name;
+					if ($item['id'] === '') {
+						$item['id'] = $this->unique_item_id($items, $key);
+					}
+					if ($index >= 0) {
+						$items[$index] = $item;
+					} else {
+						$items[] = $item;
+					}
+					$this->save_items('home', 'categories', $meta, $items);
+					$this->upsert_filter('categories', $key, $name, array('subtitle' => isset($item['subtitle']) ? $item['subtitle'] : ''));
+					$this->upsert_filter('propertyTypes', $key, $name);
+					$this->session->set_flashdata('msg', 'Category saved');
+					redirect($list_url);
+				}
+			}
+		}
+		$data['item'] = $item;
+		$data['heading'] = ($id === '') ? $heading : str_replace('Add ', 'Edit ', $heading);
+		$data['error'] = $error;
+		$data['list_url'] = $list_url;
+		$data['kind'] = $kind;
+		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/catalog_form', $data, TRUE)));
+	}
+
+	private function load_items($page, $key)
+	{
+		$row = $this->db->get_where('sections', array('page' => $page, 'section_key' => $key))->row_array();
+		$payload = ($row && $row['payload'] !== '') ? json_decode($row['payload'], TRUE) : array();
+		if ( ! is_array($payload)) {
+			$payload = array();
+		}
+		if (isset($payload['items']) && is_array($payload['items'])) {
+			$items = $payload['items'];
+			$meta = $payload;
+			unset($meta['items']);
+		} elseif ($this->is_list_array($payload)) {
+			$items = $payload;
+			$meta = array();
+		} else {
+			$items = array();
+			$meta = $payload;
+		}
+		return array($row, $meta, array_values($items));
+	}
+
+	private function save_items($page, $key, $meta, $items)
+	{
+		$payload = is_array($meta) ? $meta : array();
+		$payload['items'] = array_values($items);
+		$this->db->where('page', $page)->where('section_key', $key)->update('sections', array(
+			'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+		));
+	}
+
+	private function find_item_index($items, $id)
+	{
+		foreach ($items as $index => $item) {
+			if (isset($item['id']) && (string) $item['id'] === (string) $id) {
+				return $index;
+			}
+		}
+		return -1;
+	}
+
+	private function unique_item_id($items, $base)
+	{
+		$id = $base !== '' ? $base : 'item';
+		$try = $id;
+		$n = 2;
+		while ($this->find_item_index($items, $try) >= 0) {
+			$try = $id.'-'.$n;
+			$n++;
+		}
+		return $try;
+	}
+
+	private function is_list_array($value)
+	{
+		if ( ! is_array($value)) {
+			return FALSE;
+		}
+		if ($value === array()) {
+			return TRUE;
+		}
+		return array_keys($value) === range(0, count($value) - 1);
+	}
+
+	private function upsert_filter($list_key, $value, $label, $extra = array())
+	{
+		if ($value === '' || $value === 'all') {
+			return;
+		}
+		$row = $this->db->get_where('sections', array('page' => 'global', 'section_key' => 'filters'))->row_array();
+		if ( ! $row) {
+			return;
+		}
+		$payload = json_decode($row['payload'], TRUE);
+		if ( ! is_array($payload)) {
+			$payload = array();
+		}
+		if ( ! isset($payload[$list_key]) || ! is_array($payload[$list_key])) {
+			$payload[$list_key] = array();
+		}
+		$found = FALSE;
+		foreach ($payload[$list_key] as $index => $item) {
+			if (isset($item['value']) && $item['value'] === $value) {
+				$payload[$list_key][$index] = array_merge($item, $extra, array('id' => isset($item['id']) ? $item['id'] : $value, 'label' => $label, 'value' => $value));
+				$found = TRUE;
+				break;
+			}
+		}
+		if ( ! $found) {
+			$payload[$list_key][] = array_merge(array('id' => $value, 'label' => $label, 'value' => $value), $extra);
+		}
+		$this->db->where('id', (int) $row['id'])->update('sections', array(
+			'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+		));
 	}
 }

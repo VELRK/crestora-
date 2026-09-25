@@ -8,6 +8,9 @@ if ($CI->session->userdata('admin_id')) {
 $home = array();
 $pages = array();
 foreach ($sections as $section) {
+	if ($section['page'] === 'home' && in_array($section['section_key'], array('categories', 'locations'), TRUE)) {
+		continue;
+	}
 	if ($section['page'] === 'home') {
 		$home[] = $section;
 	} else {
@@ -81,6 +84,7 @@ button,.btn{display:inline-flex;align-items:center;justify-content:center;backgr
 .row-actions a{font-weight:600}
 .ok{background:var(--ok);color:var(--ok-ink);padding:12px 14px;border-radius:12px;border:1px solid #cfe8d4}
 .img-preview{display:block;width:180px;height:112px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin:8px 0;background:#f7f4ee}
+.thumb{width:72px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#f7f4ee}
 .file-input{padding:8px;background:#fff}
 .file-note{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:6px}
 @media(max-width:980px){.stats{grid-template-columns:1fr 1fr}}
@@ -106,12 +110,15 @@ button,.btn{display:inline-flex;align-items:center;justify-content:center;backgr
     <div class="group">Content</div>
     <a href="<?php echo site_url('admin/projects'); ?>"<?php echo nav_on($uri, 'admin/projects'); ?>>Projects</a>
     <a href="<?php echo site_url('admin/blogs'); ?>"<?php echo nav_on($uri, 'admin/blogs'); ?>>Blogs</a>
+    <a href="<?php echo site_url('admin/categories'); ?>"<?php echo ($uri === 'admin/categories' || strpos($uri, 'admin/category') === 0) ? ' class="on"' : ''; ?>>Categories</a>
+    <a href="<?php echo site_url('admin/locations'); ?>"<?php echo ($uri === 'admin/locations' || strpos($uri, 'admin/location') === 0) ? ' class="on"' : ''; ?>>Locations</a>
     <?php foreach ($pages as $section): ?>
       <a class="sub<?php echo ($uri === 'admin/section/'.$section['id']) ? ' on' : ''; ?>" href="<?php echo site_url('admin/section/'.$section['id']); ?>"><?php echo html_escape($section['title']); ?></a>
     <?php endforeach; ?>
     <div class="group">Site</div>
     <a href="<?php echo site_url('admin/settings'); ?>"<?php echo nav_on($uri, 'admin/settings'); ?>>Settings</a>
-    <a href="<?php echo site_url('admin/leads'); ?>"<?php echo nav_on($uri, 'admin/leads'); ?>>Leads</a>
+    <a href="<?php echo site_url('admin/contacts'); ?>"<?php echo nav_on($uri, 'admin/contacts'); ?>>Contact forms</a>
+    <a href="<?php echo site_url('admin/visits'); ?>"<?php echo nav_on($uri, 'admin/visits'); ?>>Site visits</a>
   </nav>
   <div class="foot">
     <div class="who"><?php echo html_escape($CI->session->userdata('admin_name') ?: 'Signed in'); ?></div>

@@ -1,4 +1,5 @@
-<h2>Edit project</h2>
+<h2><?php echo html_escape($heading); ?></h2>
+<p><a href="<?php echo site_url('admin/projects'); ?>">Back to projects</a></p>
 <?php if ($msg): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card">
   <label><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> style="width:auto" /> Active on site</label>
