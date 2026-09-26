@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
-import { useSite } from "../../services/SiteData.jsx";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import {
   Phone,
   Mail,
@@ -30,7 +30,14 @@ export default function Header({
   const cityLabel = "Coimbatore";
   const logo = settings.logo || logoImg;
   const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
-  const menuLocations = (site.filters?.localities || []).filter((item) => item.value && item.value !== "all");
+  const menuLocations = (sectionItems(site.home?.locations) || [])
+    .map((item) => ({
+      id: item.id || item.cityKey,
+      label: item.name || "",
+      value: item.cityKey || "",
+      subtitle: item.highlight || item.corridor || item.state || "",
+    }))
+    .filter((item) => item.value);
   const menuStatuses = site.filters?.statuses || [];
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -242,6 +249,7 @@ export default function Header({
                     }}
                   >
                     <span className="dropdown-link-title">{item.label}</span>
+                    {item.subtitle ? <span className="dropdown-link-desc">{item.subtitle}</span> : null}
                   </a>
                 ))}
               </div>

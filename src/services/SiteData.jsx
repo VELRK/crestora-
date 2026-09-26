@@ -110,17 +110,22 @@ function categoryOptions(block, fallback) {
   ];
 }
 
+function mapLocationItem(item) {
+  return {
+    id: item.id || item.cityKey || item.value,
+    label: item.name || item.label || "",
+    value: item.cityKey || item.value || "",
+    subtitle: item.highlight || item.corridor || item.state || item.subtitle || "",
+  };
+}
+
 function locationOptions(block, fallback) {
   const items = listOf(block);
-  const source = items.length
-    ? items
-    : (Array.isArray(fallback) ? fallback : []);
-  return source
-    .map((item) => ({
-      id: item.id || item.cityKey || item.value,
-      label: item.name || item.label || "",
-      value: item.cityKey || item.value || "",
-    }))
+  if (items.length) {
+    return items.map(mapLocationItem).filter((item) => item.value && item.value !== "all");
+  }
+  return (Array.isArray(fallback) ? fallback : [])
+    .map(mapLocationItem)
     .filter((item) => item.value && item.value !== "all");
 }
 
@@ -195,7 +200,7 @@ export function SiteProvider({ children }) {
         const posts = blogs.data?.posts || [];
         const projectList = projects.data || [];
         const categories = categoryOptions(apiHome.categories, apiFilters.categories);
-        const localities = locationOptions(apiHome.locations, apiFilters.localities);
+        const localities = locationOptions(apiHome.locations, apiFilters.localities?.length ? apiFilters.localities : []);
         setState({
           home: {
             ...STATIC_HOME,
