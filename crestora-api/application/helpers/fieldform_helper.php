@@ -340,6 +340,22 @@ function fieldform_input($name, $value, $label)
 		echo '</div></label>';
 		return;
 	}
+	if (preg_match('/\[icon\]$/', $name)) {
+		echo '<select name="' . html_escape($name) . '">';
+		$found = FALSE;
+		foreach (crestora_icon_choices() as $opt_value => $opt_label) {
+			$selected = ((string) $opt_value === $text);
+			if ($selected) {
+				$found = TRUE;
+			}
+			echo '<option value="' . html_escape($opt_value) . '"' . ($selected ? ' selected' : '') . '>' . html_escape($opt_label) . '</option>';
+		}
+		if ($text !== '' && ! $found) {
+			echo '<option value="' . html_escape($text) . '" selected>' . html_escape($text) . ' (custom)</option>';
+		}
+		echo '</select></label>';
+		return;
+	}
 	$choices = fieldform_choices_for($name);
 	if (is_array($choices)) {
 		echo '<select name="' . html_escape($name) . '">';
@@ -583,6 +599,105 @@ function crestora_location_choices()
 	return $choices;
 }
 
+function crestora_icon_choices()
+{
+	return array(
+		'' => 'Default (sparkles)',
+		'Sparkles' => 'Sparkles',
+		'Landmark' => 'Landmark',
+		'ShieldCheck' => 'Shield / security',
+		'Shield' => 'Shield (simple)',
+		'Building2' => 'Building',
+		'Home' => 'Home',
+		'Trees' => 'Trees / parks',
+		'MapPin' => 'Location',
+		'TrendingUp' => 'Growth',
+		'CheckCircle2' => 'Approved / check',
+		'Layout' => 'Layout / plan',
+		'Layers' => 'Layers',
+		'Droplet' => 'Water',
+		'Star' => 'Star',
+		'Clock' => 'Travel time',
+		'landmark' => 'landmark (legacy)',
+		'shield' => 'shield (legacy)',
+		'layout' => 'layout (legacy)',
+		'trending-up' => 'trending-up (legacy)',
+		'star' => 'star (legacy)',
+		'droplet' => 'droplet (legacy)',
+		'home' => 'home (legacy)',
+	);
+}
+
+function crestora_project_admin_schema()
+{
+	return array(
+		'id' => '',
+		'status' => 'ongoing',
+		'badge' => '',
+		'tagline' => '',
+		'description' => '',
+		'price' => 0,
+		'priceDisplay' => '',
+		'pricePerSqft' => 0,
+		'totalArea' => '',
+		'totalUnits' => '',
+		'area' => '',
+		'approval' => '',
+		'reraNumber' => '',
+		'dtcpNumber' => '',
+		'isFeatured' => FALSE,
+		'isPopular' => FALSE,
+		'image' => '',
+		'gallery' => array(''),
+		'highlights' => array(''),
+		'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+		'overviewParagraphs' => array(''),
+		'specifications' => array(array('label' => '', 'value' => '')),
+		'amenityDetails' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+		'masterPlanImage' => '',
+		'plotSizes' => array(array('badge' => '', 'sqft' => '', 'ideal' => '', 'highlight' => FALSE)),
+		'proximity' => array(array('landmark' => '', 'dist' => '', 'time' => '', 'category' => '')),
+	);
+}
+
+function crestora_pick_admin_fields($item)
+{
+	$shape = fieldform_blank(crestora_project_admin_schema());
+	$item = is_array($item) ? $item : array();
+	$out = array();
+	foreach ($shape as $key => $default) {
+		$out[$key] = array_key_exists($key, $item) ? $item[$key] : $default;
+	}
+	return $out;
+}
+
+function crestora_prune_project_payload($payload, $original = array())
+{
+	if ( ! is_array($payload)) {
+		return array();
+	}
+	$keep = array_keys(crestora_project_admin_schema());
+	$keep[] = 'title';
+	$keep[] = 'slug';
+	$keep[] = 'category';
+	$keep[] = 'location';
+	$keep[] = 'locality';
+	$keep[] = 'type';
+	$keep[] = 'typeName';
+	$keep[] = 'cityName';
+	$keep[] = 'amenities';
+	$out = array();
+	foreach ($keep as $key) {
+		if (array_key_exists($key, $payload)) {
+			$out[$key] = $payload[$key];
+		}
+	}
+	if (empty($out['id']) && is_array($original) && ! empty($original['id'])) {
+		$out['id'] = $original['id'];
+	}
+	return $out;
+}
+
 function crestora_sync_project($payload)
 {
 	if ( ! is_array($payload)) {
@@ -605,8 +720,12 @@ function crestora_sync_project($payload)
 			if ($loc['key'] !== '') {
 				$payload['locality'] = $loc['key'];
 			}
+			$payload['cityName'] = $loc['name'];
 			break;
 		}
+	}
+	if (empty($payload['cityName']) && $picked !== '') {
+		$payload['cityName'] = $picked;
 	}
 	return $payload;
 }

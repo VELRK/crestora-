@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import aboutImg from "../../assets/about/about.png";
 import { useSite } from "../../services/SiteData.jsx";
-import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star } from "lucide-react";
+import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star, Building2 } from "lucide-react";
 
 export default function AdissiaProjectsShowcase({
   projects = [],
@@ -54,15 +54,18 @@ export default function AdissiaProjectsShowcase({
 
   // Icon selector helper
   const renderIcon = (iconName) => {
-    switch (iconName) {
-      case "landmark": return <Landmark size={22} />;
-      case "shield": return <Shield size={22} />;
-      case "trending-up": return <TrendingUp size={22} />;
-      case "star": return <Star size={22} />;
-      case "droplet": return <Droplet size={22} />;
-      case "home": return <Home size={22} />;
-      default: return <Sparkles size={22} />;
-    }
+    const key = String(iconName || "").trim();
+    const lower = key.toLowerCase();
+    if (key === "Landmark" || lower === "landmark") return <Landmark size={22} />;
+    if (key === "ShieldCheck" || key === "Shield" || lower === "shield") return <Shield size={22} />;
+    if (key === "TrendingUp" || lower === "trending-up") return <TrendingUp size={22} />;
+    if (key === "Star" || lower === "star") return <Star size={22} />;
+    if (key === "Droplet" || lower === "droplet") return <Droplet size={22} />;
+    if (key === "Home" || lower === "home") return <Home size={22} />;
+    if (key === "Building2" || lower === "layout") return <Layers size={22} />;
+    if (key === "CheckCircle2") return <CheckCircle size={22} />;
+    if (key === "MapPin") return <MapPin size={22} />;
+    return <Sparkles size={22} />;
   };
 
   return (

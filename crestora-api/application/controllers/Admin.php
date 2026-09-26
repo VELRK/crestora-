@@ -269,6 +269,7 @@ class Admin extends CI_Controller {
 			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 			$posted = $this->input->post('payload');
 			$payload = crestora_sync_project(fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array())));
+			$payload = crestora_prune_project_payload($payload, $original);
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			$location = trim(isset($payload['location']) ? $payload['location'] : '');
 			$category = trim(isset($payload['category']) ? $payload['category'] : '');
@@ -310,7 +311,7 @@ class Admin extends CI_Controller {
 				'is_featured' => ! empty($payload['isFeatured']) ? 1 : 0,
 				'is_popular' => ! empty($payload['isPopular']) ? 1 : 0,
 				'is_active' => $this->input->post('is_active') ? 1 : ($was_draft ? 1 : 0),
-				'sort_order' => (int) $this->input->post('sort_order'),
+				'sort_order' => (int) $row['sort_order'],
 				'payload' => fieldform_json($payload),
 			));
 			if ($this->form_stays_open()) {
@@ -440,74 +441,17 @@ class Admin extends CI_Controller {
 
 	private function project_fields()
 	{
-		return array(
-			'title' => '',
-			'status' => '',
-			'category' => '',
-			'type' => '',
-			'typeName' => '',
-			'statusLabel' => '',
-			'tag' => '',
-			'badge' => '',
-			'location' => '',
-			'locality' => '',
-			'city' => '',
-			'cityName' => '',
-			'price' => 0,
-			'priceDisplay' => '',
-			'pricePerSqft' => 0,
-			'period' => '',
-			'beds' => 0,
-			'baths' => 0,
-			'sqft' => 0,
-			'totalUnits' => '',
-			'approval' => '',
-			'reraNumber' => '',
-			'dtcpNumber' => '',
-			'rating' => 0,
-			'reviewsCount' => 0,
-			'isFeatured' => FALSE,
-			'isPopular' => FALSE,
-			'totalArea' => '',
-			'tagline' => '',
-			'description' => '',
-			'priceRange' => '',
-			'area' => '',
-			'image' => '',
-			'slug' => '',
-			'gallery' => array(''),
-			'highlights' => array(''),
-			'amenities' => array(''),
-			'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
-			'overviewParagraphs' => array(''),
-			'specifications' => array(array('label' => '', 'value' => '')),
-			'amenityDetails' => array(array('title' => '', 'desc' => '', 'icon' => '')),
-			'masterPlanImage' => '',
-			'plotSizes' => array(array('badge' => '', 'sqft' => '', 'ideal' => '', 'highlight' => FALSE)),
-			'proximity' => array(array('landmark' => '', 'dist' => '', 'time' => '', 'category' => '')),
-			'specsIntro' => '',
-			'amenitiesIntro' => '',
-			'masterPlanIntro' => '',
-			'proximityIntro' => '',
-		);
+		return crestora_project_admin_schema();
 	}
 
 	private function project_template()
 	{
-		$shape = $this->project_fields();
-		$rows = $this->db->get('projects')->result_array();
-		foreach ($rows as $row) {
-			$payload = json_decode($row['payload'], TRUE);
-			if (is_array($payload)) {
-				$shape = $this->merge_shape($shape, $payload);
-			}
-		}
-		return $shape;
+		return $this->project_fields();
 	}
 
 	private function fill_project($item, $row)
 	{
-		$template = $this->project_template();
+		$template = $this->project_fields();
 		$item = $this->order_like($template, $this->fill_missing(is_array($item) ? $item : array(), $template));
 		$columns = array('title' => 'title', 'category' => 'category', 'locality' => 'locality', 'status' => 'status', 'price' => 'price');
 		foreach ($columns as $key => $column) {

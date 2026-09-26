@@ -19,7 +19,20 @@
     <label>Count label<input name="item[plotsCount]" value="<?php echo html_escape($item['plotsCount']); ?>" /></label>
     <label>Starting price<input name="item[startingPrice]" value="<?php echo html_escape($item['startingPrice']); ?>" /></label>
     <label>Example<input name="item[exampleText]" value="<?php echo html_escape($item['exampleText']); ?>" /></label>
-    <label>Icon<input name="item[icon]" value="<?php echo html_escape($item['icon']); ?>" /></label>
+    <label>Icon
+      <select name="item[icon]">
+        <?php
+          $icons = array('LandPlot' => 'Plots / land', 'Home' => 'Villas / homes', 'Building2' => 'Apartments / buildings', 'Warehouse' => 'Commercial / industrial', 'MapPinned' => 'Location');
+          $cur = isset($item['icon']) ? $item['icon'] : 'LandPlot';
+          foreach ($icons as $val => $lab):
+        ?>
+          <option value="<?php echo html_escape($val); ?>" <?php echo ((string) $val === (string) $cur) ? 'selected' : ''; ?>><?php echo html_escape($lab); ?></option>
+        <?php endforeach; ?>
+        <?php if ($cur !== '' && ! isset($icons[$cur])): ?>
+          <option value="<?php echo html_escape($cur); ?>" selected><?php echo html_escape($cur); ?> (custom)</option>
+        <?php endif; ?>
+      </select>
+    </label>
     <input type="hidden" name="item[id]" value="<?php echo html_escape($item['id']); ?>" />
   <?php endif; ?>
   </div>

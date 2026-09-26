@@ -21,6 +21,11 @@ import {
   Clock,
   Check,
   Trees as TreesIcon,
+  Home,
+  TrendingUp,
+  Layers,
+  Droplet,
+  Star,
 } from "lucide-react";
 
 const LUCIDE_ICONS = {
@@ -28,14 +33,37 @@ const LUCIDE_ICONS = {
   Building2,
   Check,
   ShieldCheck,
+  Shield: ShieldCheck,
   Trees: TreesIcon,
   Sparkles,
   CheckCircle2,
   Clock,
+  Home,
+  MapPin,
+  TrendingUp,
+  Layers,
+  Droplet,
+  Star,
+  Layout: Building2,
+};
+
+const ICON_ALIASES = {
+  landmark: "Landmark",
+  shield: "ShieldCheck",
+  layout: "Building2",
+  "trending-up": "TrendingUp",
+  star: "Star",
+  droplet: "Droplet",
+  home: "Home",
 };
 
 function resolveLucideIcon(name, fallback = Sparkles) {
-  return LUCIDE_ICONS[name] || fallback;
+  const raw = String(name || "").trim();
+  if (!raw) return fallback;
+  if (LUCIDE_ICONS[raw]) return LUCIDE_ICONS[raw];
+  const alias = ICON_ALIASES[raw.toLowerCase()];
+  if (alias && LUCIDE_ICONS[alias]) return LUCIDE_ICONS[alias];
+  return fallback;
 }
 
 function buildSpecificationRows(project, ctx) {
@@ -391,7 +419,11 @@ export default function ProjectDetailsPage({
               <div className="pdp-badge-strip">
                 <span className={`pdp-status-tag status-${status || "ongoing"}`}>
                   <span className="pdp-status-dot"></span>
-                  {statusLabel || (status === "upcoming" ? "Pre-Launch Project" : "Ongoing Development")}
+                  {status === "upcoming"
+                    ? "Pre-Launch Project"
+                    : status === "completed"
+                    ? "Completed Landmark"
+                    : "Ongoing Development"}
                 </span>
 
                 <span className="pdp-cert-tag">
@@ -618,7 +650,10 @@ export default function ProjectDetailsPage({
                   {whyPoints.map((item, idx) => (
                     <div key={idx} className="pdp-why-card">
                       <div className="pdp-why-icon-box">
-                        <Sparkles size={20} color="#dfb743" />
+                        {(() => {
+                          const IconComp = resolveLucideIcon(item.icon, Sparkles);
+                          return <IconComp size={20} color="#dfb743" />;
+                        })()}
                       </div>
                       <div className="pdp-why-card-body">
                         <h4>{item.title}</h4>

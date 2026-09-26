@@ -10,14 +10,14 @@
 <?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card project-form">
   <?php
-    $fields = is_array($item) ? $item : array();
-    $title_value = isset($fields['title']) ? $fields['title'] : '';
-    $location_value = isset($fields['location']) ? $fields['location'] : '';
-    $locality_value = isset($fields['locality']) ? (string) $fields['locality'] : '';
-    $category_value = isset($fields['category']) ? (string) $fields['category'] : '';
+    $item = is_array($item) ? $item : array();
+    $fields = crestora_pick_admin_fields($item);
+    $title_value = isset($item['title']) ? $item['title'] : '';
+    $location_value = isset($item['location']) ? $item['location'] : '';
+    $locality_value = isset($item['locality']) ? (string) $item['locality'] : '';
+    $category_value = isset($item['category']) ? (string) $item['category'] : '';
     $category_labels = crestora_category_labels();
     $location_choices = crestora_location_choices();
-    unset($fields['slug'], $fields['title'], $fields['location'], $fields['locality'], $fields['category'], $fields['type'], $fields['typeName']);
   ?>
   <div class="form-grid">
     <label>Title <span class="req">*</span>
@@ -41,6 +41,7 @@
           <option value="<?php echo html_escape($location_value); ?>" selected><?php echo html_escape($location_value); ?></option>
         <?php endif; ?>
       </select>
+      <span class="file-note">City and map labels are filled automatically from this location.</span>
     </label>
     <label>Category <span class="req">*</span>
       <select name="payload[category]" required>
@@ -56,13 +57,15 @@
     <label>Active on site
       <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
     </label>
-    <label>Sort order
-      <input name="sort_order" value="<?php echo (int) $row['sort_order']; ?>" />
-    </label>
   </div>
+  <p class="file-note" style="margin:0 0 12px">Fields below match the public project list and project detail page only.</p>
   <?php
     fieldform_set_choices(array(
-      'status' => array('ongoing' => 'Ongoing', 'upcoming' => 'Upcoming', 'completed' => 'Completed'),
+      'status' => array(
+        'ongoing' => 'Ongoing',
+        'upcoming' => 'Upcoming',
+        'completed' => 'Completed',
+      ),
     ));
     fieldform_render($fields, 'payload');
   ?>
