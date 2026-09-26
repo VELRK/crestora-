@@ -19,9 +19,9 @@ class Admin extends CI_Controller {
 	public function index()
 	{
 		$this->require_login();
-		$data['projects'] = $this->db->count_all('projects');
-		$data['projects_active'] = (int) $this->db->where('is_active', 1)->count_all_results('projects');
-		$data['blogs'] = $this->db->count_all('blogs');
+		$data['projects'] = $this->count_saved_projects();
+		$data['projects_active'] = $this->count_saved_projects_active();
+		$data['blogs'] = $this->count_saved_blogs();
 		$data['enquiries'] = $this->db->count_all('enquiries');
 		$data['visits'] = $this->db->count_all('site_visits');
 		$data['leads_new'] = (int) $this->db->where('status', 'new')->count_all_results('enquiries')
@@ -37,14 +37,51 @@ class Admin extends CI_Controller {
 
 	private function dashboard_group_counts($table, $column)
 	{
-		$rows = $this->db->select($column . ' AS label, COUNT(*) AS total', FALSE)
+		$this->db->select($column . ' AS label, COUNT(*) AS total', FALSE)
 			->from($table)
-			->where($column . ' !=', '')
-			->group_by($column)
+			->where($column . ' !=', '');
+		if ($table === 'projects') {
+			$this->db->where('category !=', '');
+		}
+		$rows = $this->db->group_by($column)
 			->order_by('total', 'DESC')
 			->get()
 			->result_array();
 		return is_array($rows) ? $rows : array();
+	}
+
+	private function is_project_draft($row)
+	{
+		if ( ! is_array($row)) {
+			return FALSE;
+		}
+		if (trim(isset($row['category']) ? $row['category'] : '') !== '') {
+			return FALSE;
+		}
+		return strcasecmp(trim(isset($row['title']) ? $row['title'] : ''), 'New project') === 0;
+	}
+
+	private function is_blog_draft($row)
+	{
+		if ( ! is_array($row)) {
+			return FALSE;
+		}
+		return strcasecmp(trim(isset($row['title']) ? $row['title'] : ''), 'New blog') === 0;
+	}
+
+	private function count_saved_projects()
+	{
+		return (int) $this->db->where('category !=', '')->count_all_results('projects');
+	}
+
+	private function count_saved_projects_active()
+	{
+		return (int) $this->db->where('category !=', '')->where('is_active', 1)->count_all_results('projects');
+	}
+
+	private function count_saved_blogs()
+	{
+		return (int) $this->db->where('title !=', 'New blog')->count_all_results('blogs');
 	}
 
 	private function dashboard_leads_week()
@@ -185,11 +222,22 @@ class Admin extends CI_Controller {
 			'price' => 0,
 			'is_featured' => 0,
 			'is_popular' => 0,
-			'is_active' => 1,
+			'is_active' => 0,
 			'sort_order' => $sort,
 			'payload' => fieldform_json($payload),
 		));
 		redirect('admin/project/' . $code);
+	}
+
+	public function project_discard($code = '')
+	{
+		$this->require_login();
+		$row = $this->db->get_where('projects', array('code' => $code))->row_array();
+		if ($row && $this->is_project_draft($row)) {
+			$this->db->delete('projects', array('code' => $code));
+			$this->session->set_flashdata('msg', 'Draft discarded');
+		}
+		redirect('admin/projects');
 	}
 
 	public function project_delete($code = '')
@@ -243,6 +291,7 @@ class Admin extends CI_Controller {
 				$data['row'] = $row;
 				$data['item'] = $payload;
 				$data['heading'] = ($row['title'] === 'New project' || $title === '') ? 'Add project' : 'Edit project';
+				$data['is_draft'] = $this->is_project_draft($row);
 				$data['msg'] = '';
 				$data['error'] = implode(' and ', $missing) . ' ' . (count($missing) === 1 ? 'is' : 'are') . ' required.';
 				$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/project', $data, TRUE)));
@@ -250,6 +299,7 @@ class Admin extends CI_Controller {
 			}
 			$slug = $this->unique_slug('projects', $this->slugify($this->input->post('slug'), $title), $code);
 			$payload['slug'] = $slug;
+			$was_draft = $this->is_project_draft($row);
 			$this->db->where('code', $code)->update('projects', array(
 				'title' => isset($payload['title']) ? $payload['title'] : $row['title'],
 				'slug' => $slug,
@@ -259,7 +309,7 @@ class Admin extends CI_Controller {
 				'price' => isset($payload['price']) ? $payload['price'] : $row['price'],
 				'is_featured' => ! empty($payload['isFeatured']) ? 1 : 0,
 				'is_popular' => ! empty($payload['isPopular']) ? 1 : 0,
-				'is_active' => $this->input->post('is_active') ? 1 : 0,
+				'is_active' => $this->input->post('is_active') ? 1 : ($was_draft ? 1 : 0),
 				'sort_order' => (int) $this->input->post('sort_order'),
 				'payload' => fieldform_json($payload),
 			));
@@ -273,6 +323,7 @@ class Admin extends CI_Controller {
 		$data['row'] = $row;
 		$data['item'] = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 		$data['heading'] = ($row['title'] === 'New project') ? 'Add project' : 'Edit project';
+		$data['is_draft'] = $this->is_project_draft($row);
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/project', $data, TRUE)));
 	}
@@ -295,11 +346,22 @@ class Admin extends CI_Controller {
 			'title' => $payload['title'],
 			'category' => '',
 			'featured' => 0,
-			'is_active' => 1,
+			'is_active' => 0,
 			'sort_order' => $sort,
 			'payload' => fieldform_json($payload),
 		));
 		redirect('admin/blog/' . $code);
+	}
+
+	public function blog_discard($code = '')
+	{
+		$this->require_login();
+		$row = $this->db->get_where('blogs', array('code' => $code))->row_array();
+		if ($row && $this->is_blog_draft($row)) {
+			$this->db->delete('blogs', array('code' => $code));
+			$this->session->set_flashdata('msg', 'Draft discarded');
+		}
+		redirect('admin/blogs');
 	}
 
 	public function blog_delete($code = '')
@@ -343,6 +405,7 @@ class Admin extends CI_Controller {
 				$data['item'] = $payload;
 				$data['projects'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
 				$data['heading'] = 'Add blog';
+				$data['is_draft'] = $this->is_blog_draft($row);
 				$data['msg'] = '';
 				$data['error'] = 'Title is required.';
 				$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
@@ -350,12 +413,13 @@ class Admin extends CI_Controller {
 			}
 			$slug = $this->unique_slug('blogs', $this->slugify($this->input->post('slug'), $title), $code);
 			$payload['slug'] = $slug;
+			$was_draft = $this->is_blog_draft($row);
 			$this->db->where('code', $code)->update('blogs', array(
 				'title' => isset($payload['title']) ? $payload['title'] : $row['title'],
 				'slug' => $slug,
 				'category' => isset($payload['category']) ? $payload['category'] : $row['category'],
 				'featured' => ! empty($payload['featured']) ? 1 : 0,
-				'is_active' => $this->input->post('is_active') ? 1 : 0,
+				'is_active' => $this->input->post('is_active') ? 1 : ($was_draft ? 1 : 0),
 				'payload' => fieldform_json($payload),
 			));
 			if ($this->form_stays_open()) {
@@ -369,6 +433,7 @@ class Admin extends CI_Controller {
 		$data['item'] = json_decode($row['payload'], TRUE);
 		$data['projects'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
 		$data['heading'] = ($row['title'] === 'New blog') ? 'Add blog' : 'Edit blog';
+		$data['is_draft'] = $this->is_blog_draft($row);
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
 	}

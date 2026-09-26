@@ -1,5 +1,11 @@
 <h2><?php echo html_escape($heading); ?></h2>
-<p><a href="<?php echo site_url('admin/blogs'); ?>">Back to blogs</a></p>
+<p>
+  <?php if ( ! empty($is_draft)): ?>
+    <a href="<?php echo site_url('admin/blog_discard/'.$row['code']); ?>" onclick="return confirm('Discard this draft? It will not be saved.');">Cancel and return to blogs</a>
+  <?php else: ?>
+    <a href="<?php echo site_url('admin/blogs'); ?>">Back to blogs</a>
+  <?php endif; ?>
+</p>
 <?php if ($msg): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
 <?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card project-form">
