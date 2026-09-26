@@ -227,7 +227,8 @@ function fieldform_choices_for($name)
 
 function fieldform_input($name, $value, $label)
 {
-	echo '<label>' . html_escape($label);
+	$wide = (bool) preg_match('/\[(description|tagline|priceRange|area)\]$/i', $name);
+	echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
 	if (is_bool($value)) {
 		echo '<input type="hidden" name="' . html_escape($name) . '" value="0" />';
 		echo '<input type="checkbox" name="' . html_escape($name) . '" value="1" ' . ($value ? 'checked' : '') . ' style="width:auto" />';
@@ -263,7 +264,7 @@ function fieldform_input($name, $value, $label)
 		echo '</select></label>';
 		return;
 	}
-	if (strlen($text) > 90 || strpos($text, "\n") !== FALSE) {
+	if ($wide || strlen($text) > 90 || strpos($text, "\n") !== FALSE) {
 		echo '<textarea name="' . html_escape($name) . '" rows="4">' . html_escape($text) . '</textarea>';
 	} else {
 		echo '<input name="' . html_escape($name) . '" value="' . html_escape($text) . '" />';

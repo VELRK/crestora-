@@ -158,9 +158,9 @@ class Admin extends CI_Controller {
 			show_404();
 		}
 		if ($this->input->method() === 'post') {
-			$original = json_decode($row['payload'], TRUE);
+			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 			$posted = $this->input->post('payload');
-			$payload = fieldform_finish(fieldform_apply(is_array($original) ? $original : array(), is_array($posted) ? $posted : array()));
+			$payload = fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array()));
 			$slug = $this->unique_slug('projects', $this->slugify($this->input->post('slug'), isset($payload['title']) ? $payload['title'] : $row['title']), $code);
 			$payload['slug'] = $slug;
 			$this->db->where('code', $code)->update('projects', array(
@@ -173,6 +173,7 @@ class Admin extends CI_Controller {
 				'is_featured' => ! empty($payload['isFeatured']) ? 1 : 0,
 				'is_popular' => ! empty($payload['isPopular']) ? 1 : 0,
 				'is_active' => $this->input->post('is_active') ? 1 : 0,
+				'sort_order' => (int) $this->input->post('sort_order'),
 				'payload' => fieldform_json($payload),
 			));
 			if ($this->form_stays_open()) {
@@ -183,7 +184,7 @@ class Admin extends CI_Controller {
 			redirect('admin/projects');
 		}
 		$data['row'] = $row;
-		$data['item'] = json_decode($row['payload'], TRUE);
+		$data['item'] = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 		$data['heading'] = ($row['title'] === 'New project') ? 'Add project' : 'Edit project';
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/project', $data, TRUE)));
@@ -271,9 +272,53 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
 	}
 
+	private function project_fields()
+	{
+		return array(
+			'title' => '',
+			'slug' => '',
+			'tagline' => '',
+			'location' => '',
+			'locality' => '',
+			'city' => '',
+			'cityName' => '',
+			'category' => '',
+			'type' => '',
+			'typeName' => '',
+			'status' => '',
+			'statusLabel' => '',
+			'price' => 0,
+			'priceDisplay' => '',
+			'priceRange' => '',
+			'pricePerSqft' => 0,
+			'period' => '',
+			'tag' => '',
+			'badge' => '',
+			'approval' => '',
+			'reraNumber' => '',
+			'dtcpNumber' => '',
+			'image' => '',
+			'gallery' => array(''),
+			'beds' => 0,
+			'baths' => 0,
+			'area' => '',
+			'sqft' => 0,
+			'totalArea' => '',
+			'totalUnits' => '',
+			'isFeatured' => FALSE,
+			'isPopular' => FALSE,
+			'rating' => 0,
+			'reviewsCount' => 0,
+			'description' => '',
+			'highlights' => array(''),
+			'amenities' => array(''),
+			'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+		);
+	}
+
 	private function project_template()
 	{
-		$shape = array();
+		$shape = $this->project_fields();
 		$rows = $this->db->get('projects')->result_array();
 		foreach ($rows as $row) {
 			$payload = json_decode($row['payload'], TRUE);
@@ -281,19 +326,38 @@ class Admin extends CI_Controller {
 				$shape = $this->merge_shape($shape, $payload);
 			}
 		}
-		if ( ! $shape) {
-			$shape = array(
-				'title' => '',
-				'slug' => '',
-				'description' => '',
-				'image' => '',
-				'gallery' => array(''),
-				'highlights' => array(''),
-				'amenities' => array(''),
-				'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
-			);
-		}
 		return $shape;
+	}
+
+	private function fill_project($item, $row)
+	{
+		$item = $this->fill_missing(is_array($item) ? $item : array(), $this->project_template());
+		$columns = array('title' => 'title', 'category' => 'category', 'locality' => 'locality', 'status' => 'status', 'price' => 'price');
+		foreach ($columns as $key => $column) {
+			$empty = ! isset($item[$key]) || $item[$key] === '' || $item[$key] === 0;
+			if ($empty && isset($row[$column]) && $row[$column] !== '' && $row[$column] !== 0 && $row[$column] !== '0') {
+				$item[$key] = $row[$column];
+			}
+		}
+		if (empty($item['isFeatured']) && ! empty($row['is_featured'])) {
+			$item['isFeatured'] = TRUE;
+		}
+		if (empty($item['isPopular']) && ! empty($row['is_popular'])) {
+			$item['isPopular'] = TRUE;
+		}
+		return $item;
+	}
+
+	private function fill_missing($item, $template)
+	{
+		foreach ($template as $key => $value) {
+			if ( ! array_key_exists($key, $item)) {
+				$item[$key] = is_array($value) ? fieldform_blank($value) : $value;
+			} elseif (is_array($value) && is_array($item[$key]) && ! $this->is_list_array($value)) {
+				$item[$key] = $this->fill_missing($item[$key], $value);
+			}
+		}
+		return $item;
 	}
 
 	private function merge_shape($base, $extra)

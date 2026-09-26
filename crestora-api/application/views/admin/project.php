@@ -4,6 +4,9 @@
 <form method="post" enctype="multipart/form-data" class="card">
   <div class="form-grid">
     <label><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> style="width:auto" /> Active on site</label>
+    <label>Sort order
+      <input name="sort_order" value="<?php echo (int) $row['sort_order']; ?>" />
+    </label>
     <label class="span-3">Slug
       <span class="url-field">
         <span class="url-prefix">/project/</span>
