@@ -17,6 +17,7 @@ export default function Sidebar({
   const office = settings.corporate_office || "Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
   const cities = sectionItems(site.home?.locations) || [];
   const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
+  const menuStatuses = site.filters?.statuses || [];
   const isCategoriesActive =
     activePage === "projects" && filters?.type && filters.type !== "all";
   const isLocationsActive =
@@ -221,60 +222,27 @@ export default function Sidebar({
             </button>
             {openSubmenus.projects && (
               <div style={{ padding: "8px 0 12px 14px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "ongoing", type: "all", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.status === "ongoing" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.status === "ongoing" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "6px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  Ongoing Projects
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "upcoming", type: "all", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.status === "upcoming" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.status === "upcoming" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "6px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  Upcoming Projects
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onNavigate && onNavigate("projects", { status: "completed", type: "all", location: "all" });
-                    onClose();
-                  }}
-                  style={{
-                    textAlign: "left",
-                    color: activePage === "projects" && filters?.status === "completed" ? "#dfb743" : "#cbd5e1",
-                    fontWeight: activePage === "projects" && filters?.status === "completed" ? "700" : "400",
-                    fontSize: "14px",
-                    padding: "6px 0",
-                    background: "none",
-                    border: "none",
-                  }}
-                >
-                  Completed Landmarks
-                </button>
+                {menuStatuses.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => {
+                      onNavigate && onNavigate("projects", { status: item.value, type: "all", location: "all" });
+                      onClose();
+                    }}
+                    style={{
+                      textAlign: "left",
+                      color: activePage === "projects" && filters?.status === item.value ? "#dfb743" : "#cbd5e1",
+                      fontWeight: activePage === "projects" && filters?.status === item.value ? "700" : "400",
+                      fontSize: "14px",
+                      padding: "6px 0",
+                      background: "none",
+                      border: "none",
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import aboutImg from "../../assets/about/about.png";
 import { useSite } from "../../services/SiteData.jsx";
 import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star } from "lucide-react";
@@ -11,12 +11,15 @@ export default function AdissiaProjectsShowcase({
 }) {
   const site = useSite();
   const copy = site.home?.landmark || {};
-  const [activeTab, setActiveTab] = useState("ongoing"); // "ongoing" | "upcoming" | "completed"
+  const statuses = (site.filters?.statuses || []).filter((item) =>
+    projects.some((project) => project.status === item.value)
+  );
+  const [activeTab, setActiveTab] = useState("");
 
   // Filter projects based on active tab
   const tabProjects = useMemo(() => {
-    const list = projects.filter((p) => p.status === activeTab);
-    return list.length > 0 ? list : projects;
+    if (!activeTab) return [];
+    return projects.filter((project) => project.status === activeTab);
   }, [projects, activeTab]);
 
   // Selected project within the current tab
@@ -30,6 +33,14 @@ export default function AdissiaProjectsShowcase({
     }
     return tabProjects[0] || projects[0] || null;
   }, [tabProjects, selectedProjectId, projects]);
+
+  const statusKey = statuses.map((item) => item.value).join("|");
+  useEffect(() => {
+    const values = statusKey ? statusKey.split("|") : [];
+    if (!values.includes(activeTab)) {
+      setActiveTab(values[0] || "");
+    }
+  }, [statusKey, activeTab]);
 
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
@@ -70,29 +81,20 @@ export default function AdissiaProjectsShowcase({
 
         {/* Project Status Tabs */}
         <div className="status-tabs-nav" role="tablist">
-          <button
-            type="button"
-            className={`status-tab-btn ${activeTab === "ongoing" ? "active" : ""}`}
-            onClick={() => handleTabChange("ongoing")}
-          >
-            ONGOING PROJECTS ({projects.filter((p) => p.status === "ongoing").length})
-          </button>
-          <button
-            type="button"
-            className={`status-tab-btn ${activeTab === "upcoming" ? "active" : ""}`}
-            onClick={() => handleTabChange("upcoming")}
-          >
-            UPCOMING PROJECTS ({projects.filter((p) => p.status === "upcoming").length})
-          </button>
-          <button
-            type="button"
-            className={`status-tab-btn ${activeTab === "completed" ? "active" : ""}`}
-            onClick={() => handleTabChange("completed")}
-          >
-            COMPLETED LANDMARKS ({projects.filter((p) => p.status === "completed").length})
-          </button>
+          {statuses.map((item) => (
+            <button
+              key={item.value}
+              type="button"
+              className={`status-tab-btn ${activeTab === item.value ? "active" : ""}`}
+              onClick={() => handleTabChange(item.value)}
+            >
+              {item.label.toUpperCase()} ({projects.filter((project) => project.status === item.value).length})
+            </button>
+          ))}
         </div>
 
+        {activeProject && (
+        <>
         {/* Project Selector Pills */}
         <div className="project-pills-selector">
           {tabProjects.map((proj) => (
@@ -208,6 +210,8 @@ export default function AdissiaProjectsShowcase({
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
     </section>
   );

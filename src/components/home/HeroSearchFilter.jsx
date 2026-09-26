@@ -6,6 +6,7 @@ export default function HeroSearchFilter({ onSearch }) {
   const propertyTypes = site.filters?.propertyTypes || [];
   const locations = site.filters?.localities || [];
   const maxPrices = site.filters?.budgets || [];
+  const statuses = site.filters?.statuses || [];
   const [searchParams, setSearchParams] = useState({
     location: "all",
     type: "all",
@@ -84,9 +85,11 @@ export default function HeroSearchFilter({ onSearch }) {
               className="filter-select"
             >
               <option value="all">All Stages</option>
-              <option value="ongoing">Ongoing Projects</option>
-              <option value="upcoming">Upcoming Projects</option>
-              <option value="completed">Completed Landmarks</option>
+              {statuses.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
             </select>
           </div>
 

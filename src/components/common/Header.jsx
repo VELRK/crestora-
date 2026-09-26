@@ -31,6 +31,7 @@ export default function Header({
   const logo = settings.logo || logoImg;
   const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
   const menuLocations = (site.filters?.localities || []).filter((item) => item.value && item.value !== "all");
+  const menuStatuses = site.filters?.statuses || [];
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Determine active highlights based on active page and active filters
@@ -163,36 +164,19 @@ export default function Header({
                 PROJECTS <ChevronDown className="nav-chevron" size={13} />
               </button>
               <div className="nav-dropdown-menu">
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.status === "ongoing" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "ongoing", type: "all", location: "all" });
-                  }}
-                >
-                  Ongoing Projects
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.status === "upcoming" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "upcoming", type: "all", location: "all" });
-                  }}
-                >
-                  Upcoming Projects
-                </a>
-                <a
-                  href="/projects"
-                  className={`dropdown-link ${activePage === "projects" && filters?.status === "completed" ? "active" : ""}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate && onNavigate("projects", { status: "completed", type: "all", location: "all" });
-                  }}
-                >
-                  Completed Landmarks
-                </a>
+                {menuStatuses.map((item) => (
+                  <a
+                    key={item.value}
+                    href="/projects"
+                    className={`dropdown-link ${activePage === "projects" && filters?.status === item.value ? "active" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate && onNavigate("projects", { status: item.value, type: "all", location: "all" });
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                ))}
               </div>
             </div>
 

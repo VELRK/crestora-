@@ -18,6 +18,7 @@ export default function ProjectFilters({
   const locations = site.filters?.localities || [];
   const maxPrices = site.filters?.budgets || [];
   const sortOptions = site.filters?.sortOptions || [];
+  const statuses = site.filters?.statuses || [];
   const handleInputChange = (field, value) => {
     onFilterChange({
       ...filters,
@@ -103,9 +104,11 @@ export default function ProjectFilters({
             onChange={(e) => handleInputChange("status", e.target.value)}
           >
             <option value="all">All Stages</option>
-            <option value="ongoing">Ongoing Projects</option>
-            <option value="upcoming">Upcoming Projects</option>
-            <option value="completed">Completed Landmarks</option>
+            {statuses.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

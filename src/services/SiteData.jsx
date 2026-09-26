@@ -88,6 +88,67 @@ const STATIC_HOME = {
   },
 };
 
+function listOf(block) {
+  if (Array.isArray(block)) return block;
+  if (Array.isArray(block?.items)) return block.items;
+  return [];
+}
+
+function categoryOptions(block, fallback) {
+  const items = listOf(block);
+  if (!items.length) return Array.isArray(fallback) ? fallback : [];
+  return [
+    { id: "all", label: "All Categories", value: "all" },
+    ...items
+      .map((item) => ({
+        id: item.id || item.categoryKey || item.value,
+        label: item.categoryName || item.label || item.title || "",
+        value: item.categoryKey || item.value || "",
+        subtitle: item.subtitle || "",
+      }))
+      .filter((item) => item.value),
+  ];
+}
+
+function locationOptions(block, fallback) {
+  const items = listOf(block);
+  const source = items.length
+    ? items
+    : (Array.isArray(fallback) ? fallback : []);
+  return source
+    .map((item) => ({
+      id: item.id || item.cityKey || item.value,
+      label: item.name || item.label || "",
+      value: item.cityKey || item.value || "",
+    }))
+    .filter((item) => item.value && item.value !== "all");
+}
+
+const STATUS_ORDER = ["ongoing", "upcoming", "completed"];
+const STATUS_LABELS = {
+  ongoing: "Ongoing Projects",
+  upcoming: "Upcoming Projects",
+  completed: "Completed Landmarks",
+};
+
+function statusOptions(projects) {
+  const found = [];
+  (projects || []).forEach((project) => {
+    const value = String(project?.status || "").toLowerCase();
+    if (!value || found.some((item) => item.value === value)) return;
+    found.push({
+      value,
+      label: STATUS_LABELS[value] || project.statusLabel || value,
+    });
+  });
+  found.sort((a, b) => {
+    const ai = STATUS_ORDER.indexOf(a.value);
+    const bi = STATUS_ORDER.indexOf(b.value);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+  return found;
+}
+
 function blogCategories(posts, fromApi) {
   if (Array.isArray(fromApi) && fromApi.length) return fromApi;
   const names = [];
@@ -103,7 +164,7 @@ const SiteContext = createContext({
   about: null,
   blogs: { posts: [], categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
   contact: null,
-  filters: { categories: [], localities: [], propertyTypes: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
+  filters: { categories: [], localities: [], propertyTypes: [], statuses: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
   settings: null,
   ready: false,
 });
@@ -115,7 +176,7 @@ export function SiteProvider({ children }) {
     about: null,
     blogs: { posts: [], categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
     contact: null,
-    filters: { categories: [], localities: [], propertyTypes: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
+    filters: { categories: [], localities: [], propertyTypes: [], statuses: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
     settings: null,
     ready: false,
   });
@@ -132,8 +193,9 @@ export function SiteProvider({ children }) {
         const apiHome = home.data || {};
         const apiFilters = filters.data || {};
         const posts = blogs.data?.posts || [];
-        const categories = apiFilters.categories || [];
-        const localities = apiFilters.localities || [];
+        const projectList = projects.data || [];
+        const categories = categoryOptions(apiHome.categories, apiFilters.categories);
+        const localities = locationOptions(apiHome.locations, apiFilters.localities);
         setState({
           home: {
             ...STATIC_HOME,
@@ -141,7 +203,7 @@ export function SiteProvider({ children }) {
             categories: apiHome.categories || null,
             locations: apiHome.locations || null,
           },
-          projects: projects.data || [],
+          projects: projectList,
           about: null,
           blogs: {
             posts,
@@ -152,7 +214,8 @@ export function SiteProvider({ children }) {
           filters: {
             categories,
             localities,
-            propertyTypes: apiFilters.propertyTypes?.length ? apiFilters.propertyTypes : categories,
+            propertyTypes: categories,
+            statuses: statusOptions(projectList),
             budgets: MAX_PRICES,
             sortOptions: SORT_OPTIONS,
           },
