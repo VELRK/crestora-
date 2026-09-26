@@ -1,6 +1,6 @@
 <h2><?php echo html_escape($heading); ?></h2>
 <p><a href="<?php echo site_url('admin/slides'); ?>">Back to slider</a></p>
-<?php if ( ! empty($error)): ?><p class="ok"><?php echo html_escape($error); ?></p><?php endif; ?>
+<?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card">
   <label>Title<input name="item[title]" value="<?php echo html_escape($item['title']); ?>" required /></label>
   <label>Gold word<input name="item[titleHighlight1]" value="<?php echo html_escape($item['titleHighlight1']); ?>" /></label>

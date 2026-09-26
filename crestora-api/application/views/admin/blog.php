@@ -1,24 +1,29 @@
 <h2><?php echo html_escape($heading); ?></h2>
 <p><a href="<?php echo site_url('admin/blogs'); ?>">Back to blogs</a></p>
 <?php if ($msg): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
-<form method="post" enctype="multipart/form-data" class="card">
+<?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
+<form method="post" enctype="multipart/form-data" class="card project-form">
   <?php
     $fields = is_array($item) ? $item : array();
+    $title_value = isset($fields['title']) ? $fields['title'] : '';
     $related = isset($fields['relatedProjectId']) ? (string) $fields['relatedProjectId'] : '';
-    unset($fields['slug'], $fields['relatedProjectId']);
+    unset($fields['slug'], $fields['title'], $fields['relatedProjectId']);
     $project_rows = isset($projects) && is_array($projects) ? $projects : array();
     $known = FALSE;
   ?>
   <div class="form-grid">
-    <label>Active on site
-      <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
+    <label>Title <span class="req">*</span>
+      <input name="payload[title]" value="<?php echo html_escape($title_value); ?>" required data-slug-source />
     </label>
-    <label class="span-3">Slug
+    <label class="span-2">Slug <span class="req">*</span>
       <span class="url-field">
         <span class="url-prefix">/blog/</span>
-        <input name="slug" value="<?php echo html_escape($row['slug']); ?>" />
+        <input name="slug" value="<?php echo html_escape($row['slug']); ?>" required data-slug-target />
       </span>
-      <span class="file-note">The /blog/ part stays fixed. Type the slug after it.</span>
+      <span class="file-note">Updates from the title. Type here if you want a different slug.</span>
+    </label>
+    <label>Active on site
+      <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
     </label>
     <label>Related project
       <select name="payload[relatedProjectId]">

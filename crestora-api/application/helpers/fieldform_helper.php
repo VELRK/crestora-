@@ -253,6 +253,9 @@ function fieldform_is_wide($name, $value)
 	if (fieldform_is_image($name, $text)) {
 		return TRUE;
 	}
+	if (preg_match('/\[(location)\]$/i', $name)) {
+		return FALSE;
+	}
 	if (preg_match('/\[(description|tagline|priceRange|area)\]$/i', $name)) {
 		return TRUE;
 	}
@@ -262,6 +265,7 @@ function fieldform_is_wide($name, $value)
 function fieldform_input($name, $value, $label)
 {
 	$wide = fieldform_is_wide($name, $value);
+	$required = (bool) preg_match('/^(payload|item)\[(title|name|categoryName)\]$/', $name);
 	echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
 	if (is_bool($value)) {
 		echo '<span class="check-field">';
@@ -300,10 +304,12 @@ function fieldform_input($name, $value, $label)
 		echo '</select></label>';
 		return;
 	}
+	$req = $required ? ' required' : '';
+	$slug_attr = ($name === 'payload[title]') ? ' data-slug-source' : '';
 	if ($wide) {
-		echo '<textarea name="' . html_escape($name) . '" rows="4">' . html_escape($text) . '</textarea>';
+		echo '<textarea name="' . html_escape($name) . '" rows="4"' . $req . '>' . html_escape($text) . '</textarea>';
 	} else {
-		echo '<input name="' . html_escape($name) . '" value="' . html_escape($text) . '" />';
+		echo '<input name="' . html_escape($name) . '" value="' . html_escape($text) . '"' . $req . $slug_attr . ' />';
 	}
 	echo '</label>';
 }

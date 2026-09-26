@@ -118,6 +118,8 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .row-actions form{margin:0}
 .row-actions a{font-weight:600}
 .ok{background:var(--ok);color:var(--ok-ink);padding:12px 14px;border-radius:12px;border:1px solid #cfe8d4}
+.form-error{background:#fff5f5;color:#9b2c2c;padding:12px 14px;border-radius:12px;border:1px solid #f0d0d0}
+.req{color:#b42318;font-weight:700}
 .img-preview{display:block;width:180px;height:112px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin:8px 0;background:#f7f4ee}
 .thumb{width:72px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#f7f4ee}
 .file-input{padding:8px;background:#fff}
@@ -168,6 +170,19 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 </div>
 </div>
 <script>
+function slugifyText(value) {
+  return String(value || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+document.querySelectorAll('form').forEach(function (form) {
+  var source = form.querySelector('[data-slug-source]');
+  var target = form.querySelector('[data-slug-target]');
+  if (!source || !target) return;
+  var auto = target.value === '' || target.value === slugifyText(source.value) || /^new-(project|blog)-\d+$/.test(target.value);
+  target.addEventListener('input', function () { auto = false; });
+  source.addEventListener('input', function () {
+    if (auto) target.value = slugifyText(source.value);
+  });
+});
 document.addEventListener('click', function (event) {
   var add = event.target.closest('.js-add-item');
   if (add) {

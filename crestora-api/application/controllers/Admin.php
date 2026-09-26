@@ -161,7 +161,30 @@ class Admin extends CI_Controller {
 			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 			$posted = $this->input->post('payload');
 			$payload = fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array()));
-			$slug = $this->unique_slug('projects', $this->slugify($this->input->post('slug'), isset($payload['title']) ? $payload['title'] : $row['title']), $code);
+			$title = trim(isset($payload['title']) ? $payload['title'] : '');
+			$location = trim(isset($payload['location']) ? $payload['location'] : '');
+			$missing = array();
+			if ($title === '') {
+				$missing[] = 'Title';
+			}
+			if ($location === '') {
+				$missing[] = 'Location';
+			}
+			if ($missing) {
+				$row['slug'] = (string) $this->input->post('slug');
+				$row['is_active'] = $this->input->post('is_active') ? 1 : 0;
+				$row['sort_order'] = (int) $this->input->post('sort_order');
+				$payload['title'] = $title;
+				$payload['location'] = $location;
+				$data['row'] = $row;
+				$data['item'] = $payload;
+				$data['heading'] = ($row['title'] === 'New project' || $title === '') ? 'Add project' : 'Edit project';
+				$data['msg'] = '';
+				$data['error'] = implode(' and ', $missing) . ' ' . (count($missing) === 1 ? 'is' : 'are') . ' required.';
+				$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/project', $data, TRUE)));
+				return;
+			}
+			$slug = $this->unique_slug('projects', $this->slugify($this->input->post('slug'), $title), $code);
 			$payload['slug'] = $slug;
 			$this->db->where('code', $code)->update('projects', array(
 				'title' => isset($payload['title']) ? $payload['title'] : $row['title'],
@@ -247,7 +270,21 @@ class Admin extends CI_Controller {
 			if (is_array($posted) && array_key_exists('relatedProjectId', $posted)) {
 				$payload['relatedProjectId'] = (string) $posted['relatedProjectId'];
 			}
-			$slug = $this->unique_slug('blogs', $this->slugify($this->input->post('slug'), isset($payload['title']) ? $payload['title'] : $row['title']), $code);
+			$title = trim(isset($payload['title']) ? $payload['title'] : '');
+			if ($title === '') {
+				$row['slug'] = (string) $this->input->post('slug');
+				$row['is_active'] = $this->input->post('is_active') ? 1 : 0;
+				$payload['title'] = '';
+				$data['row'] = $row;
+				$data['item'] = $payload;
+				$data['projects'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
+				$data['heading'] = 'Add blog';
+				$data['msg'] = '';
+				$data['error'] = 'Title is required.';
+				$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
+				return;
+			}
+			$slug = $this->unique_slug('blogs', $this->slugify($this->input->post('slug'), $title), $code);
 			$payload['slug'] = $slug;
 			$this->db->where('code', $code)->update('blogs', array(
 				'title' => isset($payload['title']) ? $payload['title'] : $row['title'],
@@ -716,8 +753,15 @@ class Admin extends CI_Controller {
 			if ($kind === 'locations') {
 				$name = trim(isset($item['name']) ? $item['name'] : '');
 				$key = $this->slugify(isset($item['cityKey']) ? $item['cityKey'] : '', $name);
+				$missing = array();
 				if ($name === '') {
-					$error = 'Location name is required';
+					$missing[] = 'Name';
+				}
+				if (empty($item['image'])) {
+					$missing[] = 'Image';
+				}
+				if ($missing) {
+					$error = 'Location ' . implode(' and ', $missing) . ' ' . (count($missing) === 1 ? 'is' : 'are') . ' required.';
 				} else {
 					$item['name'] = $name;
 					$item['cityKey'] = $key;
@@ -737,12 +781,24 @@ class Admin extends CI_Controller {
 				}
 			} else {
 				$name = trim(isset($item['categoryName']) ? $item['categoryName'] : '');
+				$title = trim(isset($item['title']) ? $item['title'] : '');
 				$key = $this->slugify(isset($item['categoryKey']) ? $item['categoryKey'] : '', $name);
+				$missing = array();
 				if ($name === '') {
-					$error = 'Category name is required';
+					$missing[] = 'Name';
+				}
+				if ($title === '') {
+					$missing[] = 'Title';
+				}
+				if (empty($item['image'])) {
+					$missing[] = 'Image';
+				}
+				if ($missing) {
+					$error = implode(' and ', $missing) . ' ' . (count($missing) === 1 ? 'is' : 'are') . ' required.';
 				} else {
 					$item['categoryName'] = $name;
 					$item['categoryKey'] = $key;
+					$item['title'] = $title;
 					$item['badge'] = $item['badge'] !== '' ? $item['badge'] : $name;
 					if ($item['id'] === '') {
 						$item['id'] = $this->unique_item_id($items, $key);
