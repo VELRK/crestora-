@@ -595,14 +595,36 @@ class Admin extends CI_Controller {
 	{
 		$this->require_login();
 		$data['rows'] = $this->db->order_by('id', 'DESC')->get('enquiries')->result_array();
+		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => 'Contact forms', 'body' => $this->load->view('admin/contacts', $data, TRUE)));
+	}
+
+	public function contact_delete($id = '')
+	{
+		$this->require_login();
+		if ($this->input->method() === 'post' && $id !== '') {
+			$this->db->delete('enquiries', array('id' => (int) $id));
+			$this->session->set_flashdata('msg', 'Contact enquiry deleted');
+		}
+		redirect('admin/contacts');
 	}
 
 	public function visits()
 	{
 		$this->require_login();
 		$data['rows'] = $this->db->order_by('id', 'DESC')->get('site_visits')->result_array();
+		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => 'Site visits', 'body' => $this->load->view('admin/visits', $data, TRUE)));
+	}
+
+	public function visit_delete($id = '')
+	{
+		$this->require_login();
+		if ($this->input->method() === 'post' && $id !== '') {
+			$this->db->delete('site_visits', array('id' => (int) $id));
+			$this->session->set_flashdata('msg', 'Site visit request deleted');
+		}
+		redirect('admin/visits');
 	}
 
 	public function categories()
