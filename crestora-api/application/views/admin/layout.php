@@ -53,7 +53,7 @@ a{color:#8a6a12;text-decoration:none}
 .sidebar a.logout{color:#f0d48a}
 .workspace{flex:1;min-width:0;padding:28px 32px 48px}
 .topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}
-main{max-width:1100px}
+main{width:100%;max-width:none}
 main h2{font-family:Montserrat,sans-serif;font-size:28px;margin:0 0 6px;letter-spacing:-.3px}
 main h3{font-family:Montserrat,sans-serif;font-size:16px;margin:0 0 12px}
 .lead{margin:0 0 18px;color:var(--muted);font-size:14px}
