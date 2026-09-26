@@ -77,9 +77,12 @@ function fieldform_walk($data, $name)
 		if ($scalars) {
 			$short = array();
 			$wide = array();
+			$inline = array();
 			foreach ($scalars as $key => $value) {
 				$field_name = $name . '[' . $key . ']';
-				if (fieldform_is_wide($field_name, $value)) {
+				if ($name === 'payload' && in_array($key, array('priceRange', 'tagline', 'area'), TRUE)) {
+					$inline[$key] = $value;
+				} elseif (fieldform_is_wide($field_name, $value)) {
 					$wide[$key] = $value;
 				} else {
 					$short[$key] = $value;
@@ -94,6 +97,16 @@ function fieldform_walk($data, $name)
 						continue;
 					}
 					fieldform_input($field_name, $value, fieldform_label($field_name));
+				}
+				echo '</div>';
+			}
+			if ($inline) {
+				echo '<div class="form-grid cols-3">';
+				foreach (array('priceRange', 'tagline', 'area') as $key) {
+					if ( ! array_key_exists($key, $inline)) {
+						continue;
+					}
+					fieldform_input($name . '[' . $key . ']', $inline[$key], fieldform_label($name . '[' . $key . ']'));
 				}
 				echo '</div>';
 			}
@@ -253,10 +266,10 @@ function fieldform_is_wide($name, $value)
 	if (fieldform_is_image($name, $text)) {
 		return TRUE;
 	}
-	if (preg_match('/\[(location)\]$/i', $name)) {
+	if (preg_match('/\[(location|tagline|priceRange|area)\]$/i', $name)) {
 		return FALSE;
 	}
-	if (preg_match('/\[(description|tagline|priceRange|area)\]$/i', $name)) {
+	if (preg_match('/\[(description)\]$/i', $name)) {
 		return TRUE;
 	}
 	return strlen($text) > 90 || strpos($text, "\n") !== FALSE;
@@ -267,6 +280,9 @@ function fieldform_input($name, $value, $label)
 	$wide = fieldform_is_wide($name, $value);
 	$required = (bool) preg_match('/^(payload|item)\[(title|name|categoryName)\]$/', $name);
 	echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
+	if ($required) {
+		echo ' <span class="req">*</span>';
+	}
 	if (is_bool($value)) {
 		echo '<span class="check-field">';
 		echo '<input type="hidden" name="' . html_escape($name) . '" value="0" />';

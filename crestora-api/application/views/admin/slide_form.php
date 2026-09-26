@@ -1,8 +1,9 @@
 <h2><?php echo html_escape($heading); ?></h2>
 <p><a href="<?php echo site_url('admin/slides'); ?>">Back to slider</a></p>
 <?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
-<form method="post" enctype="multipart/form-data" class="card">
-  <label>Title<input name="item[title]" value="<?php echo html_escape($item['title']); ?>" required /></label>
+<form method="post" enctype="multipart/form-data" class="card project-form">
+  <div class="form-grid">
+  <label>Title <span class="req">*</span><input name="item[title]" value="<?php echo html_escape($item['title']); ?>" required /></label>
   <label>Gold word<input name="item[titleHighlight1]" value="<?php echo html_escape($item['titleHighlight1']); ?>" /></label>
   <label>Second highlight<input name="item[titleHighlight2]" value="<?php echo html_escape($item['titleHighlight2']); ?>" /></label>
   <label>Eyebrow<input name="item[subtitle]" value="<?php echo html_escape($item['subtitle']); ?>" /></label>
@@ -23,5 +24,6 @@
   </label>
   <input type="hidden" name="item[id]" value="<?php echo html_escape($item['id']); ?>" />
   <input type="hidden" name="item[bgImage]" value="<?php echo html_escape(isset($item['bgImage']) ? $item['bgImage'] : ''); ?>" />
+  </div>
   <p><button type="submit">Save</button></p>
 </form>

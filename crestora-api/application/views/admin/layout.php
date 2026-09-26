@@ -74,8 +74,10 @@ input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:#8a6a12;flex:0
 label{display:block;font-size:13px;font-weight:600;margin:14px 0}
 .form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 16px;align-items:start}
 .project-form .form-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.project-form .form-grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
 .project-form fieldset .form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-.form-grid > label{display:flex;flex-direction:column;gap:6px;justify-content:flex-start;margin:0;min-width:0}
+.form-grid > label{display:flex;flex-flow:row wrap;align-items:center;column-gap:4px;row-gap:6px;justify-content:flex-start;margin:0;min-width:0}
+.form-grid > label > :is(input,select,textarea,.url-field,.check-field,.file-note,.img-field){flex:1 0 100%}
 .form-grid > label:has(textarea),.form-grid > label:has(.img-field),.form-grid > label:has(.file-input),.form-grid > .span-3{grid-column:1 / -1}
 .form-grid > .span-2{grid-column:span 2}
 .form-grid input:not([type=checkbox]):not([type=hidden]),.form-grid select,.check-field{margin-top:0;height:42px;min-height:42px}
@@ -86,7 +88,7 @@ label{display:block;font-size:13px;font-weight:600;margin:14px 0}
 .url-field{display:flex;align-items:stretch;width:100%;min-width:0;height:42px;margin-top:0;border:1px solid #ddd6c8;border-radius:10px;overflow:hidden;background:#fff}
 .url-prefix{display:flex;align-items:center;padding:0 12px;background:#f3f1ea;color:#667085;font-weight:500;white-space:nowrap}
 .url-field input{flex:1;min-width:0;width:0;margin:0;border:0;border-radius:0}
-@media(max-width:800px){.form-grid,.project-form .form-grid,.project-form fieldset .form-grid{grid-template-columns:1fr}.form-grid > .span-2{grid-column:1 / -1}}
+@media(max-width:800px){.form-grid,.project-form .form-grid,.project-form .form-grid.cols-3,.project-form fieldset .form-grid{grid-template-columns:1fr}.form-grid > .span-2{grid-column:1 / -1}}
 fieldset.group{border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:8px 14px 12px;background:#fcfbf8}
 fieldset.item{border:1px dashed #e4dccb;border-radius:12px;margin:12px 0;padding:8px 12px;background:#fff}
 legend{font-size:13px;font-weight:700;color:#8a6a12;padding:0 6px}
@@ -119,7 +121,7 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .row-actions a{font-weight:600}
 .ok{background:var(--ok);color:var(--ok-ink);padding:12px 14px;border-radius:12px;border:1px solid #cfe8d4}
 .form-error{background:#fff5f5;color:#9b2c2c;padding:12px 14px;border-radius:12px;border:1px solid #f0d0d0}
-.req{color:#b42318;font-weight:700}
+.req{color:#b42318;font-weight:700;display:inline;white-space:nowrap}
 .img-preview{display:block;width:180px;height:112px;object-fit:cover;border-radius:12px;border:1px solid var(--line);margin:8px 0;background:#f7f4ee}
 .thumb{width:72px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#f7f4ee}
 .file-input{padding:8px;background:#fff}
