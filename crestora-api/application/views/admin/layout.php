@@ -91,8 +91,9 @@ button,.btn{display:inline-flex;align-items:center;justify-content:center;backgr
 .btn-plus:hover,.btn-add:hover{background:#f3faf5;border-style:solid}
 .plus{width:30px;height:30px;border-radius:50%;background:#0e7a3d;color:#fff;display:grid;place-items:center;font-size:22px;line-height:1;font-weight:700}
 .add-row{margin:4px 0 8px}
-.item-row{display:flex;gap:10px;align-items:flex-end}
-.item-row > label{flex:1;margin:8px 0}
+.item-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.item-row-tag{flex:0 0 100%;font-size:12px;font-weight:700;color:#0e7a3d;letter-spacing:.02em;margin:4px 0 0}
+.item-row > label,.item-row > .item-row-field{flex:1;margin:8px 0;min-width:200px}
 fieldset.item{position:relative;padding-right:52px}
 fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .btn-delete{background:#fff;color:var(--danger);border:1px solid #f0d0d0;padding:7px 12px}
@@ -216,13 +217,20 @@ document.addEventListener('click', function (event) {
       if (rowFound) maxIndex = Math.max(maxIndex, parseInt(rowFound[1], 10));
     });
     var next = maxIndex + 1;
+    var groupLabel = group.getAttribute('data-group-label') || '';
+    if (!groupLabel) {
+      var topLegend = group.querySelector(':scope > legend');
+      if (topLegend) {
+        groupLabel = topLegend.textContent.replace(/\s*\(\d+\)\s*$/, '').trim();
+      }
+    }
     var clone = last.cloneNode(true);
     clone.querySelectorAll('fieldset.group').forEach(function (nested) {
       var nestedRows = nested.querySelectorAll(':scope > fieldset.item');
       if (!nestedRows.length) nestedRows = nested.querySelectorAll(':scope > .item-row');
       for (var i = 1; i < nestedRows.length; i++) nestedRows[i].remove();
       var nestedLegend = nestedRows[0] && nestedRows[0].querySelector('legend');
-      if (nestedLegend) nestedLegend.textContent = 'Item 1';
+      if (nestedLegend) nestedLegend.textContent = (nested.getAttribute('data-group-label') || 'Entry') + ' 1';
     });
     clone.querySelectorAll('[name]').forEach(function (el) {
       ['payload', 'upload', 'payload_delete'].forEach(function (base) {
@@ -235,8 +243,10 @@ document.addEventListener('click', function (event) {
       else el.value = '';
     });
     clone.querySelectorAll('.img-preview').forEach(function (img) { img.remove(); });
-    var legend = clone.querySelector(':scope > legend') || clone.querySelector('legend');
-    if (legend) legend.textContent = 'Item ' + (next + 1);
+    var rowTag = clone.querySelector(':scope > .item-row-tag');
+    if (rowTag) rowTag.textContent = groupLabel + ' ' + (next + 1);
+    var itemLegend = clone.querySelector(':scope > legend');
+    if (itemLegend) itemLegend.textContent = groupLabel + ' ' + (next + 1);
     group.insertBefore(clone, add.closest('.add-row'));
     var first = clone.querySelector('input, textarea, select');
     if (first) first.focus();

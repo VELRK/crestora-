@@ -9,15 +9,40 @@ function fieldform_is_list($value)
 	return array_keys($value) === range(0, count($value) - 1);
 }
 
+function fieldform_field_key($name)
+{
+	if ( ! preg_match_all('/\[([^\]]+)\]/', $name, $matches)) {
+		return '';
+	}
+	$keys = $matches[1];
+	for ($i = count($keys) - 1; $i >= 0; $i--) {
+		if ( ! ctype_digit((string) $keys[$i])) {
+			return $keys[$i];
+		}
+	}
+	return '';
+}
+
+function fieldform_human_key($key)
+{
+	if ($key === '') {
+		return 'Item';
+	}
+	$label = preg_replace('/([a-z])([A-Z])/', '$1 $2', str_replace('_', ' ', $key));
+	return ucwords($label);
+}
+
 function fieldform_label($name)
 {
-	if (preg_match('/\[([^\]]+)\]$/', $name, $match)) {
-		$key = $match[1];
-		if (ctype_digit($key)) {
-			return 'Item ' . ((int) $key + 1);
-		}
-		$label = preg_replace('/([a-z])([A-Z])/', '$1 $2', str_replace('_', ' ', $key));
-		return ucwords($label);
+	$key = fieldform_field_key($name);
+	if ($key === '' && preg_match('/\[(\d+)\]$/', $name, $index_match)) {
+		return 'Entry ' . ((int) $index_match[1] + 1);
+	}
+	if ($key !== '' && preg_match('/\[(\d+)\]$/', $name, $index_match)) {
+		return fieldform_human_key($key) . ' ' . ((int) $index_match[1] + 1);
+	}
+	if ($key !== '') {
+		return fieldform_human_key($key);
 	}
 	return 'Content';
 }
@@ -35,10 +60,13 @@ function fieldform_walk($data, $name)
 		$is_list = fieldform_is_list($data);
 		if ($is_list && $data && ! is_array(reset($data))) {
 			$is_gallery = (bool) preg_match('/\[(gallery|images|photos)\]$/i', $name);
-			echo '<fieldset class="group"><legend>' . html_escape(fieldform_label($name)) . '</legend>';
+			$group_label = fieldform_label($name);
+			echo '<fieldset class="group" data-group-label="' . html_escape($group_label) . '"><legend>' . html_escape($group_label) . '</legend>';
 			foreach ($data as $index => $value) {
+				$row_label = $group_label . ' ' . ($index + 1);
 				echo '<div class="item-row">';
-				fieldform_input($name . '[' . $index . ']', $value, 'Item ' . ($index + 1));
+				echo '<span class="item-row-tag">' . html_escape($row_label) . '</span>';
+				fieldform_input($name . '[' . $index . ']', $value, '');
 				echo fieldform_delete_button($name . '[' . $index . ']');
 				echo '</div>';
 			}
@@ -50,9 +78,10 @@ function fieldform_walk($data, $name)
 			return;
 		}
 		if ($is_list) {
-			echo '<fieldset class="group"><legend>' . html_escape(fieldform_label($name)) . ' (' . count($data) . ')</legend>';
+			$group_label = fieldform_label($name);
+			echo '<fieldset class="group" data-group-label="' . html_escape($group_label) . '"><legend>' . html_escape($group_label) . ' (' . count($data) . ')</legend>';
 			foreach ($data as $index => $item) {
-				$legend = 'Item ' . ($index + 1);
+				$legend = $group_label . ' ' . ($index + 1);
 				if (is_array($item) && ! empty($item['title'])) {
 					$legend .= ' — ' . $item['title'];
 				}
@@ -132,7 +161,7 @@ function fieldform_is_image($name, $value)
 		return FALSE;
 	}
 	$looks_like_file = (bool) preg_match('#^(https?:)?//#i', $value) || (bool) preg_match('/\.(jpe?g|png|gif|webp)(\?.*)?$/i', $value);
-	if (preg_match('/\[(image|images|logo|avatar|banner|bannerImage|bgImage|photo|thumbnail)\]$/i', $name)) {
+	if (preg_match('/\[(image|images|logo|avatar|banner|bannerImage|bgImage|photo|thumbnail|masterPlanImage)\]$/i', $name)) {
 		return $looks_like_file || $value === '';
 	}
 	if (preg_match('/\[(gallery|images|photos)\]\[\d+\]$/i', $name)) {
@@ -279,9 +308,17 @@ function fieldform_input($name, $value, $label)
 {
 	$wide = fieldform_is_wide($name, $value);
 	$required = (bool) preg_match('/^(payload|item)\[(title|name|categoryName)\]$/', $name);
-	echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
-	if ($required) {
-		echo ' <span class="req">*</span>';
+	$bare = ($label === '' || $label === NULL);
+	if ($bare) {
+		echo '<label class="item-row-field' . ($wide ? ' span-3' : '') . '">';
+	} else {
+		echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
+		if ($required) {
+			echo ' <span class="req">*</span>';
+		}
+	}
+	if ($bare && $required) {
+		echo '<span class="req">*</span>';
 	}
 	if (is_bool($value)) {
 		echo '<span class="check-field">';

@@ -804,7 +804,7 @@ class Admin extends CI_Controller {
 			$index = $this->find_item_index($items, $id);
 			if ($row && $index >= 0) {
 				array_splice($items, $index, 1);
-				$this->save_list('home', 'hero', $items);
+				$this->save_items('home', 'hero', $meta, $items);
 				$this->session->set_flashdata('msg', 'Slide deleted');
 			}
 		}
@@ -849,7 +849,7 @@ class Admin extends CI_Controller {
 				} else {
 					$items[] = $item;
 				}
-				$this->save_list('home', 'hero', $items);
+				$this->save_items('home', 'hero', $meta, $items);
 				$this->session->set_flashdata('msg', 'Slide saved');
 				redirect('admin/slides');
 			}
