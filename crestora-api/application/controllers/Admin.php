@@ -106,8 +106,7 @@ class Admin extends CI_Controller {
 	{
 		$this->require_login();
 		$last = $this->db->order_by('sort_order', 'DESC')->limit(1)->get('projects')->row_array();
-		$sample = $last ? json_decode($last['payload'], TRUE) : array('title' => '', 'slug' => '', 'description' => '');
-		$payload = fieldform_blank(is_array($sample) ? $sample : array());
+		$payload = fieldform_blank($this->project_template());
 		$code = 'p' . time();
 		$payload['id'] = $code;
 		$payload['title'] = 'New project';
@@ -270,6 +269,81 @@ class Admin extends CI_Controller {
 		$data['heading'] = ($row['title'] === 'New blog') ? 'Add blog' : 'Edit blog';
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => $data['heading'], 'body' => $this->load->view('admin/blog', $data, TRUE)));
+	}
+
+	private function project_template()
+	{
+		$shape = array();
+		$rows = $this->db->get('projects')->result_array();
+		foreach ($rows as $row) {
+			$payload = json_decode($row['payload'], TRUE);
+			if (is_array($payload)) {
+				$shape = $this->merge_shape($shape, $payload);
+			}
+		}
+		if ( ! $shape) {
+			$shape = array(
+				'title' => '',
+				'slug' => '',
+				'description' => '',
+				'image' => '',
+				'gallery' => array(''),
+				'highlights' => array(''),
+				'amenities' => array(''),
+				'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+			);
+		}
+		return $shape;
+	}
+
+	private function merge_shape($base, $extra)
+	{
+		if ( ! is_array($extra)) {
+			return $base;
+		}
+		if ( ! is_array($base) || $base === array()) {
+			if ($this->is_list_array($extra)) {
+				return $extra ? array($this->merge_list_sample($extra)) : array();
+			}
+			$out = array();
+			foreach ($extra as $key => $value) {
+				$out[$key] = is_array($value) ? $this->merge_shape(array(), $value) : $value;
+			}
+			return $out;
+		}
+		if ($this->is_list_array($base) || $this->is_list_array($extra)) {
+			$items = array();
+			if ($this->is_list_array($base)) {
+				$items = array_merge($items, $base);
+			}
+			if ($this->is_list_array($extra)) {
+				$items = array_merge($items, $extra);
+			}
+			return $items ? array($this->merge_list_sample($items)) : array();
+		}
+		foreach ($extra as $key => $value) {
+			if ( ! array_key_exists($key, $base)) {
+				$base[$key] = is_array($value) ? $this->merge_shape(array(), $value) : $value;
+			} elseif (is_array($value) && is_array($base[$key])) {
+				$base[$key] = $this->merge_shape($base[$key], $value);
+			}
+		}
+		return $base;
+	}
+
+	private function merge_list_sample($items)
+	{
+		$sample = NULL;
+		foreach ($items as $item) {
+			if ($sample === NULL) {
+				$sample = $item;
+				continue;
+			}
+			if (is_array($sample) && is_array($item)) {
+				$sample = $this->merge_shape($sample, $item);
+			}
+		}
+		return $sample;
 	}
 
 	private function form_stays_open()
