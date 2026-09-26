@@ -9,7 +9,11 @@
 <div class="table-wrap">
 <table>
 <tr><th>Image</th><th>Title</th><th>Project</th><th>Location</th><th></th></tr>
-<?php foreach ($rows as $r): ?>
+<?php foreach ($rows as $i => $r): ?>
+<?php
+  $slide_id = isset($r['id']) ? trim((string) $r['id']) : '';
+  $delete_key = $slide_id !== '' ? $slide_id : ('idx'.$i);
+?>
 <tr>
   <td><?php if ( ! empty($r['bgImage'])): ?><img class="thumb" src="<?php echo html_escape($r['bgImage']); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape(isset($r['title']) ? $r['title'] : ''); ?></td>
@@ -17,8 +21,8 @@
   <td><?php echo html_escape(isset($r['location']) ? $r['location'] : ''); ?></td>
   <td>
     <div class="row-actions">
-      <a href="<?php echo site_url('admin/slide/'.rawurlencode($r['id'])); ?>">Edit</a>
-      <form method="post" action="<?php echo site_url('admin/slide_delete/'.rawurlencode($r['id'])); ?>" onsubmit="return confirm('Delete this slide?');">
+      <a href="<?php echo site_url('admin/slide/'.rawurlencode($delete_key)); ?>">Edit</a>
+      <form method="post" action="<?php echo site_url('admin/slide_delete/'.rawurlencode($delete_key)); ?>" onsubmit="return confirm('Delete this slide?');">
         <button type="submit" class="btn-delete">Delete</button>
       </form>
     </div>

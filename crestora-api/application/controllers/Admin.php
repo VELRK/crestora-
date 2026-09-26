@@ -724,13 +724,21 @@ class Admin extends CI_Controller {
 	public function slide_delete($id = '')
 	{
 		$this->require_login();
-		if ($this->input->method() === 'post' && $id !== '') {
+		if ($this->input->method() === 'post') {
 			list($row, $meta, $items) = $this->load_items('home', 'hero');
-			$index = $this->find_item_index($items, $id);
-			if ($row && $index >= 0) {
+			$index = -1;
+			$key = rawurldecode((string) $id);
+			if ($key !== '' && preg_match('/^idx(\d+)$/', $key, $m)) {
+				$index = (int) $m[1];
+			} elseif ($key !== '') {
+				$index = $this->find_item_index($items, $key);
+			}
+			if ($row && $index >= 0 && isset($items[$index])) {
 				array_splice($items, $index, 1);
 				$this->save_items('home', 'hero', $meta, $items);
 				$this->session->set_flashdata('msg', 'Slide deleted');
+			} else {
+				$this->session->set_flashdata('msg', 'Slide could not be deleted');
 			}
 		}
 		redirect('admin/slides');
@@ -743,7 +751,7 @@ class Admin extends CI_Controller {
 		if ( ! $row) {
 			show_error('The slider section is missing.');
 		}
-		$index = ($id === '') ? -1 : $this->find_item_index($items, $id);
+		$index = $this->resolve_item_index($items, $id);
 		if ($id !== '' && $index < 0) {
 			show_404();
 		}
@@ -766,7 +774,7 @@ class Admin extends CI_Controller {
 				$error = 'Slide title is required';
 			} else {
 				$item['title'] = $title;
-				if ($item['id'] === '') {
+				if (trim((string) (isset($item['id']) ? $item['id'] : '')) === '') {
 					$item['id'] = $this->unique_item_id($items, 's'.(count($items) + 1));
 				}
 				if ($index >= 0) {
@@ -923,11 +931,27 @@ class Admin extends CI_Controller {
 
 	private function save_items($page, $key, $meta, $items)
 	{
-		$payload = is_array($meta) ? $meta : array();
-		$payload['items'] = array_values($items);
+		$items = array_values($items);
+		$meta = is_array($meta) ? $meta : array();
+		if ($meta === array()) {
+			$payload = $items;
+		} else {
+			$payload = $meta;
+			$payload['items'] = $items;
+		}
 		$this->db->where('page', $page)->where('section_key', $key)->update('sections', array(
 			'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 		));
+	}
+
+	private function resolve_item_index($items, $id)
+	{
+		$key = rawurldecode((string) $id);
+		if ($key !== '' && preg_match('/^idx(\d+)$/', $key, $m)) {
+			$index = (int) $m[1];
+			return isset($items[$index]) ? $index : -1;
+		}
+		return $this->find_item_index($items, $key);
 	}
 
 	private function find_item_index($items, $id)

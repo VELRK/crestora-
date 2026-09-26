@@ -198,7 +198,7 @@ export function SiteProvider({ children }) {
         setState({
           home: {
             ...STATIC_HOME,
-            heroSlides: Array.isArray(apiHome.heroSlides) ? apiHome.heroSlides : [],
+            heroSlides: sectionItems(apiHome.heroSlides) || [],
             categories: apiHome.categories || null,
             locations: apiHome.locations || null,
             testimonials: apiHome.testimonials || null,

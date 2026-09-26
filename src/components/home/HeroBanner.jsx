@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSite } from "../../services/SiteData.jsx";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { MapPin, Sparkles } from "lucide-react";
 
 export default function HeroBanner({
@@ -7,7 +7,7 @@ export default function HeroBanner({
   onBookSiteVisit,
 }) {
   const site = useSite();
-  const slides = Array.isArray(site.home?.heroSlides) ? site.home.heroSlides : [];
+  const slides = sectionItems(site.home?.heroSlides) || [];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {

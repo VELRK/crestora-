@@ -39,6 +39,21 @@ class Api extends CI_Controller {
 		return $decoded === NULL ? $row['payload'] : $decoded;
 	}
 
+	private function section_list($page, $key)
+	{
+		$decoded = $this->section($page, $key);
+		if ( ! is_array($decoded)) {
+			return array();
+		}
+		if (isset($decoded['items']) && is_array($decoded['items'])) {
+			return array_values($decoded['items']);
+		}
+		if ($decoded === array() || array_keys($decoded) === range(0, count($decoded) - 1)) {
+			return $decoded;
+		}
+		return $decoded;
+	}
+
 	private function settings_map()
 	{
 		$rows = $this->db->get('settings')->result_array();
@@ -58,7 +73,7 @@ class Api extends CI_Controller {
 	{
 		$blogs = $this->active_blogs();
 		$this->ok(array(
-			'heroSlides' => $this->section('home', 'hero'),
+			'heroSlides' => $this->section_list('home', 'hero'),
 			'categories' => $this->section('home', 'categories'),
 			'locations' => $this->section('home', 'locations'),
 			'aboutStrip' => $this->section('home', 'about_strip'),
