@@ -23,7 +23,6 @@ class Admin extends CI_Controller {
 		$data['blogs'] = $this->db->count_all('blogs');
 		$data['enquiries'] = $this->db->count_all('enquiries');
 		$data['visits'] = $this->db->count_all('site_visits');
-		$data['sections'] = $this->db->order_by('page', 'ASC')->order_by('sort_order', 'ASC')->get('sections')->result_array();
 		$this->load->view('admin/layout', array('title' => 'Dashboard', 'body' => $this->load->view('admin/dashboard', $data, TRUE)));
 	}
 

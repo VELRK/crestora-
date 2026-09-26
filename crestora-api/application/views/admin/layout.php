@@ -1,22 +1,6 @@
 <?php
 $CI =& get_instance();
 $uri = trim($CI->uri->uri_string(), '/');
-$sections = array();
-if ($CI->session->userdata('admin_id')) {
-	$sections = $CI->db->order_by('page', 'ASC')->order_by('sort_order', 'ASC')->get('sections')->result_array();
-}
-$home = array();
-$pages = array();
-foreach ($sections as $section) {
-	if ($section['page'] === 'home' && in_array($section['section_key'], array('categories', 'locations', 'hero'), TRUE)) {
-		continue;
-	}
-	if ($section['page'] === 'home') {
-		$home[] = $section;
-	} else {
-		$pages[] = $section;
-	}
-}
 function nav_on($uri, $path) {
 	return ($uri === trim($path, '/') || strpos($uri, trim($path, '/').'/') === 0) ? ' class="on"' : '';
 }
@@ -142,20 +126,11 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
   </div>
   <nav class="nav">
     <a href="<?php echo site_url('admin'); ?>"<?php echo ($uri === 'admin') ? ' class="on"' : ''; ?>>Dashboard</a>
-    <div class="group">Developer</div>
     <a href="<?php echo site_url('admin/slides'); ?>"<?php echo ($uri === 'admin/slides' || strpos($uri, 'admin/slide') === 0) ? ' class="on"' : ''; ?>>Slider</a>
-    <?php foreach ($home as $section): ?>
-      <a class="sub<?php echo ($uri === 'admin/section/'.$section['id']) ? ' on' : ''; ?>" href="<?php echo site_url('admin/section/'.$section['id']); ?>"><?php echo html_escape($section['title']); ?></a>
-    <?php endforeach; ?>
-    <div class="group">Content</div>
-    <a href="<?php echo site_url('admin/projects'); ?>"<?php echo nav_on($uri, 'admin/projects'); ?>>Projects</a>
-    <a href="<?php echo site_url('admin/blogs'); ?>"<?php echo nav_on($uri, 'admin/blogs'); ?>>Blogs</a>
+    <a href="<?php echo site_url('admin/projects'); ?>"<?php echo ($uri === 'admin/projects' || strpos($uri, 'admin/project/') === 0) ? ' class="on"' : ''; ?>>Projects</a>
+    <a href="<?php echo site_url('admin/blogs'); ?>"<?php echo ($uri === 'admin/blogs' || strpos($uri, 'admin/blog/') === 0 || $uri === 'admin/blog_create') ? ' class="on"' : ''; ?>>Blogs</a>
     <a href="<?php echo site_url('admin/categories'); ?>"<?php echo ($uri === 'admin/categories' || strpos($uri, 'admin/category') === 0) ? ' class="on"' : ''; ?>>Categories</a>
     <a href="<?php echo site_url('admin/locations'); ?>"<?php echo ($uri === 'admin/locations' || strpos($uri, 'admin/location') === 0) ? ' class="on"' : ''; ?>>Locations</a>
-    <?php foreach ($pages as $section): ?>
-      <a class="sub<?php echo ($uri === 'admin/section/'.$section['id']) ? ' on' : ''; ?>" href="<?php echo site_url('admin/section/'.$section['id']); ?>"><?php echo html_escape($section['title']); ?></a>
-    <?php endforeach; ?>
-    <div class="group">Site</div>
     <a href="<?php echo site_url('admin/settings'); ?>"<?php echo nav_on($uri, 'admin/settings'); ?>>Settings</a>
     <a href="<?php echo site_url('admin/contacts'); ?>"<?php echo nav_on($uri, 'admin/contacts'); ?>>Contact forms</a>
     <a href="<?php echo site_url('admin/visits'); ?>"<?php echo nav_on($uri, 'admin/visits'); ?>>Site visits</a>
