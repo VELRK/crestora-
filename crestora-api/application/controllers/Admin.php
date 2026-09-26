@@ -20,10 +20,71 @@ class Admin extends CI_Controller {
 	{
 		$this->require_login();
 		$data['projects'] = $this->db->count_all('projects');
+		$data['projects_active'] = (int) $this->db->where('is_active', 1)->count_all_results('projects');
 		$data['blogs'] = $this->db->count_all('blogs');
 		$data['enquiries'] = $this->db->count_all('enquiries');
 		$data['visits'] = $this->db->count_all('site_visits');
+		$data['leads_new'] = (int) $this->db->where('status', 'new')->count_all_results('enquiries')
+			+ (int) $this->db->where('status', 'new')->count_all_results('site_visits');
+		$data['by_category'] = $this->dashboard_group_counts('projects', 'category');
+		$data['by_status'] = $this->dashboard_group_counts('projects', 'status');
+		$data['leads_week'] = $this->dashboard_leads_week();
+		$data['recent_enquiries'] = $this->db->order_by('created_at', 'DESC')->limit(5)->get('enquiries')->result_array();
+		$data['recent_visits'] = $this->db->order_by('created_at', 'DESC')->limit(5)->get('site_visits')->result_array();
+		$data['category_labels'] = crestora_category_labels();
 		$this->load->view('admin/layout', array('title' => 'Dashboard', 'body' => $this->load->view('admin/dashboard', $data, TRUE)));
+	}
+
+	private function dashboard_group_counts($table, $column)
+	{
+		$rows = $this->db->select($column . ' AS label, COUNT(*) AS total', FALSE)
+			->from($table)
+			->where($column . ' !=', '')
+			->group_by($column)
+			->order_by('total', 'DESC')
+			->get()
+			->result_array();
+		return is_array($rows) ? $rows : array();
+	}
+
+	private function dashboard_leads_week()
+	{
+		$series = array();
+		for ($i = 6; $i >= 0; $i--) {
+			$date = date('Y-m-d', strtotime('-' . $i . ' days'));
+			$series[$date] = array(
+				'date' => $date,
+				'label' => date('D', strtotime($date)),
+				'contacts' => 0,
+				'visits' => 0,
+				'total' => 0,
+			);
+		}
+		$start = date('Y-m-d', strtotime('-6 days')) . ' 00:00:00';
+		$enq = $this->db->query(
+			'SELECT DATE(created_at) AS d, COUNT(*) AS c FROM enquiries WHERE created_at >= ? GROUP BY DATE(created_at)',
+			array($start)
+		)->result_array();
+		foreach ($enq as $row) {
+			$d = isset($row['d']) ? $row['d'] : '';
+			if ($d !== '' && isset($series[$d])) {
+				$series[$d]['contacts'] = (int) $row['c'];
+			}
+		}
+		$vis = $this->db->query(
+			'SELECT DATE(created_at) AS d, COUNT(*) AS c FROM site_visits WHERE created_at >= ? GROUP BY DATE(created_at)',
+			array($start)
+		)->result_array();
+		foreach ($vis as $row) {
+			$d = isset($row['d']) ? $row['d'] : '';
+			if ($d !== '' && isset($series[$d])) {
+				$series[$d]['visits'] = (int) $row['c'];
+			}
+		}
+		foreach ($series as $date => $item) {
+			$series[$date]['total'] = $item['contacts'] + $item['visits'];
+		}
+		return array_values($series);
 	}
 
 	public function login()
