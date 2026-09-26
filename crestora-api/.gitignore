@@ -1,4 +1,8 @@
 .DS_Store
+
+# Images uploaded in admin stay on the server.
+uploads/*
+!uploads/index.html
 seed/cookies.txt
 seed/cookies-clean.txt
 

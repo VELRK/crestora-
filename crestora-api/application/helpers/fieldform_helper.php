@@ -460,3 +460,113 @@ function fieldform_json($value)
 {
 	return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
+
+function crestora_catalog_items($key)
+{
+	static $cache = array();
+	if (isset($cache[$key])) {
+		return $cache[$key];
+	}
+	$CI =& get_instance();
+	$row = $CI->db->get_where('sections', array('page' => 'home', 'section_key' => $key))->row_array();
+	$payload = ($row && $row['payload'] !== '') ? json_decode($row['payload'], TRUE) : array();
+	if ( ! is_array($payload) || $payload === array()) {
+		$items = array();
+	} elseif (isset($payload['items']) && is_array($payload['items'])) {
+		$items = $payload['items'];
+	} elseif (array_values($payload) === $payload) {
+		$items = $payload;
+	} else {
+		$items = array();
+	}
+	$cache[$key] = array_values($items);
+	return $cache[$key];
+}
+
+function crestora_category_labels()
+{
+	static $labels = NULL;
+	if ($labels !== NULL) {
+		return $labels;
+	}
+	$labels = array(
+		'plots' => 'Plots',
+		'villa' => 'Villas',
+		'farmlands' => 'Farmlands',
+		'commercial' => 'Commercial Lands',
+		'gated-community' => 'Gated Communities',
+	);
+	foreach (crestora_catalog_items('categories') as $item) {
+		if ( ! is_array($item)) {
+			continue;
+		}
+		$key = trim(isset($item['categoryKey']) ? $item['categoryKey'] : '');
+		$name = trim(isset($item['categoryName']) ? $item['categoryName'] : '');
+		if ($key !== '' && $name !== '') {
+			$labels[$key] = $name;
+		}
+	}
+	return $labels;
+}
+
+function crestora_location_choices()
+{
+	static $choices = NULL;
+	if ($choices !== NULL) {
+		return $choices;
+	}
+	$choices = array();
+	foreach (crestora_catalog_items('locations') as $item) {
+		if ( ! is_array($item)) {
+			continue;
+		}
+		$name = trim(isset($item['name']) ? $item['name'] : '');
+		if ($name === '') {
+			continue;
+		}
+		$key = trim(isset($item['cityKey']) ? $item['cityKey'] : '');
+		$choices[] = array('name' => $name, 'key' => $key);
+	}
+	return $choices;
+}
+
+function crestora_sync_project($payload)
+{
+	if ( ! is_array($payload)) {
+		return array();
+	}
+	$labels = crestora_category_labels();
+	$category = trim(isset($payload['category']) ? (string) $payload['category'] : '');
+	if ($category === '' && ! empty($payload['type'])) {
+		$category = trim((string) $payload['type']);
+	}
+	if ($category !== '') {
+		$payload['category'] = $category;
+		$payload['type'] = $category;
+		$payload['typeName'] = isset($labels[$category]) ? $labels[$category] : $category;
+	}
+	$picked = trim(isset($payload['location']) ? (string) $payload['location'] : '');
+	foreach (crestora_location_choices() as $loc) {
+		if (strcasecmp($loc['name'], $picked) === 0) {
+			$payload['location'] = $loc['name'];
+			if ($loc['key'] !== '') {
+				$payload['locality'] = $loc['key'];
+			}
+			break;
+		}
+	}
+	return $payload;
+}
+
+function fieldform_asset_url($url)
+{
+	$url = trim((string) $url);
+	if ($url === '') {
+		return '';
+	}
+	if (preg_match('#(?:^|/)uploads/([^/?#]+)$#', $url, $match)) {
+		$CI =& get_instance();
+		return rtrim($CI->config->item('base_url'), '/') . '/uploads/' . $match[1];
+	}
+	return $url;
+}

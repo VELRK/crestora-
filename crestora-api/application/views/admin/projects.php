@@ -10,9 +10,20 @@
 <?php if (empty($rows)): ?>
 <tr><td colspan="7">No projects found</td></tr>
 <?php else: ?>
-<?php foreach ($rows as $r): $item = json_decode($r['payload'], TRUE); $image = (is_array($item) && ! empty($item['image'])) ? $item['image'] : ''; ?>
+<?php foreach ($rows as $r):
+  $item = json_decode($r['payload'], TRUE);
+  $image = '';
+  if (is_array($item)) {
+    if ( ! empty($item['image'])) {
+      $image = $item['image'];
+    } elseif ( ! empty($item['gallery'][0])) {
+      $image = $item['gallery'][0];
+    }
+  }
+  $image = fieldform_asset_url($image);
+?>
 <tr>
-  <td><?php if ($image): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
+  <td><?php if ($image !== ''): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape($r['title']); ?></td>
   <td><?php echo html_escape($r['slug']); ?></td>
   <td><?php echo html_escape($r['category']); ?></td>

@@ -37,8 +37,9 @@ jobs:
             --exclude=seed/cookies-ui.txt \
             --exclude=application/logs \
             --exclude=application/cache \
+            --exclude=uploads \
             -cf - . | tar -C deploy/release/crestora-api -xf -
-          mkdir -p deploy/release/crestora-api/application/logs deploy/release/crestora-api/application/cache deploy/release/crestora-api/uploads
+          mkdir -p deploy/release/crestora-api/application/logs deploy/release/crestora-api/application/cache
           printf '%s\n' '<html><body></body></html>' > deploy/release/crestora-api/application/logs/index.html
           printf '%s\n' '<html><body></body></html>' > deploy/release/crestora-api/application/cache/index.html
           printf '%s\n' \
@@ -125,7 +126,6 @@ jobs:
               mkdir -p \"\$TARGET\"
               if [ -f \"\$TARGET/crestora-api/application/config/database.php\" ]; then cp \"\$TARGET/crestora-api/application/config/database.php\" \"\$BACKUP_DIR/database.php\"; fi
               if [ -f \"\$TARGET/crestora-api/deploy.local.php\" ]; then cp \"\$TARGET/crestora-api/deploy.local.php\" \"\$BACKUP_DIR/deploy.local.php\"; fi
-              if [ -d \"\$TARGET/crestora-api/uploads\" ]; then mkdir -p \"\$BACKUP_DIR/uploads\"; cp -a \"\$TARGET/crestora-api/uploads/.\" \"\$BACKUP_DIR/uploads/\"; fi
               echo \"Secrets backed up\""; then
               exit 0
             fi
@@ -144,6 +144,7 @@ jobs:
             if rsync -avz --delete \
               -e "${RSYNC_SSH}" \
               --exclude-from=deploy/rsync-exclude.txt \
+              --filter 'protect crestora-api/uploads/***' \
               deploy/release/ \
               "hostinger-deploy:${TARGET}/"; then
               exit 0
@@ -165,7 +166,6 @@ jobs:
               mkdir -p \"\$TARGET/crestora-api/application/config\" \"\$TARGET/crestora-api/uploads\"
               if [ -f \"\$BACKUP_DIR/database.php\" ]; then cp \"\$BACKUP_DIR/database.php\" \"\$TARGET/crestora-api/application/config/database.php\"; fi
               if [ -f \"\$BACKUP_DIR/deploy.local.php\" ]; then cp \"\$BACKUP_DIR/deploy.local.php\" \"\$TARGET/crestora-api/deploy.local.php\"; fi
-              if [ -d \"\$BACKUP_DIR/uploads\" ]; then cp -a \"\$BACKUP_DIR/uploads/.\" \"\$TARGET/crestora-api/uploads/\"; fi
               rm -rf \"\$BACKUP_DIR\"
               echo \"Deployed to \$TARGET\""; then
               exit 0

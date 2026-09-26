@@ -4,3 +4,5 @@ deploy.local.php
 seed/cookies.txt
 seed/cookies-clean.txt
 seed/cookies-ui.txt
+crestora-api/uploads/
+crestora-api/uploads/***

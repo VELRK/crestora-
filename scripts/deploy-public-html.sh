@@ -36,6 +36,7 @@ tar -C "$ROOT/crestora-api" \
   --exclude=seed/cookies-ui.txt \
   --exclude=application/logs \
   --exclude=application/cache \
+  --exclude=uploads \
   -cf - . | tar -C "$DEPLOYPATH/crestora-api" -xf -
 
 mkdir -p "$DEPLOYPATH/crestora-api/application/logs" "$DEPLOYPATH/crestora-api/application/cache" "$DEPLOYPATH/crestora-api/uploads"
@@ -46,6 +47,8 @@ if [ -n "$KEEPDB" ]; then
   cp "$KEEPDB" "$DBFILE"
   rm -f "$KEEPDB"
 fi
+rm -rf "$DEPLOYPATH/crestora-api/uploads"
+mkdir -p "$DEPLOYPATH/crestora-api/uploads"
 if [ -n "$KEEPUPLOADS" ]; then
   cp -a "$KEEPUPLOADS/." "$DEPLOYPATH/crestora-api/uploads/"
   rm -rf "$KEEPUPLOADS"

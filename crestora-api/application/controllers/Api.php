@@ -6,6 +6,7 @@ class Api extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('fieldform');
 		$this->output->set_content_type('application/json');
 	}
 
@@ -106,7 +107,7 @@ class Api extends CI_Controller {
 		foreach ($rows as $row) {
 			$item = json_decode($row['payload'], TRUE);
 			if ($item) {
-				$list[] = $item;
+				$list[] = crestora_sync_project($item);
 			}
 		}
 		$status = $this->input->get('status');
@@ -161,7 +162,7 @@ class Api extends CI_Controller {
 		if (empty($item['id'])) {
 			$item['id'] = $row['code'];
 		}
-		return $item;
+		return crestora_sync_project($item);
 	}
 
 	public function project($id = '')
@@ -191,6 +192,7 @@ class Api extends CI_Controller {
 			if (empty($item['id'])) {
 				$item['id'] = $row['code'];
 			}
+			$item = crestora_sync_project($item);
 			if ($item['id'] === $current['id'] || $row['code'] === $current['id'] || ( ! empty($current['slug']) && isset($item['slug']) && $item['slug'] === $current['slug'])) {
 				continue;
 			}

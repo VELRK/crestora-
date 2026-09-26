@@ -160,15 +160,19 @@ class Admin extends CI_Controller {
 		if ($this->input->method() === 'post') {
 			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 			$posted = $this->input->post('payload');
-			$payload = fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array()));
+			$payload = crestora_sync_project(fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array())));
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			$location = trim(isset($payload['location']) ? $payload['location'] : '');
+			$category = trim(isset($payload['category']) ? $payload['category'] : '');
 			$missing = array();
 			if ($title === '') {
 				$missing[] = 'Title';
 			}
 			if ($location === '') {
 				$missing[] = 'Location';
+			}
+			if ($category === '') {
+				$missing[] = 'Category';
 			}
 			if ($missing) {
 				$row['slug'] = (string) $this->input->post('slug');
