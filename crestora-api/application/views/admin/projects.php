@@ -6,9 +6,9 @@
 <div class="card">
 <div class="table-wrap">
 <table>
-<tr><th>Image</th><th>Title</th><th>Slug</th><th>Category</th><th>Status</th><th>Active</th><th>Actions</th></tr>
+<tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Active</th><th>Actions</th></tr>
 <?php if (empty($rows)): ?>
-<tr><td colspan="7">No projects found</td></tr>
+<tr><td colspan="6">No projects found</td></tr>
 <?php else: ?>
 <?php foreach ($rows as $r):
   $item = json_decode($r['payload'], TRUE);
@@ -25,7 +25,6 @@
 <tr>
   <td><?php if ($image !== ''): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape($r['title']); ?></td>
-  <td><?php echo html_escape($r['slug']); ?></td>
   <td><?php echo html_escape($r['category']); ?></td>
   <td><?php echo html_escape($r['status']); ?></td>
   <td><?php echo $r['is_active'] ? 'Yes' : 'No'; ?></td>

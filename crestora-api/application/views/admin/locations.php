@@ -7,20 +7,19 @@
 <div class="card">
 <div class="table-wrap">
 <table>
-<tr><th>Image</th><th>Name</th><th>Key</th><th>Corridor</th><th>Actions</th></tr>
+<tr><th>Image</th><th>Name</th><th>Corridor</th><th>Actions</th></tr>
 <?php if (empty($rows)): ?>
-<tr><td colspan="5">No locations found</td></tr>
+<tr><td colspan="4">No locations found</td></tr>
 <?php else: ?>
 <?php foreach ($rows as $r): ?>
 <tr>
   <td><?php if ( ! empty($r['image'])): ?><img class="thumb" src="<?php echo html_escape($r['image']); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape(isset($r['name']) ? $r['name'] : ''); ?></td>
-  <td><?php echo html_escape(isset($r['cityKey']) ? $r['cityKey'] : ''); ?></td>
   <td><?php echo html_escape(isset($r['state']) ? $r['state'] : ''); ?></td>
   <td>
     <div class="row-actions">
-      <a class="btn btn-ico btn-ico-edit" href="<?php echo site_url('admin/location/'.$r['id']); ?>" title="Edit"><i class="fas fa-edit"></i></a>
-      <form method="post" action="<?php echo site_url('admin/location_delete/'.$r['id']); ?>" onsubmit="return confirm('Are you sure?');">
+      <a class="btn btn-ico btn-ico-edit" href="<?php echo site_url('admin/location/'.rawurlencode($r['id'])); ?>" title="Edit"><i class="fas fa-edit"></i></a>
+      <form method="post" action="<?php echo site_url('admin/location_delete/'.rawurlencode($r['id'])); ?>" onsubmit="return confirm('Are you sure?');">
         <button type="submit" class="btn-ico btn-ico-delete" title="Delete"><i class="fas fa-trash"></i></button>
       </form>
     </div>

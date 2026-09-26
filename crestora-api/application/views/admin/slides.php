@@ -17,8 +17,8 @@
   <td><?php echo html_escape(isset($r['location']) ? $r['location'] : ''); ?></td>
   <td>
     <div class="row-actions">
-      <a href="<?php echo site_url('admin/slide/'.$r['id']); ?>">Edit</a>
-      <form method="post" action="<?php echo site_url('admin/slide_delete/'.$r['id']); ?>" onsubmit="return confirm('Delete this slide?');">
+      <a href="<?php echo site_url('admin/slide/'.rawurlencode($r['id'])); ?>">Edit</a>
+      <form method="post" action="<?php echo site_url('admin/slide_delete/'.rawurlencode($r['id'])); ?>" onsubmit="return confirm('Delete this slide?');">
         <button type="submit" class="btn-delete">Delete</button>
       </form>
     </div>

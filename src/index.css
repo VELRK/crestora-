@@ -1193,6 +1193,21 @@ ol {
   background: linear-gradient(180deg, rgba(10, 28, 56, 0.02) 0%, rgba(10, 28, 56, 0.22) 100%);
 }
 
+.category-classic-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(10, 28, 56, 0.88);
+  border: 1px solid rgba(197, 155, 39, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .category-classic-index {
   position: absolute;
   top: 12px;

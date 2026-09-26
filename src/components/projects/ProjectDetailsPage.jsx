@@ -20,7 +20,50 @@ import {
   ExternalLink,
   Clock,
   Check,
+  Trees as TreesIcon,
 } from "lucide-react";
+
+const LUCIDE_ICONS = {
+  Landmark,
+  Building2,
+  Check,
+  ShieldCheck,
+  Trees: TreesIcon,
+  Sparkles,
+  CheckCircle2,
+  Clock,
+};
+
+function resolveLucideIcon(name, fallback = Sparkles) {
+  return LUCIDE_ICONS[name] || fallback;
+}
+
+function buildSpecificationRows(project, ctx) {
+  const fromDb = (project.specifications || []).filter((row) => row?.label && row?.value);
+  if (fromDb.length) return fromDb;
+  const rows = [
+    { label: "Project Name", value: ctx.title },
+    { label: "Location", value: ctx.location },
+  ];
+  if (ctx.dtcpNumber || ctx.approval) {
+    rows.push({ label: "DTCP Sanction No.", value: ctx.dtcpNumber || ctx.approval });
+  }
+  if (ctx.reraNumber) {
+    rows.push({ label: "TNRERA Reg. No.", value: ctx.reraNumber });
+  }
+  if (ctx.totalArea) rows.push({ label: "Total Land Area", value: ctx.totalArea });
+  if (ctx.totalUnits) rows.push({ label: "Total Units / Plots", value: ctx.totalUnits });
+  if (ctx.area) rows.push({ label: "Plot / Built-up Area", value: ctx.area });
+  return rows;
+}
+
+function buildAmenityCards(project) {
+  const detailed = (project.amenityDetails || []).filter((item) => item?.title);
+  if (detailed.length) return detailed;
+  return (project.amenities || [])
+    .filter((name) => name && String(name).trim())
+    .map((name) => ({ title: name, desc: "", icon: "CheckCircle2" }));
+}
 
 export default function ProjectDetailsPage({
   project,
@@ -171,11 +214,29 @@ export default function ProjectDetailsPage({
     description,
     highlights = [],
     whyPoints = [],
+    overviewParagraphs = [],
+    specifications = [],
+    amenityDetails = [],
+    amenities = [],
+    masterPlanImage = "",
+    plotSizes = [],
+    proximity = [],
+    specsIntro = "",
+    amenitiesIntro = "",
+    masterPlanIntro = "",
+    proximityIntro = "",
   } = project;
 
   const displayPrice = priceDisplay || formatINR(price);
   const fullGallery = gallery && gallery.length > 0 ? gallery : [image];
   const isFavorite = favorites.has(id);
+  const specCtx = { title, location, dtcpNumber, approval, reraNumber, totalArea, totalUnits, area };
+  const specRows = buildSpecificationRows({ specifications }, specCtx);
+  const amenityCards = buildAmenityCards({ amenityDetails, amenities });
+  const extraOverview = (overviewParagraphs || []).filter((p) => p && String(p).trim());
+  const planImage = masterPlanImage || fullGallery[1] || fullGallery[0];
+  const plotSizeCards = (plotSizes || []).filter((p) => p?.badge || p?.sqft);
+  const proximityItems = (proximity || []).filter((p) => p?.landmark);
 
   // Form Submit handler
   const handleFormSubmit = (e) => {
@@ -522,13 +583,10 @@ export default function ProjectDetailsPage({
               </div>
 
               <div className="pdp-narrative-text">
-                <p>
-                  {description ||
-                    `${title} is an exclusively master-planned gated enclave offering premium DTCP and RERA approved villa plots and bespoke residences in the thriving corridor of ${location}. Designed with classic architecture and expansive open green expanses, the community harmonizes urban convenience with serene living.`}
-                </p>
-                <p>
-                  Every individual plot is demarcated with clear boundary corner stones, equipped with individual potable water supply pipelines, underground electrical cabling, and connected via wide, tarred avenue roads. Whether you are constructing your dream family villa or securing high-growth real estate equity, {title} offers unmatched peace of mind and assured capital appreciation.
-                </p>
+                {description ? <p>{description}</p> : null}
+                {extraOverview.map((paragraph, idx) => (
+                  <p key={idx}>{paragraph}</p>
+                ))}
               </div>
 
               {/* Architectural Highlights Grid */}
@@ -581,56 +639,38 @@ export default function ProjectDetailsPage({
                 </h2>
               </div>
 
-              <div className="pdp-specs-table-wrap">
-                <table className="pdp-specs-table">
-                  <tbody>
-                    <tr>
-                      <td className="pdp-table-lbl">Project Name</td>
-                      <td className="pdp-table-val">{title}</td>
-                      <td className="pdp-table-lbl">Location</td>
-                      <td className="pdp-table-val">{location}</td>
-                    </tr>
-                    <tr>
-                      <td className="pdp-table-lbl">DTCP Sanction No.</td>
-                      <td className="pdp-table-val">
-                        <strong style={{ color: "#163057" }}>
-                          {dtcpNumber || approval || "DTCP Approved"}
-                        </strong>
-                      </td>
-                      <td className="pdp-table-lbl">TNRERA Reg. No.</td>
-                      <td className="pdp-table-val">
-                        <strong style={{ color: "#163057" }}>
-                          {reraNumber || "TN/11/Layout/1284/2023"}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="pdp-table-lbl">Total Land Area</td>
-                      <td className="pdp-table-val">{totalArea || "10 Acres"}</td>
-                      <td className="pdp-table-lbl">Total Units / Plots</td>
-                      <td className="pdp-table-val">{totalUnits || "168 Units"}</td>
-                    </tr>
-                    <tr>
-                      <td className="pdp-table-lbl">Internal Road Widths</td>
-                      <td className="pdp-table-val">30 Feet &amp; 40 Feet Blacktop</td>
-                      <td className="pdp-table-lbl">Vasthu Orientation</td>
-                      <td className="pdp-table-val">100% Vasthu Compliant</td>
-                    </tr>
-                    <tr>
-                      <td className="pdp-table-lbl">Water Infrastructure</td>
-                      <td className="pdp-table-val">Individual Pipeline to Plot Boundary</td>
-                      <td className="pdp-table-lbl">Electrical Grid</td>
-                      <td className="pdp-table-val">Underground EB Cabling &amp; Transformers</td>
-                    </tr>
-                    <tr>
-                      <td className="pdp-table-lbl">Security &amp; Perimeter</td>
-                      <td className="pdp-table-val">Grand Arch with 24/7 CCTV Surveillance</td>
-                      <td className="pdp-table-lbl">Title Guarantee</td>
-                      <td className="pdp-table-val">Clear Title with Immediate Registry</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              {specsIntro ? (
+                <p style={{ color: "#64748b", margin: "0 0 16px", fontSize: "14px" }}>{specsIntro}</p>
+              ) : null}
+              {specRows.length > 0 ? (
+                <div className="pdp-specs-table-wrap">
+                  <table className="pdp-specs-table">
+                    <tbody>
+                      {Array.from({ length: Math.ceil(specRows.length / 2) }, (_, rowIdx) => {
+                        const left = specRows[rowIdx * 2];
+                        const right = specRows[rowIdx * 2 + 1];
+                        return (
+                          <tr key={rowIdx}>
+                            <td className="pdp-table-lbl">{left.label}</td>
+                            <td className="pdp-table-val">{left.value}</td>
+                            {right ? (
+                              <>
+                                <td className="pdp-table-lbl">{right.label}</td>
+                                <td className="pdp-table-val">{right.value}</td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="pdp-table-lbl" />
+                                <td className="pdp-table-val" />
+                              </>
+                            )}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
             </section>
 
             {/* SECTION 4: Amenities & Infrastructure */}
@@ -640,68 +680,31 @@ export default function ProjectDetailsPage({
                 <h2 className="pdp-section-heading">
                   Community <span>Amenities</span>
                 </h2>
-                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                  Thoughtfully integrated lifestyle amenities to enrich your everyday living experience.
-                </p>
+                {amenitiesIntro ? (
+                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                    {amenitiesIntro}
+                  </p>
+                ) : null}
               </div>
 
-              <div className="pdp-amenities-grid">
-                {[
-                  {
-                    title: "Grand Entrance Gateway",
-                    desc: "Majestic security entrance arch with boom barrier and surveillance room.",
-                    icon: Landmark,
-                  },
-                  {
-                    title: "30ft & 40ft Tar Roads",
-                    desc: "High quality engineered blacktop roads designed for heavy traffic durability.",
-                    icon: Building2,
-                  },
-                  {
-                    title: "Underground Drainage",
-                    desc: "Comprehensive storm water drains and subterranean sewer infrastructure.",
-                    icon: Check,
-                  },
-                  {
-                    title: "24/7 CCTV & Security",
-                    desc: "Complete gated compound wall with high-definition digital cameras and guards.",
-                    icon: ShieldCheck,
-                  },
-                  {
-                    title: "Landscaped Children's Park",
-                    desc: "Manicured green lawn with modern play equipment and sitting gazebos.",
-                    icon: Trees,
-                  },
-                  {
-                    title: "Solar Street Illumination",
-                    desc: "Energy-efficient automatic solar street lamps along all internal avenues.",
-                    icon: Sparkles,
-                  },
-                  {
-                    title: "Potable Water Pipeline",
-                    desc: "Dedicated Siruvani/borewell water pipeline stub provided for each plot.",
-                    icon: CheckCircle2,
-                  },
-                  {
-                    title: "Avenue Tree Plantations",
-                    desc: "Shaded green pathways lined with native flora and flowering avenue trees.",
-                    icon: Trees,
-                  },
-                ].map((item, idx) => {
-                  const IconComp = item.icon;
-                  return (
-                    <div key={idx} className="pdp-amenity-card">
-                      <div className="pdp-amenity-icon-circle">
-                        <IconComp size={22} color="#dfb743" />
+              {amenityCards.length > 0 ? (
+                <div className="pdp-amenities-grid">
+                  {amenityCards.map((item, idx) => {
+                    const IconComp = resolveLucideIcon(item.icon, CheckCircle2);
+                    return (
+                      <div key={idx} className="pdp-amenity-card">
+                        <div className="pdp-amenity-icon-circle">
+                          <IconComp size={22} color="#dfb743" />
+                        </div>
+                        <div className="pdp-amenity-info">
+                          <h5>{item.title}</h5>
+                          {item.desc ? <p>{item.desc}</p> : null}
+                        </div>
                       </div>
-                      <div className="pdp-amenity-info">
-                        <h5>{item.title}</h5>
-                        <p>{item.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              ) : null}
             </section>
 
             {/* SECTION 5: Master Plan & Plot Configurations */}
@@ -711,15 +714,17 @@ export default function ProjectDetailsPage({
                 <h2 className="pdp-section-heading">
                   Master Layout <span>Plan</span>
                 </h2>
-                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                  Engineered with 100% Vasthu alignment, optimal plot dimensions, and generous park reservations.
-                </p>
+                {masterPlanIntro ? (
+                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                    {masterPlanIntro}
+                  </p>
+                ) : null}
               </div>
 
               <div className="pdp-master-plan-box">
                 <div className="pdp-plan-visual-wrap">
                   <img
-                    src={fullGallery[1] || fullGallery[0]}
+                    src={planImage}
                     alt={`${title} Master Plan Layout`}
                     className="pdp-plan-img"
                   />
@@ -736,32 +741,20 @@ export default function ProjectDetailsPage({
                   </div>
                 </div>
 
-                {/* Plot Configuration Sizes */}
-                <div className="pdp-plot-sizes-strip">
-                  <div className="pdp-plot-size-card">
-                    <div className="pdp-size-badge">2 CENTS</div>
-                    <div className="pdp-size-sqft">871 sq.ft</div>
-                    <div className="pdp-size-ideal">Ideal for compact 2 BHK Villas</div>
+                {plotSizeCards.length > 0 ? (
+                  <div className="pdp-plot-sizes-strip">
+                    {plotSizeCards.map((size, idx) => (
+                      <div
+                        key={idx}
+                        className={`pdp-plot-size-card${size.highlight ? " highlight" : ""}`}
+                      >
+                        <div className="pdp-size-badge">{size.badge}</div>
+                        <div className="pdp-size-sqft">{size.sqft}</div>
+                        {size.ideal ? <div className="pdp-size-ideal">{size.ideal}</div> : null}
+                      </div>
+                    ))}
                   </div>
-
-                  <div className="pdp-plot-size-card highlight">
-                    <div className="pdp-size-badge">3 CENTS</div>
-                    <div className="pdp-size-sqft">1,306 sq.ft</div>
-                    <div className="pdp-size-ideal">Most Popular for 3 BHK Duplex</div>
-                  </div>
-
-                  <div className="pdp-plot-size-card">
-                    <div className="pdp-size-badge">5 CENTS</div>
-                    <div className="pdp-size-sqft">2,178 sq.ft</div>
-                    <div className="pdp-size-ideal">Spacious 4 BHK Mansions with Garden</div>
-                  </div>
-
-                  <div className="pdp-plot-size-card">
-                    <div className="pdp-size-badge">CORNER PLOTS</div>
-                    <div className="pdp-size-sqft">2,500 – 3,500 sq.ft</div>
-                    <div className="pdp-size-ideal">Dual Road Frontage &amp; Extra Parking</div>
-                  </div>
-                </div>
+                ) : null}
               </div>
             </section>
 
@@ -772,65 +765,36 @@ export default function ProjectDetailsPage({
                 <h2 className="pdp-section-heading">
                   Location &amp; <span>Connectivity</span>
                 </h2>
-                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                  Positioned with swift access to key transit hubs, prestigious educational hubs, and healthcare centers.
-                </p>
+                {proximityIntro ? (
+                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                    {proximityIntro}
+                  </p>
+                ) : null}
               </div>
 
-              <div className="pdp-connectivity-grid">
-                {[
-                  {
-                    landmark: "Coimbatore International Airport",
-                    dist: "8.5 km",
-                    time: "10 Mins",
-                    category: "Transit Hub",
-                  },
-                  {
-                    landmark: "KMCH & Kovai Multi-Speciality Hospital",
-                    dist: "6.0 km",
-                    time: "8 Mins",
-                    category: "Healthcare",
-                  },
-                  {
-                    landmark: "CHIL SEZ & TIDEL Park IT Corridor",
-                    dist: "9.2 km",
-                    time: "12 Mins",
-                    category: "Tech Hub",
-                  },
-                  {
-                    landmark: "Leading International Schools & Engineering Col.",
-                    dist: "3.5 km",
-                    time: "5 Mins",
-                    category: "Education",
-                  },
-                  {
-                    landmark: "Coimbatore Central Railway Junction",
-                    dist: "14 km",
-                    time: "20 Mins",
-                    category: "Transit Hub",
-                  },
-                  {
-                    landmark: "Prozone Mall & Fun Republic Shopping",
-                    dist: "8.0 km",
-                    time: "11 Mins",
-                    category: "Shopping & Dining",
-                  },
-                ].map((item, idx) => (
-                  <div key={idx} className="pdp-proximity-card">
-                    <div className="pdp-prox-left">
-                      <div className="pdp-prox-category">{item.category}</div>
-                      <div className="pdp-prox-name">{item.landmark}</div>
-                    </div>
-                    <div className="pdp-prox-right">
-                      <div className="pdp-prox-time">
-                        <Clock size={13} color="#dfb743" />
-                        <span>{item.time}</span>
+              {proximityItems.length > 0 ? (
+                <div className="pdp-connectivity-grid">
+                  {proximityItems.map((item, idx) => (
+                    <div key={idx} className="pdp-proximity-card">
+                      <div className="pdp-prox-left">
+                        {item.category ? (
+                          <div className="pdp-prox-category">{item.category}</div>
+                        ) : null}
+                        <div className="pdp-prox-name">{item.landmark}</div>
                       </div>
-                      <div className="pdp-prox-dist">{item.dist}</div>
+                      <div className="pdp-prox-right">
+                        {item.time ? (
+                          <div className="pdp-prox-time">
+                            <Clock size={13} color="#dfb743" />
+                            <span>{item.time}</span>
+                          </div>
+                        ) : null}
+                        {item.dist ? <div className="pdp-prox-dist">{item.dist}</div> : null}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : null}
             </section>
 
 

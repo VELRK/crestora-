@@ -303,9 +303,19 @@ export default function App() {
 
     // Location / Locality
     if (filters.location && filters.location !== "all") {
-      result = result.filter(
-        (p) => p.locality === filters.location || p.city === filters.location
-      );
+      const locKey = filters.location;
+      result = result.filter((p) => {
+        if (p.locality === locKey || p.city === locKey) return true;
+        const label = site.filters?.localities?.find((l) => l.value === locKey)?.label;
+        if (label) {
+          const n = label.toLowerCase();
+          return (
+            String(p.location || "").toLowerCase() === n ||
+            String(p.cityName || "").toLowerCase() === n
+          );
+        }
+        return false;
+      });
     }
 
     // Status (ongoing, upcoming, completed)
@@ -331,7 +341,7 @@ export default function App() {
     }
 
     return result;
-  }, [projects, filters, sortBy]);
+  }, [projects, filters, sortBy, site.filters?.localities]);
 
   // Pagination slice
   const totalPages = Math.max(

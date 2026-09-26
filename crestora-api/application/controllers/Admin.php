@@ -354,6 +354,16 @@ class Admin extends CI_Controller {
 			'highlights' => array(''),
 			'amenities' => array(''),
 			'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+			'overviewParagraphs' => array(''),
+			'specifications' => array(array('label' => '', 'value' => '')),
+			'amenityDetails' => array(array('title' => '', 'desc' => '', 'icon' => '')),
+			'masterPlanImage' => '',
+			'plotSizes' => array(array('badge' => '', 'sqft' => '', 'ideal' => '', 'highlight' => FALSE)),
+			'proximity' => array(array('landmark' => '', 'dist' => '', 'time' => '', 'category' => '')),
+			'specsIntro' => '',
+			'amenitiesIntro' => '',
+			'masterPlanIntro' => '',
+			'proximityIntro' => '',
 		);
 	}
 
@@ -564,8 +574,13 @@ class Admin extends CI_Controller {
 			list($row, $meta, $items) = $this->load_items('home', 'categories');
 			$index = $this->find_item_index($items, $id);
 			if ($row && $index >= 0) {
+				$key = isset($items[$index]['categoryKey']) ? $items[$index]['categoryKey'] : '';
 				array_splice($items, $index, 1);
 				$this->save_items('home', 'categories', $meta, $items);
+				if ($key !== '') {
+					$this->remove_filter('categories', $key);
+					$this->remove_filter('propertyTypes', $key);
+				}
 				$this->session->set_flashdata('msg', 'Category deleted');
 			}
 		}
@@ -607,8 +622,12 @@ class Admin extends CI_Controller {
 			list($row, $meta, $items) = $this->load_items('home', 'locations');
 			$index = $this->find_item_index($items, $id);
 			if ($row && $index >= 0) {
+				$key = isset($items[$index]['cityKey']) ? $items[$index]['cityKey'] : '';
 				array_splice($items, $index, 1);
 				$this->save_items('home', 'locations', $meta, $items);
+				if ($key !== '') {
+					$this->remove_filter('localities', $key);
+				}
 				$this->session->set_flashdata('msg', 'Location deleted');
 			}
 		}
@@ -860,8 +879,15 @@ class Admin extends CI_Controller {
 
 	private function find_item_index($items, $id)
 	{
+		$id = rawurldecode((string) $id);
 		foreach ($items as $index => $item) {
 			if (isset($item['id']) && (string) $item['id'] === (string) $id) {
+				return $index;
+			}
+			if (isset($item['categoryKey']) && (string) $item['categoryKey'] === (string) $id) {
+				return $index;
+			}
+			if (isset($item['cityKey']) && (string) $item['cityKey'] === (string) $id) {
 				return $index;
 			}
 		}
@@ -889,6 +915,27 @@ class Admin extends CI_Controller {
 			return TRUE;
 		}
 		return array_keys($value) === range(0, count($value) - 1);
+	}
+
+	private function remove_filter($list_key, $value)
+	{
+		if ($value === '' || $value === 'all') {
+			return;
+		}
+		$row = $this->db->get_where('sections', array('page' => 'global', 'section_key' => 'filters'))->row_array();
+		if ( ! $row) {
+			return;
+		}
+		$payload = json_decode($row['payload'], TRUE);
+		if ( ! is_array($payload) || ! isset($payload[$list_key]) || ! is_array($payload[$list_key])) {
+			return;
+		}
+		$payload[$list_key] = array_values(array_filter($payload[$list_key], function ($item) use ($value) {
+			return ! (isset($item['value']) && (string) $item['value'] === (string) $value);
+		}));
+		$this->db->where('id', (int) $row['id'])->update('sections', array(
+			'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+		));
 	}
 
 	private function upsert_filter($list_key, $value, $label, $extra = array())

@@ -142,7 +142,7 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
   </div>
   <nav class="nav">
     <a href="<?php echo site_url('admin'); ?>"<?php echo ($uri === 'admin') ? ' class="on"' : ''; ?>>Dashboard</a>
-    <div class="group">Home</div>
+    <div class="group">Developer</div>
     <a href="<?php echo site_url('admin/slides'); ?>"<?php echo ($uri === 'admin/slides' || strpos($uri, 'admin/slide') === 0) ? ' class="on"' : ''; ?>>Slider</a>
     <?php foreach ($home as $section): ?>
       <a class="sub<?php echo ($uri === 'admin/section/'.$section['id']) ? ' on' : ''; ?>" href="<?php echo site_url('admin/section/'.$section['id']); ?>"><?php echo html_escape($section['title']); ?></a>

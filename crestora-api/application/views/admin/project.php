@@ -17,13 +17,7 @@
     <label>Title <span class="req">*</span>
       <input name="payload[title]" value="<?php echo html_escape($title_value); ?>" required data-slug-source />
     </label>
-    <label class="span-2">Slug <span class="req">*</span>
-      <span class="url-field">
-        <span class="url-prefix">/project/</span>
-        <input name="slug" value="<?php echo html_escape($row['slug']); ?>" required data-slug-target />
-      </span>
-      <span class="file-note">Updates from the title. Type here if you want a different slug.</span>
-    </label>
+    <input type="hidden" name="slug" value="<?php echo html_escape($row['slug']); ?>" required data-slug-target />
     <label>Location <span class="req">*</span>
       <select name="payload[location]" required>
         <option value="">Select location</option>

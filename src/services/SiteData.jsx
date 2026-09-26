@@ -4,8 +4,6 @@ import {
   STATS_DATA,
   BUILD_COMPANION_DATA,
   NRI_SERVICES,
-  TESTIMONIALS_DATA,
-  GOOGLE_REVIEWS_META,
   FAQS_DATA,
   BANK_PARTNERS,
   WHY_COIMBATORE_DATA,
@@ -43,14 +41,6 @@ const STATIC_HOME = {
     { text: "100% VASTHU COMPLIANT LAYOUTS", highlight: false },
   ],
   whyCoimbatore: WHY_COIMBATORE_DATA,
-  testimonials: {
-    eyebrow: "HAPPY INVESTORS",
-    titleLead: "Client Stories &",
-    titleHighlight: "Testimonials",
-    intro: "Hear from families and NRI investors who trusted Crestora Properties for secure, DTCP & RERA-approved plotted developments and luxury residences.",
-    items: TESTIMONIALS_DATA,
-  },
-  googleReviews: GOOGLE_REVIEWS_META,
   faqs: {
     eyebrow: "FREQUENTLY ASKED QUESTIONS",
     titleLead: "Answers &",
@@ -201,12 +191,18 @@ export function SiteProvider({ children }) {
         const projectList = projects.data || [];
         const categories = categoryOptions(apiHome.categories, apiFilters.categories);
         const localities = locationOptions(apiHome.locations, apiFilters.localities?.length ? apiFilters.localities : []);
+        const budgets =
+          Array.isArray(apiFilters.budgets) && apiFilters.budgets.length
+            ? apiFilters.budgets
+            : MAX_PRICES;
         setState({
           home: {
             ...STATIC_HOME,
             heroSlides: Array.isArray(apiHome.heroSlides) ? apiHome.heroSlides : [],
             categories: apiHome.categories || null,
             locations: apiHome.locations || null,
+            testimonials: apiHome.testimonials || null,
+            googleReviews: apiHome.googleReviews || null,
           },
           projects: projectList,
           about: null,
@@ -221,7 +217,7 @@ export function SiteProvider({ children }) {
             localities,
             propertyTypes: categories,
             statuses: statusOptions(projectList),
-            budgets: MAX_PRICES,
+            budgets,
             sortOptions: SORT_OPTIONS,
           },
           settings: settings.data,
@@ -245,4 +241,42 @@ export function sectionItems(block) {
 
 export function useSite() {
   return useContext(SiteContext);
+}
+
+export function projectMatchesCategory(project, categoryKey) {
+  if (!categoryKey || !project) return false;
+  return project.category === categoryKey || project.type === categoryKey;
+}
+
+export function countProjectsForCategory(projects, categoryKey) {
+  return (projects || []).filter((p) => projectMatchesCategory(p, categoryKey)).length;
+}
+
+export function projectMatchesLocation(project, loc) {
+  if (!project || !loc) return false;
+  const key = loc.cityKey || loc.value;
+  if (key && (project.locality === key || project.city === key)) return true;
+  const name = loc.name || loc.label;
+  if (name) {
+    const n = String(name).toLowerCase();
+    return (
+      String(project.location || "").toLowerCase() === n ||
+      String(project.cityName || "").toLowerCase() === n
+    );
+  }
+  return false;
+}
+
+export function countProjectsForLocation(projects, loc) {
+  return (projects || []).filter((p) => projectMatchesLocation(p, loc)).length;
+}
+
+export function formatCategoryCountLabel(plotsCount, count) {
+  const n = Number(count) || 0;
+  const suffix = String(plotsCount || "")
+    .replace(/^[\d,+]+\s*/, "")
+    .trim();
+  const tail = suffix || (n === 1 ? "Project" : "Projects");
+  if (!n) return plotsCount || `0 ${tail}`;
+  return `${n}${n >= 10 ? "+" : ""} ${tail}`;
 }

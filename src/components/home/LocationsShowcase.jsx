@@ -1,10 +1,11 @@
 import React from "react";
-import { sectionItems, useSite } from "../../services/SiteData.jsx";
+import { sectionItems, useSite, countProjectsForLocation } from "../../services/SiteData.jsx";
 
 export default function LocationsShowcase({ onSelectLocation }) {
   const site = useSite();
   const block = site.home?.locations;
   const cities = sectionItems(block) || [];
+  const projects = site.projects || [];
   const eyebrow = block?.eyebrow || "STRATEGIC GROWTH CORRIDORS";
   const titleLead = block?.titleLead || "Explore Prime";
   const titleHighlight = block?.titleHighlight || "Locations";
@@ -29,9 +30,12 @@ export default function LocationsShowcase({ onSelectLocation }) {
 
         {/* Modern Rounded Card Grid (Matching Reference UI) */}
         <div className="locations-modern-grid">
-          {cities.map((loc) => (
+          {cities.map((loc) => {
+            const liveCount = countProjectsForLocation(projects, loc);
+            const displayCount = liveCount > 0 ? liveCount : Number(loc.count) || 0;
+            return (
             <div
-              key={loc.id}
+              key={loc.id || loc.cityKey}
               className={`location-modern-card ${loc.span === 2 ? "span-wide" : ""}`}
               onClick={() => onSelectLocation && onSelectLocation(loc.cityKey)}
               role="button"
@@ -50,11 +54,12 @@ export default function LocationsShowcase({ onSelectLocation }) {
               <div className="location-modern-info">
                 <h3 className="location-modern-title">{loc.name}</h3>
                 <span className="location-modern-count">
-                  {loc.count} {loc.count === 1 ? "Property" : "Properties"}
+                  {displayCount} {displayCount === 1 ? "Property" : "Properties"}
                 </span>
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
       </div>
     </section>

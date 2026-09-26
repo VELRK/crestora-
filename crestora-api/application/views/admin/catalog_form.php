@@ -5,26 +5,14 @@
   <div class="form-grid">
   <?php if ($kind === 'locations'): ?>
     <label>Name <span class="req">*</span><input name="item[name]" value="<?php echo html_escape($item['name']); ?>" required data-slug-source /></label>
-    <label class="span-2">Slug <span class="req">*</span>
-      <span class="url-field">
-        <span class="url-prefix">/locations/</span>
-        <input name="item[cityKey]" value="<?php echo html_escape($item['cityKey']); ?>" required data-slug-target />
-      </span>
-      <span class="file-note">Updates from the name. Type here if you want a different slug.</span>
-    </label>
+    <input type="hidden" name="item[cityKey]" value="<?php echo html_escape($item['cityKey']); ?>" required data-slug-target />
     <label>Corridor<input name="item[state]" value="<?php echo html_escape($item['state']); ?>" /></label>
     <label>Highlight<input name="item[highlight]" value="<?php echo html_escape($item['highlight']); ?>" /></label>
     <label>Property count<input name="item[count]" value="<?php echo html_escape($item['count']); ?>" /></label>
     <input type="hidden" name="item[id]" value="<?php echo html_escape($item['id']); ?>" />
   <?php else: ?>
     <label>Name <span class="req">*</span><input name="item[categoryName]" value="<?php echo html_escape($item['categoryName']); ?>" required data-slug-source /></label>
-    <label class="span-2">Slug <span class="req">*</span>
-      <span class="url-field">
-        <span class="url-prefix">/projects/</span>
-        <input name="item[categoryKey]" value="<?php echo html_escape($item['categoryKey']); ?>" required data-slug-target />
-      </span>
-      <span class="file-note">Updates from the name. Type here if you want a different slug.</span>
-    </label>
+    <input type="hidden" name="item[categoryKey]" value="<?php echo html_escape($item['categoryKey']); ?>" required data-slug-target />
     <label>Title <span class="req">*</span><input name="item[title]" value="<?php echo html_escape($item['title']); ?>" required /></label>
     <label>Subtitle<input name="item[subtitle]" value="<?php echo html_escape($item['subtitle']); ?>" /></label>
     <label>Badge<input name="item[badge]" value="<?php echo html_escape($item['badge']); ?>" /></label>
