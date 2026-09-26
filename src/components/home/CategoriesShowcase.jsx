@@ -1,16 +1,15 @@
 import React from "react";
-import { CATEGORIES_DATA } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { ArrowRight } from "lucide-react";
 
 export default function CategoriesShowcase({ onSelectCategory }) {
   const site = useSite();
   const block = site.home?.categories;
-  const categories = sectionItems(block) || CATEGORIES_DATA;
-  const eyebrow = block?.eyebrow || "PROPERTY CATEGORIES";
-  const titleLead = block?.titleLead || "Explore by";
-  const titleHighlight = block?.titleHighlight || "Category";
-  const intro = block?.intro || "Curated residential plots, luxury villas, eco farmlands, and commercial developments across prime corridors.";
+  const categories = sectionItems(block) || [];
+  const eyebrow = block?.eyebrow || "";
+  const titleLead = block?.titleLead || "";
+  const titleHighlight = block?.titleHighlight || "";
+  const intro = block?.intro || "";
   return (
     <section id="categories-section" className="categories-section">
       <div className="crestora-container">

@@ -47,7 +47,7 @@ export function SiteProvider({ children }) {
         });
       })
       .catch((err) => {
-        console.warn("Crestora API unavailable, using local content", err);
+        console.warn("Crestora API unavailable", err);
         setState((prev) => ({ ...prev, ready: true }));
       });
   }, []);

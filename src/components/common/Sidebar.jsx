@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight } from "lucide-react";
-import { POPULAR_CITIES } from "../../data/homeData";
-import { CATEGORIES } from "../../data/projectsData";
-
 export default function Sidebar({
   isOpen,
   onClose,
@@ -18,8 +15,8 @@ export default function Sidebar({
   const phoneTel = settings.phone_tel || "+919159066666";
   const email = settings.email || "info@crestoraproperties.com";
   const office = settings.corporate_office || "Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
-  const cities = sectionItems(site.home?.locations) || POPULAR_CITIES;
-  const menuCategories = (site.filters?.categories?.length ? site.filters.categories : CATEGORIES).filter((item) => item.value && item.value !== "all");
+  const cities = sectionItems(site.home?.locations) || [];
+  const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
   const isCategoriesActive =
     activePage === "projects" && filters?.type && filters.type !== "all";
   const isLocationsActive =

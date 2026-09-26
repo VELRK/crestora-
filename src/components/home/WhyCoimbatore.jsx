@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CITY_SPOTLIGHT, POPULAR_CITIES } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import whyCbeImg from "../../assets/whycbe.png";
 
@@ -8,8 +7,17 @@ import { MapPin, ArrowRight } from "lucide-react";
 export default function WhyCoimbatore({ onExploreProjects, onSelectLocation }) {
   const site = useSite();
   const [activeCityKey, setActiveCityKey] = useState("coimbatore");
-  const cityData = site.home?.whyCoimbatore || CITY_SPOTLIGHT[activeCityKey] || CITY_SPOTLIGHT.coimbatore;
-  const corridors = sectionItems(site.home?.locations) || POPULAR_CITIES;
+  const storedCity = site.home?.whyCoimbatore || null;
+  const corridors = sectionItems(site.home?.locations) || [];
+  if (!storedCity) return null;
+  const cityData = {
+    title: "",
+    subtitle: "",
+    badge: "",
+    leftPoints: [],
+    rightPoints: [],
+    ...storedCity,
+  };
 
   return (
     <section id="city-locations-section" className="city-spotlight-section">

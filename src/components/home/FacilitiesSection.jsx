@@ -1,7 +1,9 @@
 import React from "react";
-import { FACILITIES_DATA } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 
 export default function FacilitiesSection() {
+  const site = useSite();
+  const facilities = sectionItems(site.home?.facilities) || [];
   return (
     <section className="home-section facilities-section">
       <div className="ul-container">
@@ -19,7 +21,7 @@ export default function FacilitiesSection() {
             </p>
 
             <div className="facilities-items-grid">
-              {FACILITIES_DATA.map((item) => (
+              {facilities.map((item) => (
                 <div key={item.id} className="facility-item-card">
                   <div className="facility-icon-wrap">
                     <i className={item.icon}></i>

@@ -1,5 +1,5 @@
 import React from "react";
-import { ADISSIA_STATS } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { useCountUp } from "../../hooks/useCountUp";
 
 function StatItem({ item }) {
@@ -24,12 +24,14 @@ function StatItem({ item }) {
 }
 
 export default function StatsCounter() {
+  const site = useSite();
+  const stats = sectionItems(site.home?.stats) || [];
   return (
     <section className="home-section stats-counter-section">
       <div className="ul-container">
         <div className="stats-counter-banner">
           <div className="stats-cards-grid">
-            {ADISSIA_STATS.map((item) => (
+            {stats.map((item) => (
               <StatItem key={item.id} item={item} />
             ))}
           </div>

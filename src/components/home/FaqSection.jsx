@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { FAQS_DATA } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { ChevronDown } from "lucide-react";
 
 export default function FaqSection() {
   const site = useSite();
   const block = site.home?.faqs;
-  const faqs = sectionItems(block) || FAQS_DATA;
-  const eyebrow = block?.eyebrow || "FREQUENTLY ASKED QUESTIONS";
-  const titleLead = block?.titleLead || "Answers &";
-  const titleHighlight = block?.titleHighlight || "Advisory";
-  const intro = block?.intro || "Key insights into DTCP sanctions, TN RERA compliance, bank home loan pre-approvals, and NRI acquisition protocols at Crestora Properties.";
+  const faqs = sectionItems(block) || [];
+  const eyebrow = block?.eyebrow || "";
+  const titleLead = block?.titleLead || "";
+  const titleHighlight = block?.titleHighlight || "";
+  const intro = block?.intro || "";
   const [openIndex, setOpenIndex] = useState(0);
 
   const toggleFaq = (idx) => {

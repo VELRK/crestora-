@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { PROPERTY_TYPES, LOCATIONS, MAX_PRICES } from "../../data/projectsData";
 import { useSite } from "../../services/SiteData.jsx";
 
 export default function HeroSearchFilter({ onSearch }) {
   const site = useSite();
-  const propertyTypes = site.filters?.propertyTypes?.length ? site.filters.propertyTypes : PROPERTY_TYPES;
-  const locations = site.filters?.localities?.length ? site.filters.localities : LOCATIONS;
-  const maxPrices = site.filters?.budgets?.length ? site.filters.budgets : MAX_PRICES;
+  const propertyTypes = site.filters?.propertyTypes || [];
+  const locations = site.filters?.localities || [];
+  const maxPrices = site.filters?.budgets || [];
   const [searchParams, setSearchParams] = useState({
     location: "all",
     type: "all",

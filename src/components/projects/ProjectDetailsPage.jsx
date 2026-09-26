@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { formatINR } from "../../services/mockupApi";
+import { formatINR } from "../../services/api";
 import { crestoraApi } from "../../services/api";
 import ProjectCard from "./ProjectCard";
 import {

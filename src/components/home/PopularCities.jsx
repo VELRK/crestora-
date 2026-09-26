@@ -1,7 +1,9 @@
 import React from "react";
-import { POPULAR_CITIES } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 
 export default function PopularCities({ onSelectCity }) {
+  const site = useSite();
+  const cities = sectionItems(site.home?.locations) || [];
   return (
     <section id="popular-cities-section" className="home-section popular-cities-section">
       <div className="ul-container">
@@ -18,7 +20,7 @@ export default function PopularCities({ onSelectCity }) {
 
         {/* Cities/Localities Grid */}
         <div className="cities-grid">
-          {POPULAR_CITIES.map((city) => (
+          {cities.map((city) => (
             <div
               key={city.id}
               className="city-card"

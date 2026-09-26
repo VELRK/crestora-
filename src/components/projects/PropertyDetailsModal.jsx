@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { formatINR } from "../../services/mockupApi";
+import { formatINR } from "../../services/api";
 import { X, MapPin, ShieldCheck, Heart, CheckCircle2, Phone, Calendar } from "lucide-react";
 
 export default function PropertyDetailsModal({

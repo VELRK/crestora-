@@ -1,26 +1,17 @@
 import React from "react";
-import { STATS_DATA } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import aboutImg from "../../assets/about/about.png";
 import { ShieldCheck, CheckCircle2, Award, Users } from "lucide-react";
 
 export default function AboutAdissia({ onExplore, onBookSiteVisit, onReadMore }) {
   const site = useSite();
-  const stats = sectionItems(site.home?.stats) || STATS_DATA;
+  const stats = sectionItems(site.home?.stats) || [];
   const strip = site.home?.aboutStrip || {};
   const imageSrc = strip.image || aboutImg;
-  const paragraphs = strip.paragraphs?.length ? strip.paragraphs : [
-    "Crestora Properties develops DTCP and RERA-approved gated community villa plots and bespoke luxury residences across Coimbatore and Tamil Nadu's fastest growing corridors.",
-    "Combining strategic locations, crystal-clear legal titles, and completely transparent documentation, we engineer spaces where families flourish, communities bond, and generational capital appreciation is assured.",
-  ];
-  const features = strip.features?.length ? strip.features : [
-    "100% DTCP & RERA Sanctioned",
-    "Instant Patta Transfer & Registry",
-    "100% Vasthu Compliant Layouts",
-    "Approved by SBI, HDFC & ICICI",
-  ];
-  const title = strip.title || "All About Crestora Properties";
-  const titleHighlight = strip.titleHighlight || "Crestora Properties";
+  const paragraphs = strip.paragraphs || [];
+  const features = strip.features || [];
+  const title = strip.title || "";
+  const titleHighlight = strip.titleHighlight || "";
   const titleLead = title.replace(titleHighlight, "").trim();
   return (
     <section id="about-crestora" className="about-crestora-section">
@@ -29,7 +20,7 @@ export default function AboutAdissia({ onExplore, onBookSiteVisit, onReadMore })
         <div className="about-intro-grid">
           {/* Text Column */}
           <div className="about-text-col">
-            <h5>{strip.eyebrow || "ABOUT US"}</h5>
+            <h5>{strip.eyebrow || ""}</h5>
             <h2>
               {titleLead} <span>{titleHighlight}</span>
             </h2>

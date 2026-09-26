@@ -1,15 +1,14 @@
 import React from "react";
-import { BANK_PARTNERS } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { Landmark } from "lucide-react";
 
 export default function PartnersSection() {
   const site = useSite();
   const block = site.home?.partners;
-  const partners = sectionItems(block) || BANK_PARTNERS;
-  const eyebrow = block?.eyebrow || "INSTITUTIONAL PRE-APPROVALS";
-  const title = block?.titleLead || "Banking & Home Loan Partners";
-  const intro = block?.intro || "All Crestora Properties projects are pre-sanctioned for hassle-free home and plot loans.";
+  const partners = sectionItems(block) || [];
+  const eyebrow = block?.eyebrow || "";
+  const title = block?.titleLead || "";
+  const intro = block?.intro || "";
   return (
     <section style={{ background: "#ffffff", padding: "60px 0", borderTop: "1px solid #edf2f7" }}>
       <div className="crestora-container">

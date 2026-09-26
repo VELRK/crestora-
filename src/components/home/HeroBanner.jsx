@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { HERO_SLIDES } from "../../data/homeData";
 import { useSite } from "../../services/SiteData.jsx";
 import { MapPin, Sparkles } from "lucide-react";
 
@@ -8,18 +7,19 @@ export default function HeroBanner({
   onBookSiteVisit,
 }) {
   const site = useSite();
-  const slides = site.home?.heroSlides?.length ? site.home.heroSlides : HERO_SLIDES;
+  const slides = Array.isArray(site.home?.heroSlides) ? site.home.heroSlides : [];
   const [currentIdx, setCurrentIdx] = useState(0);
 
-  // Auto slide transition every 7 seconds
   useEffect(() => {
+    if (!slides.length) return undefined;
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % slides.length);
     }, 7000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const activeSlide = slides[currentIdx];
+  if (!activeSlide) return null;
 
   const renderSlideTitle = () => {
     if (activeSlide.id === "s1") {

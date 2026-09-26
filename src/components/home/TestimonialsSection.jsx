@@ -1,17 +1,16 @@
 import React from "react";
-import { TESTIMONIALS_DATA, GOOGLE_REVIEWS_META } from "../../data/homeData";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
 import { Star, Quote } from "lucide-react";
 
 export default function TestimonialsSection() {
   const site = useSite();
-  const reviews = site.home?.googleReviews || GOOGLE_REVIEWS_META;
+  const reviews = site.home?.googleReviews || {};
   const block = site.home?.testimonials;
-  const testimonials = sectionItems(block) || TESTIMONIALS_DATA;
-  const eyebrow = block?.eyebrow || "HAPPY INVESTORS";
-  const titleLead = block?.titleLead || "Client Stories &";
-  const titleHighlight = block?.titleHighlight || "Testimonials";
-  const intro = block?.intro || "Hear from families and NRI investors who trusted Crestora Properties for secure, DTCP & RERA-approved plotted developments and luxury residences.";
+  const testimonials = sectionItems(block) || [];
+  const eyebrow = block?.eyebrow || "";
+  const titleLead = block?.titleLead || "";
+  const titleHighlight = block?.titleHighlight || "";
+  const intro = block?.intro || "";
   return (
     <section className="testimonials-section">
       <div className="crestora-container">

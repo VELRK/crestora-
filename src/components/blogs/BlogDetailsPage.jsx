@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BLOGS_DATA } from "../../data/blogsData";
 import {
   ArrowLeft,
   Calendar,
@@ -23,7 +22,7 @@ import {
 
 export default function BlogDetailsPage({
   post,
-  allPosts = BLOGS_DATA,
+  allPosts = [],
   onBackToBlogs,
   onSelectBlog,
   onSelectProject,
@@ -37,17 +36,17 @@ export default function BlogDetailsPage({
   );
 
   // Fallback to first post if none passed
-  const currentPost = post || allPosts[0] || BLOGS_DATA[0];
+  const currentPost = post || allPosts[0] || null;
 
   // Scroll to top on post change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPost.id]);
+  }, [currentPost?.id]);
 
   // Observer for table of contents active highlighting
   useEffect(() => {
     const handleScroll = () => {
-      if (!currentPost.tableOfContents) return;
+      if (!currentPost?.tableOfContents) return;
       const scrollY = window.scrollY;
       for (const item of currentPost.tableOfContents) {
         const el = document.getElementById(item.id);
@@ -107,6 +106,14 @@ export default function BlogDetailsPage({
   const handlePrint = () => {
     window.print();
   };
+
+  if (!currentPost) {
+    return (
+      <div className="crestora-container" style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2>Article not found</h2>
+      </div>
+    );
+  }
 
   return (
     <article className="blog-details-page-wrapper">

@@ -1,5 +1,5 @@
 import React from "react";
-import { formatINR } from "../../services/mockupApi";
+import { formatINR } from "../../services/api";
 import {
   MapPin,
   Heart,

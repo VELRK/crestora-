@@ -1,18 +1,17 @@
 import React from "react";
-import { BLOGS_DATA } from "../../data/homeData";
 import { useSite } from "../../services/SiteData.jsx";
 import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
 
 export default function LatestBlogs({ onSelectBlog, onNavigate }) {
   const site = useSite();
   const copy = site.home?.insights || {};
-  const source = site.home?.latestBlogs?.length ? site.home.latestBlogs : BLOGS_DATA;
+  const source = site.home?.latestBlogs || site.blogs?.posts || [];
   const displayBlogs = source.slice(0, 3);
-  const eyebrow = copy.eyebrow || "INSIGHT HUB";
-  const titleLead = copy.titleLead || "Market Insights &";
-  const titleHighlight = copy.titleHighlight || "Advisory";
-  const intro = copy.intro || "Stay informed with expert analysis on Coimbatore infrastructure projects, Avinashi road elevated expressway, DTCP legal procedures, and high-yield real estate investments.";
-  const buttonText = copy.buttonText || "Explore All Insights & Blogs";
+  const eyebrow = copy.eyebrow || "";
+  const titleLead = copy.titleLead || "";
+  const titleHighlight = copy.titleHighlight || "";
+  const intro = copy.intro || "";
+  const buttonText = copy.buttonText || "";
 
   const handlePostClick = (post) => {
     if (onSelectBlog) {

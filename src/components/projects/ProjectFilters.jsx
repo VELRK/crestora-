@@ -1,10 +1,4 @@
 import React from "react";
-import {
-  PROPERTY_TYPES,
-  LOCATIONS,
-  MAX_PRICES,
-  SORT_OPTIONS,
-} from "../../data/projectsData";
 import { useSite } from "../../services/SiteData.jsx";
 import { Search, RotateCcw, Filter, LayoutGrid, List } from "lucide-react";
 
@@ -20,10 +14,10 @@ export default function ProjectFilters({
   onViewModeChange,
 }) {
   const site = useSite();
-  const propertyTypes = site.filters?.propertyTypes?.length ? site.filters.propertyTypes : PROPERTY_TYPES;
-  const locations = site.filters?.localities?.length ? site.filters.localities : LOCATIONS;
-  const maxPrices = site.filters?.budgets?.length ? site.filters.budgets : MAX_PRICES;
-  const sortOptions = site.filters?.sortOptions?.length ? site.filters.sortOptions : SORT_OPTIONS;
+  const propertyTypes = site.filters?.propertyTypes || [];
+  const locations = site.filters?.localities || [];
+  const maxPrices = site.filters?.budgets || [];
+  const sortOptions = site.filters?.sortOptions || [];
   const handleInputChange = (field, value) => {
     onFilterChange({
       ...filters,

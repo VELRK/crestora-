@@ -32,8 +32,6 @@ import BlogListPage from "./components/blogs/BlogListPage";
 import BlogDetailsPage from "./components/blogs/BlogDetailsPage";
 import ContactPage from "./components/contact/ContactPage";
 
-import { INITIAL_PROJECTS } from "./data/projectsData";
-import { BLOGS_DATA } from "./data/blogsData";
 import { useSite } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
@@ -54,9 +52,9 @@ export default function App() {
   const phoneTel = settings.phone_tel || "+919159066666";
   const whatsapp = settings.whatsapp || "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.";
   const logo = settings.logo || logoImg;
-  const blogPosts = site.blogs?.posts?.length ? site.blogs.posts : BLOGS_DATA;
+  const blogPosts = site.blogs?.posts || [];
+  const projects = site.projects || [];
   const [activePage, setActivePage] = useState("home"); // "home" | "projects"
-  const [projects, setProjects] = useState(INITIAL_PROJECTS);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [sortBy, setSortBy] = useState("featured");
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,9 +64,9 @@ export default function App() {
   const [favorites, setFavorites] = useState(() => {
     try {
       const saved = localStorage.getItem("crestora_favorites");
-      return saved ? new Set(JSON.parse(saved)) : new Set(["p1", "p2"]);
+      return saved ? new Set(JSON.parse(saved)) : new Set();
     } catch {
-      return new Set(["p1", "p2"]);
+      return new Set();
     }
   });
 
@@ -80,13 +78,6 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
-
-  // Fetch projects from Mockup API on mount
-  useEffect(() => {
-    if (site.projects?.length) {
-      setProjects(site.projects);
-    }
-  }, [site.projects]);
 
   // Sync favorites with localStorage
   useEffect(() => {

@@ -1,7 +1,9 @@
 import React from "react";
-import { WHY_CHOOSE_FEATURES } from "../../data/homeData";
+import { sectionItems, useSite } from "../../services/SiteData.jsx";
 
 export default function WhyChooseUs({ onExplore, onBookSiteVisit }) {
+  const site = useSite();
+  const features = sectionItems(site.home?.whyChoose) || site.home?.whyChoose?.features || [];
   return (
     <section className="adissia-why-us-section">
       <div className="ul-container">
@@ -17,13 +19,13 @@ export default function WhyChooseUs({ onExplore, onBookSiteVisit }) {
             </p>
 
             <div className="why-features-cards-grid">
-              {WHY_CHOOSE_FEATURES.map((f) => (
+              {features.map((f) => (
                 <div key={f.id} className="adissia-feature-card">
                   <div className="feature-card-header">
                     <span className="feature-icon-badge">✦</span>
                     <h4>{f.title}</h4>
                   </div>
-                  <p>{f.description}</p>
+                  <p>{f.description || f.desc}</p>
                 </div>
               ))}
             </div>

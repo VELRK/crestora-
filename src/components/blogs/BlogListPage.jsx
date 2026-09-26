@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { BLOGS_DATA, BLOGS_CATEGORIES, BLOG_NEWSLETTER_DATA } from "../../data/blogsData";
 import { useSite } from "../../services/SiteData.jsx";
 import {
   Search,
@@ -25,9 +24,9 @@ export default function BlogListPage({
   showToast,
 }) {
   const site = useSite();
-  const posts = site.blogs?.posts?.length ? site.blogs.posts : BLOGS_DATA;
-  const categories = site.blogs?.categories?.length ? site.blogs.categories : BLOGS_CATEGORIES;
-  const newsletter = site.blogs?.newsletter || BLOG_NEWSLETTER_DATA;
+  const posts = site.blogs?.posts || [];
+  const categories = site.blogs?.categories || [];
+  const newsletter = site.blogs?.newsletter || {};
   const [selectedCategory, setSelectedCategory] = useState("All Articles");
   const [searchQuery, setSearchQuery] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");

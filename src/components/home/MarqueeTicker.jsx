@@ -3,16 +3,8 @@ import { useSite } from "../../services/SiteData.jsx";
 
 export default function MarqueeTicker() {
   const site = useSite();
-  const fallback = [
-    { text: "THINK REAL ESTATE", highlight: false },
-    { text: "THINK CRESTORA PROPERTIES", highlight: true },
-    { text: "DTCP & RERA APPROVED", highlight: false },
-    { text: "BUILDING TRUST • CREATING VALUE", highlight: true },
-    { text: "PRIME CORRIDORS & CLEAR TITLES", highlight: false },
-    { text: "1,500+ LUXURY PLOTS & VILLAS", highlight: true },
-    { text: "100% VASTHU COMPLIANT LAYOUTS", highlight: false },
-  ];
-  const items = site.home?.ticker?.length ? site.home.ticker : fallback;
+  const items = Array.isArray(site.home?.ticker) ? site.home.ticker : [];
+  if (!items.length) return null;
 
   // Repeat items for seamless infinite scroll
   const displayItems = [...items, ...items, ...items, ...items];

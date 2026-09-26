@@ -1,9 +1,22 @@
 import React from "react";
-import { BUILD_COMPANION_DATA, NRI_SERVICES } from "../../data/homeData";
+import { useSite } from "../../services/SiteData.jsx";
 import whyCbeImg from "../../assets/be.png";
 import { CheckCircle2, Shield, Compass, PhoneCall } from "lucide-react";
 
 export default function BuildCompanion({ onBookSiteVisit }) {
+  const site = useSite();
+  const BUILD_COMPANION_DATA = {
+    subtitle: "",
+    lead: "",
+    paragraphs: [],
+    features: [],
+    ...(site.home?.buildCompanion || {}),
+  };
+  const NRI_SERVICES = {
+    subtitle: "",
+    paragraphs: [],
+    ...(site.home?.nri || {}),
+  };
   return (
     <section id="build-companion-section" className="build-companion-section">
       <div className="crestora-container">

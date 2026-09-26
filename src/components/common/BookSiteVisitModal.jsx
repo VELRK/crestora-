@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { crestoraApi } from "../../services/api";
-import { INITIAL_PROJECTS } from "../../data/projectsData";
 import { useSite } from "../../services/SiteData.jsx";
 import { X, Calendar, Clock, MapPin, CheckCircle, Car } from "lucide-react";
 
@@ -10,7 +9,7 @@ export default function BookSiteVisitModal({
   initialProject = null,
 }) {
   const site = useSite();
-  const projectOptions = site.projects?.length ? site.projects : INITIAL_PROJECTS;
+  const projectOptions = site.projects || [];
   const [formData, setFormData] = useState({
     name: "",
     phone: "",

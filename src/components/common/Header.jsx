@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
 import { useSite } from "../../services/SiteData.jsx";
-import { CATEGORIES, LOCATIONS } from "../../data/projectsData";
 import {
   Phone,
   Mail,
@@ -30,8 +29,8 @@ export default function Header({
   const email = settings.email || "info@crestoraproperties.com";
   const cityLabel = "Coimbatore";
   const logo = settings.logo || logoImg;
-  const menuCategories = (site.filters?.categories?.length ? site.filters.categories : CATEGORIES).filter((item) => item.value && item.value !== "all");
-  const menuLocations = (site.filters?.localities?.length ? site.filters.localities : LOCATIONS).filter((item) => item.value && item.value !== "all");
+  const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
+  const menuLocations = (site.filters?.localities || []).filter((item) => item.value && item.value !== "all");
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Determine active highlights based on active page and active filters
