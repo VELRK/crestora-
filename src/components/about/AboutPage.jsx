@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import {
+  ABOUT_MILESTONES,
+  CORE_PILLARS,
+  PHILOSOPHY_CARDS,
+  ACCREDITATIONS,
+} from "../../data/aboutData";
 import { useSite } from "../../services/SiteData.jsx";
 import aboutImg from "../../assets/about/about.png";
 import whyCbeImg from "../../assets/whycbe.png";
@@ -30,16 +36,38 @@ import {
 export default function AboutPage({ onNavigate, onBookSiteVisit }) {
   const site = useSite();
   const about = site.about || {};
-  const text = (key) => {
+  const text = (key, fallback) => {
     const value = about[key];
-    return typeof value === "string" && value.trim() ? value : "";
+    return typeof value === "string" && value.trim() ? value : fallback;
   };
-  const ABOUT_MILESTONES_LIVE = about.milestones || [];
-  const CORE_PILLARS_LIVE = about.pillars || [];
-  const PHILOSOPHY_LIVE = about.philosophy || [];
-  const ACCREDITATIONS_LIVE = about.accreditations || [];
-  const heroMetrics = about.heroMetrics || [];
-  const anchors = about.anchors || [];
+  const ABOUT_MILESTONES_LIVE = ABOUT_MILESTONES;
+  const CORE_PILLARS_LIVE = CORE_PILLARS;
+  const PHILOSOPHY_LIVE = PHILOSOPHY_CARDS;
+  const ACCREDITATIONS_LIVE = ACCREDITATIONS;
+  const heroMetrics = [
+    { value: "6+", label: "Years of Excellence" },
+    { value: "8+", label: "Landmark Enclaves" },
+    { value: "100+", label: "Sanctioned Plots" },
+    { value: "100%", label: "Title Transparency" },
+  ];
+  const anchors = [
+    {
+      title: "100% DTCP & RERA Registered",
+      text: "Every single layout is verified and registered with TN RERA before launch.",
+    },
+    {
+      title: "Spotless 30-Year Title Pedigree",
+      text: "Scrutinized by senior legal advocates for instant registry and peaceful patta transfer.",
+    },
+    {
+      title: "Signature British Architecture",
+      text: "Classical neoclassical entry arches and timeless European design aesthetics.",
+    },
+    {
+      title: "100% Vasthu & Natural Harmony",
+      text: "Carefully oriented street grids and sweet groundwater reserves for family prosperity.",
+    },
+  ];
   const anchorIcons = [FileCheck2, Award, Building2, Compass];
   const mainImage = text("mainImage", aboutImg);
   const secondaryImage = text("secondaryImage", banner1);

@@ -5,10 +5,10 @@ export default function LocationsShowcase({ onSelectLocation }) {
   const site = useSite();
   const block = site.home?.locations;
   const cities = sectionItems(block) || [];
-  const eyebrow = block?.eyebrow || "";
-  const titleLead = block?.titleLead || "";
-  const titleHighlight = block?.titleHighlight || "";
-  const intro = block?.intro || "";
+  const eyebrow = block?.eyebrow || "STRATEGIC GROWTH CORRIDORS";
+  const titleLead = block?.titleLead || "Explore Prime";
+  const titleHighlight = block?.titleHighlight || "Locations";
+  const intro = block?.intro || "Browse DTCP and RERA-approved plotted developments across Coimbatore's highest-appreciation residential and IT growth corridors.";
   return (
     <section id="locations-section" className="locations-section">
       <div className="crestora-container">

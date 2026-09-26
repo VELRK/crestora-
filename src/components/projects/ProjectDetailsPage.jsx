@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { formatINR } from "../../services/api";
-import { crestoraApi } from "../../services/api";
+import { crestoraApi, formatINR } from "../../services/api";
 import ProjectCard from "./ProjectCard";
 import {
   ArrowLeft,
@@ -185,10 +184,27 @@ export default function ProjectDetailsPage({
       alert("Please provide your name and contact phone number.");
       return;
     }
-    setFormSubmitted(true);
-    if (showToast) {
-      showToast(`Site visit enquiry submitted for ${title}! Our advisor will contact you.`);
-    }
+    crestoraApi
+      .bookSiteVisit({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        projectName: title,
+        message: `Site visit request for ${title}`,
+      })
+      .then((res) => {
+        if (!res?.success) {
+          if (showToast) showToast("Could not save the site visit. Please try again.");
+          return;
+        }
+        setFormSubmitted(true);
+        if (showToast) {
+          showToast(`Site visit enquiry submitted for ${title}! Our advisor will contact you.`);
+        }
+      })
+      .catch(() => {
+        if (showToast) showToast("Could not save the site visit. Please try again.");
+      });
   };
 
   // Share handler
