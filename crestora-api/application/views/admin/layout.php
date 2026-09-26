@@ -72,6 +72,13 @@ input,textarea,select{width:100%;padding:10px 12px;border:1px solid #ddd6c8;bord
 input:focus,textarea:focus,select:focus{outline:2px solid rgba(198,161,90,.45);border-color:var(--gold);background:#fff}
 input[type=checkbox]{width:auto;margin:0 8px 0 0;accent-color:#8a6a12}
 label{display:block;font-size:13px;font-weight:600;margin:14px 0}
+.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 16px;align-items:start}
+.form-grid > label{margin:8px 0}
+.form-grid > label:has(textarea),.form-grid > label:has(.img-field),.form-grid > label:has(.file-input),.form-grid > .span-3{grid-column:1 / -1}
+.url-field{display:flex;align-items:stretch;margin-top:6px;border:1px solid #ddd6c8;border-radius:10px;overflow:hidden;background:#fff}
+.url-prefix{display:flex;align-items:center;padding:0 12px;background:#f3f1ea;color:#667085;font-weight:500;white-space:nowrap}
+.url-field input{margin:0;border:0;border-radius:0}
+@media(max-width:800px){.form-grid{grid-template-columns:1fr}}
 fieldset.group{border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:8px 14px 12px;background:#fcfbf8}
 fieldset.item{border:1px dashed #e4dccb;border-radius:12px;margin:12px 0;padding:8px 12px;background:#fff}
 legend{font-size:13px;font-weight:700;color:#8a6a12;padding:0 6px}

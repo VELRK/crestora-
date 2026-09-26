@@ -2,11 +2,16 @@
 <p><a href="<?php echo site_url('admin/projects'); ?>">Back to projects</a></p>
 <?php if ($msg): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card">
-  <label><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> style="width:auto" /> Active on site</label>
-  <label>Slug
-    <input name="slug" value="<?php echo html_escape($row['slug']); ?>" />
-    <span class="file-note">Public address: /project/<?php echo html_escape($row['slug']); ?></span>
-  </label>
+  <div class="form-grid">
+    <label><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> style="width:auto" /> Active on site</label>
+    <label class="span-3">Slug
+      <span class="url-field">
+        <span class="url-prefix">/project/</span>
+        <input name="slug" value="<?php echo html_escape($row['slug']); ?>" />
+      </span>
+      <span class="file-note">The /project/ part stays fixed. Type the slug after it.</span>
+    </label>
+  </div>
   <?php
     $fields = is_array($item) ? $item : array();
     unset($fields['slug']);

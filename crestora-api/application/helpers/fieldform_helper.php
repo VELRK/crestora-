@@ -65,7 +65,28 @@ function fieldform_walk($data, $name)
 			echo '</fieldset>';
 			return;
 		}
+		$scalars = array();
+		$children = array();
 		foreach ($data as $key => $value) {
+			if (is_array($value)) {
+				$children[$key] = $value;
+			} else {
+				$scalars[$key] = $value;
+			}
+		}
+		if ($scalars) {
+			echo '<div class="form-grid">';
+			foreach ($scalars as $key => $value) {
+				$field_name = $name . '[' . $key . ']';
+				if ($key === 'id') {
+					echo '<input type="hidden" name="' . html_escape($field_name) . '" value="' . html_escape((string) $value) . '" />';
+					continue;
+				}
+				fieldform_input($field_name, $value, fieldform_label($field_name));
+			}
+			echo '</div>';
+		}
+		foreach ($children as $key => $value) {
 			fieldform_walk($value, $name . '[' . $key . ']');
 		}
 		return;
