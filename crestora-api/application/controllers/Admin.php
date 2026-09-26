@@ -276,40 +276,40 @@ class Admin extends CI_Controller {
 	{
 		return array(
 			'title' => '',
-			'slug' => '',
-			'tagline' => '',
+			'status' => '',
+			'category' => '',
+			'type' => '',
+			'typeName' => '',
+			'statusLabel' => '',
+			'tag' => '',
+			'badge' => '',
 			'location' => '',
 			'locality' => '',
 			'city' => '',
 			'cityName' => '',
-			'category' => '',
-			'type' => '',
-			'typeName' => '',
-			'status' => '',
-			'statusLabel' => '',
 			'price' => 0,
 			'priceDisplay' => '',
-			'priceRange' => '',
 			'pricePerSqft' => 0,
 			'period' => '',
-			'tag' => '',
-			'badge' => '',
+			'beds' => 0,
+			'baths' => 0,
+			'sqft' => 0,
+			'totalUnits' => '',
 			'approval' => '',
 			'reraNumber' => '',
 			'dtcpNumber' => '',
-			'image' => '',
-			'gallery' => array(''),
-			'beds' => 0,
-			'baths' => 0,
-			'area' => '',
-			'sqft' => 0,
-			'totalArea' => '',
-			'totalUnits' => '',
-			'isFeatured' => FALSE,
-			'isPopular' => FALSE,
 			'rating' => 0,
 			'reviewsCount' => 0,
+			'isFeatured' => FALSE,
+			'isPopular' => FALSE,
+			'totalArea' => '',
+			'tagline' => '',
 			'description' => '',
+			'priceRange' => '',
+			'area' => '',
+			'image' => '',
+			'slug' => '',
+			'gallery' => array(''),
 			'highlights' => array(''),
 			'amenities' => array(''),
 			'whyPoints' => array(array('title' => '', 'desc' => '', 'icon' => '')),
@@ -331,7 +331,8 @@ class Admin extends CI_Controller {
 
 	private function fill_project($item, $row)
 	{
-		$item = $this->fill_missing(is_array($item) ? $item : array(), $this->project_template());
+		$template = $this->project_template();
+		$item = $this->order_like($template, $this->fill_missing(is_array($item) ? $item : array(), $template));
 		$columns = array('title' => 'title', 'category' => 'category', 'locality' => 'locality', 'status' => 'status', 'price' => 'price');
 		foreach ($columns as $key => $column) {
 			$empty = ! isset($item[$key]) || $item[$key] === '' || $item[$key] === 0;
@@ -346,6 +347,27 @@ class Admin extends CI_Controller {
 			$item['isPopular'] = TRUE;
 		}
 		return $item;
+	}
+
+	private function order_like($template, $item)
+	{
+		$out = array();
+		foreach ($template as $key => $value) {
+			if ( ! array_key_exists($key, $item)) {
+				continue;
+			}
+			if (is_array($value) && is_array($item[$key]) && ! $this->is_list_array($value)) {
+				$out[$key] = $this->order_like($value, $item[$key]);
+			} else {
+				$out[$key] = $item[$key];
+			}
+		}
+		foreach ($item as $key => $value) {
+			if ( ! array_key_exists($key, $out)) {
+				$out[$key] = $value;
+			}
+		}
+		return $out;
 	}
 
 	private function fill_missing($item, $template)

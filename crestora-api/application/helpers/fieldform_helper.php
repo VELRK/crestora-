@@ -75,16 +75,35 @@ function fieldform_walk($data, $name)
 			}
 		}
 		if ($scalars) {
-			echo '<div class="form-grid">';
+			$short = array();
+			$wide = array();
 			foreach ($scalars as $key => $value) {
 				$field_name = $name . '[' . $key . ']';
-				if ($key === 'id') {
-					echo '<input type="hidden" name="' . html_escape($field_name) . '" value="' . html_escape((string) $value) . '" />';
-					continue;
+				if (fieldform_is_wide($field_name, $value)) {
+					$wide[$key] = $value;
+				} else {
+					$short[$key] = $value;
 				}
-				fieldform_input($field_name, $value, fieldform_label($field_name));
 			}
-			echo '</div>';
+			if ($short) {
+				echo '<div class="form-grid">';
+				foreach ($short as $key => $value) {
+					$field_name = $name . '[' . $key . ']';
+					if ($key === 'id') {
+						echo '<input type="hidden" name="' . html_escape($field_name) . '" value="' . html_escape((string) $value) . '" />';
+						continue;
+					}
+					fieldform_input($field_name, $value, fieldform_label($field_name));
+				}
+				echo '</div>';
+			}
+			if ($wide) {
+				echo '<div class="form-stack">';
+				foreach ($wide as $key => $value) {
+					fieldform_input($name . '[' . $key . ']', $value, fieldform_label($name . '[' . $key . ']'));
+				}
+				echo '</div>';
+			}
 		}
 		foreach ($children as $key => $value) {
 			fieldform_walk($value, $name . '[' . $key . ']');
@@ -225,14 +244,31 @@ function fieldform_choices_for($name)
 	return $GLOBALS['fieldform_choices'][$key];
 }
 
+function fieldform_is_wide($name, $value)
+{
+	if (is_bool($value)) {
+		return FALSE;
+	}
+	$text = is_string($value) ? $value : '';
+	if (fieldform_is_image($name, $text)) {
+		return TRUE;
+	}
+	if (preg_match('/\[(description|tagline|priceRange|area)\]$/i', $name)) {
+		return TRUE;
+	}
+	return strlen($text) > 90 || strpos($text, "\n") !== FALSE;
+}
+
 function fieldform_input($name, $value, $label)
 {
-	$wide = (bool) preg_match('/\[(description|tagline|priceRange|area)\]$/i', $name);
+	$wide = fieldform_is_wide($name, $value);
 	echo '<label' . ($wide ? ' class="span-3"' : '') . '>' . html_escape($label);
 	if (is_bool($value)) {
+		echo '<span class="check-field">';
 		echo '<input type="hidden" name="' . html_escape($name) . '" value="0" />';
-		echo '<input type="checkbox" name="' . html_escape($name) . '" value="1" ' . ($value ? 'checked' : '') . ' style="width:auto" />';
-		echo '</label>';
+		echo '<input type="checkbox" name="' . html_escape($name) . '" value="1" ' . ($value ? 'checked' : '') . ' />';
+		echo '<span>Yes</span>';
+		echo '</span></label>';
 		return;
 	}
 	$text = (string) $value;
@@ -264,7 +300,7 @@ function fieldform_input($name, $value, $label)
 		echo '</select></label>';
 		return;
 	}
-	if ($wide || strlen($text) > 90 || strpos($text, "\n") !== FALSE) {
+	if ($wide) {
 		echo '<textarea name="' . html_escape($name) . '" rows="4">' . html_escape($text) . '</textarea>';
 	} else {
 		echo '<input name="' . html_escape($name) . '" value="' . html_escape($text) . '" />';

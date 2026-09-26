@@ -10,7 +10,9 @@
     $known = FALSE;
   ?>
   <div class="form-grid">
-    <label><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> style="width:auto" /> Active on site</label>
+    <label>Active on site
+      <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
+    </label>
     <label class="span-3">Slug
       <span class="url-field">
         <span class="url-prefix">/blog/</span>
