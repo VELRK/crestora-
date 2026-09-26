@@ -102,12 +102,12 @@ function fieldform_add_button($name)
 {
 	$label = fieldform_label($name);
 	$text = ($label === 'Content') ? 'Add item' : 'Add ' . strtolower($label);
-	return '<button type="button" data-list="' . html_escape($name) . '" class="btn-plus js-add-item" title="' . html_escape($text) . '"><span class="plus" aria-hidden="true">+</span><span>' . html_escape($text) . '</span></button>';
+	return '<button type="button" data-list="' . html_escape($name) . '" class="btn-plus js-add-item" title="' . html_escape($text) . '"><i class="fas fa-plus"></i><span>' . html_escape($text) . '</span></button>';
 }
 
 function fieldform_delete_button($name)
 {
-	return '<button type="button" class="btn-remove js-remove-item" title="Remove" aria-label="Remove"><span aria-hidden="true">&times;</span></button>';
+	return '<button type="button" class="btn-remove js-remove-item" title="Remove" aria-label="Remove"><i class="fas fa-trash"></i></button>';
 }
 
 function fieldform_blank($sample)

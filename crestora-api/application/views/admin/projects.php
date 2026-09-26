@@ -1,11 +1,15 @@
 <div class="page-head">
-  <h2>Projects</h2>
-  <a class="btn btn-plus" href="<?php echo site_url('admin/project_create'); ?>"><span class="plus" aria-hidden="true">+</span><span>Add project</span></a>
+  <h2><i class="fas fa-home"></i> Projects</h2>
+  <a class="btn btn-new" href="<?php echo site_url('admin/project_create'); ?>"><i class="fas fa-plus"></i> Add New Project</a>
 </div>
 <?php if ( ! empty($msg)): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
 <div class="card">
+<div class="table-wrap">
 <table>
-<tr><th>Image</th><th>Title</th><th>Slug</th><th>Category</th><th>Status</th><th>Active</th><th></th></tr>
+<tr><th>Image</th><th>Title</th><th>Slug</th><th>Category</th><th>Status</th><th>Active</th><th>Actions</th></tr>
+<?php if (empty($rows)): ?>
+<tr><td colspan="7">No projects found</td></tr>
+<?php else: ?>
 <?php foreach ($rows as $r): $item = json_decode($r['payload'], TRUE); $image = (is_array($item) && ! empty($item['image'])) ? $item['image'] : ''; ?>
 <tr>
   <td><?php if ($image): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
@@ -16,13 +20,15 @@
   <td><?php echo $r['is_active'] ? 'Yes' : 'No'; ?></td>
   <td>
     <div class="row-actions">
-      <a href="<?php echo site_url('admin/project/'.$r['code']); ?>">Edit</a>
-      <form method="post" action="<?php echo site_url('admin/project_delete/'.$r['code']); ?>" onsubmit="return confirm('Delete this project?');">
-        <button type="submit" class="btn-delete">Delete</button>
+      <a class="btn btn-ico btn-ico-edit" href="<?php echo site_url('admin/project/'.$r['code']); ?>" title="Edit"><i class="fas fa-edit"></i></a>
+      <form method="post" action="<?php echo site_url('admin/project_delete/'.$r['code']); ?>" onsubmit="return confirm('Are you sure?');">
+        <button type="submit" class="btn-ico btn-ico-delete" title="Delete"><i class="fas fa-trash"></i></button>
       </form>
     </div>
   </td>
 </tr>
 <?php endforeach; ?>
+<?php endif; ?>
 </table>
+</div>
 </div>

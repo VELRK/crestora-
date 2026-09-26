@@ -30,6 +30,7 @@ function nav_on($uri, $path) {
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 <style>
 :root{--ink:#122033;--muted:#667085;--line:#e7e4dc;--paper:#f6f4ef;--card:#fff;--navy:#101b2d;--navy-2:#18263b;--gold:#c6a15a;--gold-2:#dfb743;--danger:#9b2c2c;--ok:#e8f6ea;--ok-ink:#1d6b32}
 *{box-sizing:border-box}
@@ -76,8 +77,16 @@ fieldset.item{border:1px dashed #e4dccb;border-radius:12px;margin:12px 0;padding
 legend{font-size:13px;font-weight:700;color:#8a6a12;padding:0 6px}
 button,.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;font-size:14px}
 .page-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}
-.page-head h2{margin:0}
-.btn-add,.btn-plus{background:#fff;color:#1c1508;border:1px dashed #d7c28a;gap:8px;padding:6px 14px 6px 6px}
+.page-head h2{margin:0;display:flex;align-items:center;gap:10px}
+.page-head h2 i{color:#667eea}
+.btn-new{background:#0d6efd;color:#fff;border-radius:8px;gap:8px;padding:10px 16px}
+.btn-new:hover{background:#0b5ed7}
+.btn-ico{width:34px;height:34px;padding:0;border-radius:6px;border:0;color:#fff}
+.btn-ico-edit{background:#ffc107;color:#212529}
+.btn-ico-edit:hover{background:#e0a800}
+.btn-ico-delete{background:#dc3545}
+.btn-ico-delete:hover{background:#bb2d3b}
+.btn-add,.btn-plus{background:#fff;color:#0d6efd;border:1px solid #0d6efd;gap:8px;padding:8px 14px;border-radius:8px}
 .btn-plus:hover,.btn-add:hover{background:#fffaf0;border-style:solid}
 .plus{width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#e2c36a,#b8923e);display:grid;place-items:center;font-size:22px;line-height:1;font-weight:700}
 .add-row{margin:4px 0 8px}
@@ -87,8 +96,8 @@ fieldset.item{position:relative;padding-right:52px}
 fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .btn-delete{background:#fff;color:var(--danger);border:1px solid #f0d0d0;padding:7px 12px}
 .btn-delete:hover{background:#fff5f5}
-.btn-remove{width:32px;height:32px;min-width:32px;padding:0;border-radius:50%;background:#fff;color:var(--danger);border:1px solid #f0d0d0;font-size:20px;line-height:1}
-.btn-remove:hover{background:#fff5f5}
+.btn-remove{width:34px;height:34px;min-width:34px;padding:0;border-radius:6px;background:#dc3545;color:#fff;border:0;font-size:14px;line-height:1}
+.btn-remove:hover{background:#bb2d3b}
 .delete-flag{color:var(--danger);font-weight:600}
 .row-actions{display:flex;gap:10px;align-items:center}
 .row-actions form{margin:0}
