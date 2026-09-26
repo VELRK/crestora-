@@ -333,8 +333,7 @@ class Admin extends CI_Controller {
 	{
 		$this->require_login();
 		$last = $this->db->order_by('sort_order', 'DESC')->limit(1)->get('blogs')->row_array();
-		$sample = $last ? json_decode($last['payload'], TRUE) : array('title' => '', 'slug' => '', 'excerpt' => '');
-		$payload = fieldform_blank(is_array($sample) ? $sample : array());
+		$payload = fieldform_blank(crestora_blog_admin_schema());
 		$code = 'b' . time();
 		$payload['id'] = $code;
 		$payload['title'] = 'New blog';
@@ -397,6 +396,7 @@ class Admin extends CI_Controller {
 			if (is_array($posted) && array_key_exists('relatedProjectId', $posted)) {
 				$payload['relatedProjectId'] = (string) $posted['relatedProjectId'];
 			}
+			$payload = crestora_prune_blog_payload($payload, is_array($original) ? $original : array());
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			if ($title === '') {
 				$row['slug'] = (string) $this->input->post('slug');
@@ -431,7 +431,9 @@ class Admin extends CI_Controller {
 			redirect('admin/blogs');
 		}
 		$data['row'] = $row;
-		$data['item'] = json_decode($row['payload'], TRUE);
+		$decoded = json_decode($row['payload'], TRUE);
+		$data['item'] = crestora_pick_blog_fields($decoded);
+		$data['item']['title'] = (is_array($decoded) && isset($decoded['title'])) ? $decoded['title'] : $row['title'];
 		$data['projects'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
 		$data['heading'] = ($row['title'] === 'New blog') ? 'Add blog' : 'Edit blog';
 		$data['is_draft'] = $this->is_blog_draft($row);
@@ -615,20 +617,7 @@ class Admin extends CI_Controller {
 
 	public function category_create()
 	{
-		$this->catalog_form('categories', '', array(
-			'id' => '',
-			'categoryKey' => '',
-			'categoryName' => '',
-			'title' => '',
-			'subtitle' => '',
-			'description' => '',
-			'badge' => '',
-			'plotsCount' => '',
-			'startingPrice' => '',
-			'exampleText' => '',
-			'image' => '',
-			'icon' => 'LandPlot',
-		), 'Add category', 'admin/categories');
+		$this->catalog_form('categories', '', fieldform_blank(crestora_category_catalog_schema()), 'Add category', 'admin/categories');
 	}
 
 	public function category($id = '')
@@ -668,15 +657,7 @@ class Admin extends CI_Controller {
 
 	public function location_create()
 	{
-		$this->catalog_form('locations', '', array(
-			'id' => '',
-			'name' => '',
-			'state' => '',
-			'count' => 0,
-			'cityKey' => '',
-			'image' => '',
-			'highlight' => '',
-		), 'Add location', 'admin/locations');
+		$this->catalog_form('locations', '', fieldform_blank(crestora_location_catalog_schema()), 'Add location', 'admin/locations');
 	}
 
 	public function location($id = '')
@@ -828,14 +809,14 @@ class Admin extends CI_Controller {
 		if ($id !== '' && $index < 0) {
 			show_404();
 		}
-		$item = ($index >= 0) ? $items[$index] : $blank;
+		$item = crestora_pick_catalog_item(($index >= 0) ? $items[$index] : $blank, $kind);
 		$error = '';
 		if ($this->input->method() === 'post') {
 			$posted = $this->input->post('item');
 			if ( ! is_array($posted)) {
 				$posted = array();
 			}
-			$item = array_merge($item, $posted);
+			$item = crestora_pick_catalog_item(array_merge($item, $posted), $kind);
 			if (isset($_FILES['image']['name']) && $_FILES['image']['name'] !== '' && (int) $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 				$url = fieldform_store_upload($_FILES['image']['tmp_name'], $_FILES['image']['name']);
 				if ($url) {
@@ -857,7 +838,11 @@ class Admin extends CI_Controller {
 				} else {
 					$item['name'] = $name;
 					$item['cityKey'] = $key;
-					$item['count'] = (int) $item['count'];
+					if ($index >= 0 && isset($items[$index]['count'])) {
+						$item['count'] = (int) $items[$index]['count'];
+					} else {
+						$item['count'] = 0;
+					}
 					if ($item['id'] === '') {
 						$item['id'] = $this->unique_item_id($items, $key);
 					}
@@ -891,7 +876,6 @@ class Admin extends CI_Controller {
 					$item['categoryName'] = $name;
 					$item['categoryKey'] = $key;
 					$item['title'] = $title;
-					$item['badge'] = $item['badge'] !== '' ? $item['badge'] : $name;
 					if ($item['id'] === '') {
 						$item['id'] = $this->unique_item_id($items, $key);
 					}
@@ -901,7 +885,7 @@ class Admin extends CI_Controller {
 						$items[] = $item;
 					}
 					$this->save_items('home', 'categories', $meta, $items);
-					$this->upsert_filter('categories', $key, $name, array('subtitle' => isset($item['subtitle']) ? $item['subtitle'] : ''));
+					$this->upsert_filter('categories', $key, $name, array());
 					$this->upsert_filter('propertyTypes', $key, $name);
 					$this->session->set_flashdata('msg', 'Category saved');
 					redirect($list_url);

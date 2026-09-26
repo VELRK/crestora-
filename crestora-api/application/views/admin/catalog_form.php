@@ -8,17 +8,12 @@
     <input type="hidden" name="item[cityKey]" value="<?php echo html_escape($item['cityKey']); ?>" required data-slug-target />
     <label>Corridor<input name="item[state]" value="<?php echo html_escape($item['state']); ?>" /></label>
     <label>Highlight<input name="item[highlight]" value="<?php echo html_escape($item['highlight']); ?>" /></label>
-    <label>Property count<input name="item[count]" value="<?php echo html_escape($item['count']); ?>" /></label>
     <input type="hidden" name="item[id]" value="<?php echo html_escape($item['id']); ?>" />
   <?php else: ?>
     <label>Name <span class="req">*</span><input name="item[categoryName]" value="<?php echo html_escape($item['categoryName']); ?>" required data-slug-source /></label>
     <input type="hidden" name="item[categoryKey]" value="<?php echo html_escape($item['categoryKey']); ?>" required data-slug-target />
     <label>Title <span class="req">*</span><input name="item[title]" value="<?php echo html_escape($item['title']); ?>" required /></label>
-    <label>Subtitle<input name="item[subtitle]" value="<?php echo html_escape($item['subtitle']); ?>" /></label>
-    <label>Badge<input name="item[badge]" value="<?php echo html_escape($item['badge']); ?>" /></label>
-    <label>Count label<input name="item[plotsCount]" value="<?php echo html_escape($item['plotsCount']); ?>" /></label>
-    <label>Starting price<input name="item[startingPrice]" value="<?php echo html_escape($item['startingPrice']); ?>" /></label>
-    <label>Example<input name="item[exampleText]" value="<?php echo html_escape($item['exampleText']); ?>" /></label>
+    <label>Count label<input name="item[plotsCount]" value="<?php echo html_escape($item['plotsCount']); ?>" placeholder="e.g. Plots" /></label>
     <label>Icon
       <select name="item[icon]">
         <?php
@@ -36,11 +31,6 @@
     <input type="hidden" name="item[id]" value="<?php echo html_escape($item['id']); ?>" />
   <?php endif; ?>
   </div>
-  <?php if ($kind !== 'locations'): ?>
-  <div class="form-stack">
-    <label>Description<textarea name="item[description]" rows="4"><?php echo html_escape($item['description']); ?></textarea></label>
-  </div>
-  <?php endif; ?>
   <div class="form-stack">
     <label>Image <?php if (empty($item['image'])): ?><span class="req">*</span><?php endif; ?>
       <span class="img-field">

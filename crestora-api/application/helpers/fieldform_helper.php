@@ -698,6 +698,108 @@ function crestora_prune_project_payload($payload, $original = array())
 	return $out;
 }
 
+function crestora_blog_admin_schema()
+{
+	return array(
+		'id' => '',
+		'subtitle' => '',
+		'date' => '',
+		'category' => '',
+		'readTime' => '',
+		'views' => '',
+		'featured' => FALSE,
+		'image' => '',
+		'bannerImage' => '',
+		'excerpt' => '',
+		'author' => array(
+			'name' => '',
+			'role' => '',
+			'avatar' => '',
+			'bio' => '',
+		),
+		'tags' => array(''),
+		'keyTakeaways' => array(''),
+		'tableOfContents' => array(array('id' => '', 'title' => '')),
+		'sections' => array(array(
+			'id' => '',
+			'heading' => '',
+			'quote' => '',
+			'paragraphs' => array(''),
+			'highlightStats' => array(array('label' => '', 'value' => '')),
+		)),
+		'relatedProjectId' => '',
+	);
+}
+
+function crestora_pick_blog_fields($item)
+{
+	$shape = fieldform_blank(crestora_blog_admin_schema());
+	$item = is_array($item) ? $item : array();
+	$out = array();
+	foreach ($shape as $key => $default) {
+		$out[$key] = array_key_exists($key, $item) ? $item[$key] : $default;
+	}
+	return $out;
+}
+
+function crestora_prune_blog_payload($payload, $original = array())
+{
+	if ( ! is_array($payload)) {
+		return array();
+	}
+	$keep = array_keys(crestora_blog_admin_schema());
+	$keep[] = 'title';
+	$keep[] = 'slug';
+	$out = array();
+	foreach ($keep as $key) {
+		if (array_key_exists($key, $payload)) {
+			$out[$key] = $payload[$key];
+		}
+	}
+	if (empty($out['id']) && is_array($original) && ! empty($original['id'])) {
+		$out['id'] = $original['id'];
+	}
+	return $out;
+}
+
+function crestora_category_catalog_schema()
+{
+	return array(
+		'id' => '',
+		'categoryKey' => '',
+		'categoryName' => '',
+		'title' => '',
+		'plotsCount' => '',
+		'icon' => 'LandPlot',
+		'image' => '',
+	);
+}
+
+function crestora_location_catalog_schema()
+{
+	return array(
+		'id' => '',
+		'name' => '',
+		'state' => '',
+		'cityKey' => '',
+		'highlight' => '',
+		'image' => '',
+		'count' => 0,
+	);
+}
+
+function crestora_pick_catalog_item($item, $kind)
+{
+	$schema = ($kind === 'locations') ? crestora_location_catalog_schema() : crestora_category_catalog_schema();
+	$shape = fieldform_blank($schema);
+	$item = is_array($item) ? $item : array();
+	$out = array();
+	foreach ($shape as $key => $default) {
+		$out[$key] = array_key_exists($key, $item) ? $item[$key] : $default;
+	}
+	return $out;
+}
+
 function crestora_sync_project($payload)
 {
 	if ( ! is_array($payload)) {

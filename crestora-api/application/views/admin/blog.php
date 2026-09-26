@@ -10,10 +10,10 @@
 <?php if ( ! empty($error)): ?><p class="form-error"><?php echo html_escape($error); ?></p><?php endif; ?>
 <form method="post" enctype="multipart/form-data" class="card project-form">
   <?php
-    $fields = is_array($item) ? $item : array();
-    $title_value = isset($fields['title']) ? $fields['title'] : '';
+    $fields = crestora_pick_blog_fields(is_array($item) ? $item : array());
+    $title_value = isset($item['title']) ? $item['title'] : '';
     $related = isset($fields['relatedProjectId']) ? (string) $fields['relatedProjectId'] : '';
-    unset($fields['slug'], $fields['title'], $fields['relatedProjectId']);
+    unset($fields['relatedProjectId']);
     $project_rows = isset($projects) && is_array($projects) ? $projects : array();
     $known = FALSE;
   ?>
@@ -36,7 +36,6 @@
           <option value="<?php echo html_escape($related); ?>" selected><?php echo html_escape($related); ?></option>
         <?php endif; ?>
       </select>
-      <span class="file-note">Shown with this article. Pick the project by name.</span>
     </label>
   </div>
   <?php

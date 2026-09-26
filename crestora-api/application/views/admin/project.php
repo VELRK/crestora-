@@ -41,7 +41,6 @@
           <option value="<?php echo html_escape($location_value); ?>" selected><?php echo html_escape($location_value); ?></option>
         <?php endif; ?>
       </select>
-      <span class="file-note">City and map labels are filled automatically from this location.</span>
     </label>
     <label>Category <span class="req">*</span>
       <select name="payload[category]" required>
@@ -58,7 +57,6 @@
       <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
     </label>
   </div>
-  <p class="file-note" style="margin:0 0 12px">Fields below match the public project list and project detail page only.</p>
   <?php
     fieldform_set_choices(array(
       'status' => array(
