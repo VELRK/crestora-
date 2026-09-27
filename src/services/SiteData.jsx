@@ -9,8 +9,14 @@ import {
   WHY_COIMBATORE_DATA,
   WHY_CHOOSE_FEATURES,
 } from "../data/homeData";
-import { MAX_PRICES, SORT_OPTIONS } from "../data/projectsData";
-import { BLOG_NEWSLETTER_DATA } from "../data/blogsData";
+import {
+  INITIAL_PROJECTS,
+  CATEGORIES,
+  COIMBATORE_LOCALITIES,
+  MAX_PRICES,
+  SORT_OPTIONS,
+} from "../data/projectsData";
+import { BLOGS_DATA, BLOG_NEWSLETTER_DATA } from "../data/blogsData";
 
 const STATIC_HOME = {
   aboutStrip: {
@@ -155,11 +161,11 @@ function blogCategories(posts, fromApi) {
 
 const SiteContext = createContext({
   home: STATIC_HOME,
-  projects: [],
+  projects: INITIAL_PROJECTS,
   about: null,
-  blogs: { posts: [], categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
+  blogs: { posts: BLOGS_DATA, categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
   contact: null,
-  filters: { categories: [], localities: [], propertyTypes: [], statuses: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
+  filters: { categories: CATEGORIES, localities: COIMBATORE_LOCALITIES, propertyTypes: CATEGORIES, statuses: statusOptions(INITIAL_PROJECTS), budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
   settings: null,
   ready: false,
 });
@@ -167,11 +173,11 @@ const SiteContext = createContext({
 export function SiteProvider({ children }) {
   const [state, setState] = useState({
     home: { ...STATIC_HOME, heroSlides: [], categories: null, locations: null },
-    projects: [],
+    projects: INITIAL_PROJECTS,
     about: null,
-    blogs: { posts: [], categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
+    blogs: { posts: BLOGS_DATA, categories: ["All Articles"], newsletter: BLOG_NEWSLETTER_DATA },
     contact: null,
-    filters: { categories: [], localities: [], propertyTypes: [], statuses: [], budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
+    filters: { categories: CATEGORIES, localities: COIMBATORE_LOCALITIES, propertyTypes: CATEGORIES, statuses: statusOptions(INITIAL_PROJECTS), budgets: MAX_PRICES, sortOptions: SORT_OPTIONS },
     settings: null,
     ready: false,
   });
@@ -187,8 +193,8 @@ export function SiteProvider({ children }) {
       .then(([home, projects, blogs, filters, settings]) => {
         const apiHome = home.data || {};
         const apiFilters = filters.data || {};
-        const posts = blogs.data?.posts || [];
-        const projectList = projects.data || [];
+        const posts = blogs.data?.posts?.length ? blogs.data.posts : BLOGS_DATA;
+        const projectList = projects.data?.length ? projects.data : INITIAL_PROJECTS;
         const categories = categoryOptions(apiHome.categories, apiFilters.categories);
         const localities = locationOptions(apiHome.locations, apiFilters.localities?.length ? apiFilters.localities : []);
         const budgets =
@@ -225,7 +231,7 @@ export function SiteProvider({ children }) {
         });
       })
       .catch((err) => {
-        console.warn("Crestora API unavailable", err);
+        console.warn("Crestora API unavailable, using local fallback data", err);
         setState((prev) => ({ ...prev, ready: true }));
       });
   }, []);

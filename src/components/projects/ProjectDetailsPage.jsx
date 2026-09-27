@@ -26,6 +26,10 @@ import {
   Layers,
   Droplet,
   Star,
+  Play,
+  Navigation,
+  Map,
+  Video,
 } from "lucide-react";
 
 const LUCIDE_ICONS = {
@@ -93,19 +97,67 @@ function buildSpecificationRows(project, ctx) {
 
 function resolveMapHref(project) {
   const custom = (project?.mapUrl || "").trim();
-  if (custom) return custom;
+  if (custom) {
+    if (!custom.includes("output=embed") && !custom.includes("/embed")) {
+      return custom;
+    }
+    try {
+      const parsed = new URL(custom);
+      const q = parsed.searchParams.get("q") || parsed.searchParams.get("query");
+      if (q) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    } catch {
+      // not full url
+    }
+  }
   const q = `${project?.title || ""} ${project?.location || ""}`.trim();
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
+
+function resolveMapEmbedUrl(project) {
+  const custom = (project?.mapEmbedUrl || "").trim();
+  if (custom) return custom;
+
+  const mapUrl = (project?.mapUrl || "").trim();
+  if (mapUrl) {
+    if (mapUrl.includes("output=embed") || mapUrl.includes("/embed")) {
+      return mapUrl;
+    }
+    try {
+      const parsed = new URL(mapUrl);
+      const q = parsed.searchParams.get("query") || parsed.searchParams.get("q");
+      if (q) {
+        return `https://maps.google.com/maps?q=${encodeURIComponent(q)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const query = `${project?.title || ""} ${project?.location || "Coimbatore"}`.trim();
+  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
 }
 
 function youtubeEmbedUrl(url) {
   const raw = (url || "").trim();
   if (!raw) return "";
-  if (raw.includes("youtube.com/embed/")) return raw;
+  if (raw.includes("youtube.com/embed/")) {
+    return raw.includes("?") ? raw : `${raw}?rel=0&modestbranding=1`;
+  }
   const match = raw.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([^&\s?/]+)/
+    /(?:youtube\.com\/(?:watch\?.*v=|shorts\/)|youtu\.be\/)([^&\s?/]+)/
   );
-  return match ? `https://www.youtube.com/embed/${match[1]}` : "";
+  return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1` : "";
+}
+
+function resolveYoutubeWatchUrl(url) {
+  const raw = (url || "").trim();
+  if (!raw) return "";
+  if (raw.includes("youtube.com/watch") || raw.includes("youtu.be/")) return raw;
+  if (raw.includes("youtube.com/embed/")) {
+    const id = raw.split("youtube.com/embed/")[1]?.split("?")[0];
+    if (id) return `https://www.youtube.com/watch?v=${id}`;
+  }
+  return raw;
 }
 
 function buildAmenityCards(project) {
@@ -284,7 +336,9 @@ export default function ProjectDetailsPage({
 
   const displayPrice = priceDisplay || formatINR(price);
   const mapHref = resolveMapHref(project);
+  const mapEmbedUrl = resolveMapEmbedUrl(project);
   const videoEmbed = youtubeEmbedUrl(videoUrl);
+  const youtubeWatchUrl = resolveYoutubeWatchUrl(videoUrl);
   const fullGallery = gallery && gallery.length > 0 ? gallery : [image];
   const isFavorite = favorites.has(id);
   const specCtx = { title, location, dtcpNumber, approval, reraNumber, totalArea, totalUnits, area, bhk };
@@ -503,12 +557,23 @@ export default function ProjectDetailsPage({
                 <span>{location}</span>
                 <span className="pdp-loc-dot">•</span>
                 <a
+                  href="#location-map"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("location-map")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="pdp-map-link"
+                >
+                  View on Map <Map size={12} />
+                </a>
+                <span className="pdp-loc-dot">•</span>
+                <a
                   href={mapHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="pdp-map-link"
                 >
-                  View on Google Maps <ExternalLink size={12} />
+                  Open in Google Maps <ExternalLink size={12} />
                 </a>
               </div>
             </div>
@@ -597,6 +662,23 @@ export default function ProjectDetailsPage({
                 <ShieldCheck size={18} color="#dfb743" />
                 <span>OFFICIAL VERIFIED SANCTION <span className="pdp-wm-brand">• CRESTORA PROPERTIES</span></span>
               </div>
+
+              {videoEmbed ? (
+                <a
+                  href="#video-tour"
+                  className="pdp-stage-video-badge"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("video-tour")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  title="Watch 4K Video Tour"
+                >
+                  <div className="pdp-video-badge-pulse">
+                    <Play size={13} fill="#0a1c38" color="#0a1c38" />
+                  </div>
+                  <span>WATCH 4K VIDEO TOUR</span>
+                </a>
+              ) : null}
             </div>
 
             {/* Thumbnail Filmstrip */}
@@ -619,33 +701,6 @@ export default function ProjectDetailsPage({
           </div>
         </div>
       </section>
-
-      {videoEmbed ? (
-        <section className="pdp-gallery-section" style={{ paddingTop: 0 }}>
-          <div className="crestora-container">
-            <div className="section-header" style={{ marginBottom: "20px" }}>
-              <h5>PROJECT VIDEO</h5>
-              <h2>
-                Walkthrough <span>&amp; highlights</span>
-              </h2>
-            </div>
-            <div
-              className="pdp-gallery-card"
-              style={{ overflow: "hidden", aspectRatio: "16 / 9", maxWidth: "960px", margin: "0 auto" }}
-            >
-              <iframe
-                title={`${title} video`}
-                src={videoEmbed}
-                width="100%"
-                height="100%"
-                style={{ border: 0, display: "block", minHeight: "360px" }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       {/* 5. Main 2-Column Content & Sticky Enquiry Desk */}
       <div className="pdp-main-content-layout">
@@ -682,12 +737,28 @@ export default function ProjectDetailsPage({
               >
                 Master Layout
               </a>
+              {videoEmbed ? (
+                <a
+                  href="#video-tour"
+                  className={`pdp-tab-item ${activeTab === "video" ? "active" : ""}`}
+                  onClick={() => setActiveTab("video")}
+                >
+                  Video Tour
+                </a>
+              ) : null}
               <a
                 href="#connectivity"
                 className={`pdp-tab-item ${activeTab === "connectivity" ? "active" : ""}`}
                 onClick={() => setActiveTab("connectivity")}
               >
-                Location & Proximity
+                Proximity
+              </a>
+              <a
+                href="#location-map"
+                className={`pdp-tab-item ${activeTab === "map" ? "active" : ""}`}
+                onClick={() => setActiveTab("map")}
+              >
+                Location Map
               </a>
 
 
@@ -881,6 +952,66 @@ export default function ProjectDetailsPage({
               </div>
             </section>
 
+            {/* SECTION: Video Walkthrough */}
+            {videoEmbed ? (
+              <section id="video-tour" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">EXCLUSIVE 4K VIRTUAL TOUR</span>
+                  <div className="pdp-section-title-split">
+                    <h2 className="pdp-section-heading" style={{ margin: 0 }}>
+                      Project <span>Video Walkthrough</span>
+                    </h2>
+                    {youtubeWatchUrl ? (
+                      <a
+                        href={youtubeWatchUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pdp-youtube-link-btn"
+                        title="Watch on YouTube"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff0000">
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        <span>Watch on YouTube</span>
+                        <ExternalLink size={13} />
+                      </a>
+                    ) : null}
+                  </div>
+                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                    Experience the complete aerial drone walkthrough, grand entranceway, and on-ground infrastructure of {title}.
+                  </p>
+                </div>
+
+                <div className="pdp-video-container-card">
+                  <div className="pdp-video-aspect-wrap">
+                    <iframe
+                      title={`${title} 4K Walkthrough Video`}
+                      src={videoEmbed}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="pdp-video-footer-strip">
+                    <div className="pdp-video-feat-item">
+                      <Sparkles size={14} color="#dfb743" />
+                      <span>4K Ultra HD Drone Footage</span>
+                    </div>
+                    <div className="pdp-video-feat-item">
+                      <ShieldCheck size={14} color="#dfb743" />
+                      <span>Verified On-Site Video</span>
+                    </div>
+                    <div className="pdp-video-feat-item">
+                      <Clock size={14} color="#dfb743" />
+                      <span>Actual Ground Progress</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            ) : null}
+
             {/* SECTION 6: Location & Connectivity Table */}
             <section id="connectivity" className="pdp-section-block">
               <div className="pdp-section-header">
@@ -918,6 +1049,89 @@ export default function ProjectDetailsPage({
                   ))}
                 </div>
               ) : null}
+            </section>
+
+            {/* SECTION 7: Interactive Location Map & Navigation */}
+            <section id="location-map" className="pdp-section-block">
+              <div className="pdp-section-header">
+                <span className="pdp-gold-eyebrow">GEOGRAPHIC LOCATION &amp; MAP</span>
+                <div className="pdp-section-title-split">
+                  <h2 className="pdp-section-heading" style={{ margin: 0 }}>
+                    Location <span>Map &amp; Directions</span>
+                  </h2>
+                  <div className="pdp-map-header-actions">
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${title} ${location}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="crestora-btn crestora-btn-gold pdp-map-dir-btn"
+                    >
+                      <Navigation size={14} />
+                      <span>Get Driving Directions</span>
+                    </a>
+                    <a
+                      href={mapHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="crestora-btn crestora-btn-outline pdp-map-ext-btn"
+                    >
+                      <span>Open Google Maps</span>
+                      <ExternalLink size={13} />
+                    </a>
+                  </div>
+                </div>
+                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                  Explore the exact location of {title} in {location}. Zoom and pan the interactive map below or click to start turn-by-turn navigation.
+                </p>
+              </div>
+
+              <div className="pdp-interactive-map-card">
+                <div className="pdp-map-info-bar">
+                  <div className="pdp-map-info-left">
+                    <div className="pdp-map-pin-badge">
+                      <MapPin size={18} color="#dfb743" />
+                    </div>
+                    <div>
+                      <div className="pdp-map-address-title">{title}</div>
+                      <div className="pdp-map-address-text">{location}</div>
+                    </div>
+                  </div>
+                  <div className="pdp-map-info-right">
+                    <span className="pdp-map-status-pill">
+                      <ShieldCheck size={13} color="#10b981" />
+                      <span>Geotagged &amp; Verified Site</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pdp-map-embed-wrapper">
+                  <iframe
+                    title={`${title} Location Map`}
+                    src={mapEmbedUrl}
+                    width="100%"
+                    height="380"
+                    style={{ border: 0, display: "block" }}
+                    allowFullScreen=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+
+                <div className="pdp-map-cta-bar">
+                  <div className="pdp-map-cta-text">
+                    <strong>Planning a visit to {title}?</strong>
+                    <span>We offer complimentary door-step cab pickup and expert site accompaniment.</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="crestora-btn crestora-btn-gold pdp-map-pickup-btn"
+                    onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+                  >
+                    <span>SCHEDULE FREE CAB PICKUP</span>
+                    <span className="btn-arrow-hover">→</span>
+                  </button>
+                </div>
+              </div>
             </section>
 
 
