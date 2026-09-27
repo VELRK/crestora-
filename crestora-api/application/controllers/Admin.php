@@ -266,13 +266,28 @@ class Admin extends CI_Controller {
 			show_404();
 		}
 		if ($this->input->method() === 'post') {
-			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
 			$posted = $this->input->post('payload');
-			$payload = crestora_sync_project(fieldform_finish(fieldform_apply($original, is_array($posted) ? $posted : array())));
+			$posted = is_array($posted) ? $posted : array();
+			$original = $this->fill_project(json_decode($row['payload'], TRUE), $row);
+			foreach (array('title', 'location', 'category') as $grid_key) {
+				if (array_key_exists($grid_key, $posted)) {
+					$original[$grid_key] = $posted[$grid_key];
+				}
+			}
+			$payload = crestora_sync_project(fieldform_finish(fieldform_apply($original, $posted)));
+			foreach (array('title', 'location', 'category') as $grid_key) {
+				if (array_key_exists($grid_key, $posted)) {
+					$payload[$grid_key] = $posted[$grid_key];
+				}
+			}
 			$payload = crestora_prune_project_payload($payload, $original);
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			$location = trim(isset($payload['location']) ? $payload['location'] : '');
 			$category = trim(isset($payload['category']) ? $payload['category'] : '');
+			if ($category === '' && ! empty($row['category'])) {
+				$category = trim((string) $row['category']);
+				$payload['category'] = $category;
+			}
 			$missing = array();
 			if ($title === '') {
 				$missing[] = 'Title';
@@ -289,6 +304,7 @@ class Admin extends CI_Controller {
 				$row['sort_order'] = (int) $this->input->post('sort_order');
 				$payload['title'] = $title;
 				$payload['location'] = $location;
+				$payload['category'] = $category;
 				$data['row'] = $row;
 				$data['item'] = $payload;
 				$data['heading'] = ($row['title'] === 'New project' || $title === '') ? 'Add project' : 'Edit project';
