@@ -636,6 +636,9 @@ function crestora_project_admin_schema()
 		'badge' => '',
 		'tagline' => '',
 		'description' => '',
+		'mapUrl' => '',
+		'videoUrl' => '',
+		'bhk' => '',
 		'price' => 0,
 		'priceDisplay' => '',
 		'pricePerSqft' => 0,
@@ -686,6 +689,9 @@ function crestora_prune_project_payload($payload, $original = array())
 	$keep[] = 'typeName';
 	$keep[] = 'cityName';
 	$keep[] = 'amenities';
+	$keep[] = 'mapUrl';
+	$keep[] = 'videoUrl';
+	$keep[] = 'bhk';
 	$out = array();
 	foreach ($keep as $key) {
 		if (array_key_exists($key, $payload)) {

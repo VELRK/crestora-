@@ -4,7 +4,7 @@
 <div class="card">
 <div class="table-wrap">
 <table>
-<tr><th>When</th><th>Name</th><th>Phone</th><th>Email</th><th>Project</th><th>Visit date</th><th>Message</th><th></th></tr>
+<tr><th>When</th><th>Name</th><th>Phone</th><th>Email</th><th>Project</th><th>Code</th><th>Visit date</th><th>Message</th><th></th></tr>
 <?php foreach ($rows as $r): ?>
 <tr>
   <td><?php echo html_escape($r['created_at']); ?></td>
@@ -12,6 +12,7 @@
   <td><?php echo html_escape($r['phone']); ?></td>
   <td><?php echo html_escape(isset($r['email']) ? $r['email'] : ''); ?></td>
   <td><?php echo html_escape($r['project_name']); ?></td>
+  <td><?php echo html_escape(isset($r['project_code']) ? $r['project_code'] : ''); ?></td>
   <td><?php echo html_escape($r['visit_date']); ?></td>
   <td><?php echo html_escape(isset($r['message']) ? $r['message'] : ''); ?></td>
   <td>

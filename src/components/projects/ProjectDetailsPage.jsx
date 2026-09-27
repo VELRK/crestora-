@@ -68,7 +68,12 @@ function resolveLucideIcon(name, fallback = Sparkles) {
 
 function buildSpecificationRows(project, ctx) {
   const fromDb = (project.specifications || []).filter((row) => row?.label && row?.value);
-  if (fromDb.length) return fromDb;
+  if (fromDb.length) {
+    if (ctx.bhk) {
+      return [{ label: "Configuration (BHK)", value: ctx.bhk }, ...fromDb];
+    }
+    return fromDb;
+  }
   const rows = [
     { label: "Project Name", value: ctx.title },
     { label: "Location", value: ctx.location },
@@ -82,7 +87,25 @@ function buildSpecificationRows(project, ctx) {
   if (ctx.totalArea) rows.push({ label: "Total Land Area", value: ctx.totalArea });
   if (ctx.totalUnits) rows.push({ label: "Total Units / Plots", value: ctx.totalUnits });
   if (ctx.area) rows.push({ label: "Plot / Built-up Area", value: ctx.area });
+  if (ctx.bhk) rows.push({ label: "Configuration (BHK)", value: ctx.bhk });
   return rows;
+}
+
+function resolveMapHref(project) {
+  const custom = (project?.mapUrl || "").trim();
+  if (custom) return custom;
+  const q = `${project?.title || ""} ${project?.location || ""}`.trim();
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
+
+function youtubeEmbedUrl(url) {
+  const raw = (url || "").trim();
+  if (!raw) return "";
+  if (raw.includes("youtube.com/embed/")) return raw;
+  const match = raw.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([^&\s?/]+)/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : "";
 }
 
 function buildAmenityCards(project) {
@@ -114,6 +137,7 @@ export default function ProjectDetailsPage({
     date: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [enquiryType, setEnquiryType] = useState("visit");
 
   // EMI Calculator State
   const initialPrice = project?.price || 4500000;
@@ -253,12 +277,17 @@ export default function ProjectDetailsPage({
     amenitiesIntro = "",
     masterPlanIntro = "",
     proximityIntro = "",
+    mapUrl = "",
+    videoUrl = "",
+    bhk = "",
   } = project;
 
   const displayPrice = priceDisplay || formatINR(price);
+  const mapHref = resolveMapHref(project);
+  const videoEmbed = youtubeEmbedUrl(videoUrl);
   const fullGallery = gallery && gallery.length > 0 ? gallery : [image];
   const isFavorite = favorites.has(id);
-  const specCtx = { title, location, dtcpNumber, approval, reraNumber, totalArea, totalUnits, area };
+  const specCtx = { title, location, dtcpNumber, approval, reraNumber, totalArea, totalUnits, area, bhk };
   const specRows = buildSpecificationRows({ specifications }, specCtx);
   const amenityCards = buildAmenityCards({ amenityDetails, amenities });
   const extraOverview = (overviewParagraphs || []).filter((p) => p && String(p).trim());
@@ -273,26 +302,54 @@ export default function ProjectDetailsPage({
       alert("Please provide your name and contact phone number.");
       return;
     }
-    crestoraApi
-      .bookSiteVisit({
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        projectName: title,
-        message: `Site visit request for ${title}`,
-      })
+    const payload = {
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      projectName: title,
+      projectCode: id,
+      projectId: id,
+    };
+    const request =
+      enquiryType === "enquiry"
+        ? crestoraApi.submitEnquiry({
+            ...payload,
+            message: `Property enquiry for ${title}`,
+            source: "project",
+          })
+        : crestoraApi.bookSiteVisit({
+            ...payload,
+            message: `Site visit request for ${title}`,
+          });
+    request
       .then((res) => {
         if (!res?.success) {
-          if (showToast) showToast("Could not save the site visit. Please try again.");
+          if (showToast) {
+            showToast(
+              enquiryType === "enquiry"
+                ? "Could not send your enquiry. Please try again."
+                : "Could not save the site visit. Please try again."
+            );
+          }
           return;
         }
         setFormSubmitted(true);
         if (showToast) {
-          showToast(`Site visit enquiry submitted for ${title}! Our advisor will contact you.`);
+          showToast(
+            enquiryType === "enquiry"
+              ? `Enquiry sent for ${title}! Our advisor will contact you.`
+              : `Site visit enquiry submitted for ${title}! Our advisor will contact you.`
+          );
         }
       })
       .catch(() => {
-        if (showToast) showToast("Could not save the site visit. Please try again.");
+        if (showToast) {
+          showToast(
+            enquiryType === "enquiry"
+              ? "Could not send your enquiry. Please try again."
+              : "Could not save the site visit. Please try again."
+          );
+        }
       });
   };
 
@@ -446,9 +503,7 @@ export default function ProjectDetailsPage({
                 <span>{location}</span>
                 <span className="pdp-loc-dot">•</span>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    title + " " + location
-                  )}`}
+                  href={mapHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="pdp-map-link"
@@ -491,6 +546,12 @@ export default function ProjectDetailsPage({
               <strong className="pdp-stat-val">{totalArea || "10 Acres"}</strong>
             </div>
 
+            {bhk ? (
+              <div className="pdp-stat-cell">
+                <span className="pdp-stat-lbl">CONFIGURATION</span>
+                <strong className="pdp-stat-val">{bhk}</strong>
+              </div>
+            ) : null}
             <div className="pdp-stat-cell">
               <span className="pdp-stat-lbl">PLOT / UNIT SIZES</span>
               <strong className="pdp-stat-val">
@@ -558,6 +619,33 @@ export default function ProjectDetailsPage({
           </div>
         </div>
       </section>
+
+      {videoEmbed ? (
+        <section className="pdp-gallery-section" style={{ paddingTop: 0 }}>
+          <div className="crestora-container">
+            <div className="section-header" style={{ marginBottom: "20px" }}>
+              <h5>PROJECT VIDEO</h5>
+              <h2>
+                Walkthrough <span>&amp; highlights</span>
+              </h2>
+            </div>
+            <div
+              className="pdp-gallery-card"
+              style={{ overflow: "hidden", aspectRatio: "16 / 9", maxWidth: "960px", margin: "0 auto" }}
+            >
+              <iframe
+                title={`${title} video`}
+                src={videoEmbed}
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: "block", minHeight: "360px" }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* 5. Main 2-Column Content & Sticky Enquiry Desk */}
       <div className="pdp-main-content-layout">
@@ -909,15 +997,26 @@ export default function ProjectDetailsPage({
                     />
                   </div>
 
-
-
+                  <div className="pdp-input-group">
+                    <label htmlFor="pdp-enquiry-type">Enquiry type</label>
+                    <select
+                      id="pdp-enquiry-type"
+                      value={enquiryType}
+                      onChange={(e) => setEnquiryType(e.target.value)}
+                    >
+                      <option value="visit">Schedule site visit</option>
+                      <option value="enquiry">Property enquiry</option>
+                    </select>
+                  </div>
 
                   <button
                     type="submit"
                     className="crestora-btn crestora-btn-gold pdp-submit-btn"
                   >
                     <span className="btn-arrow-normal">✓</span>
-                    <span className="btn-text">CONFIRM SITE VISIT</span>
+                    <span className="btn-text">
+                      {enquiryType === "enquiry" ? "SEND PROPERTY ENQUIRY" : "CONFIRM SITE VISIT"}
+                    </span>
                     <span className="btn-arrow-hover">→</span>
                   </button>
                 </form>

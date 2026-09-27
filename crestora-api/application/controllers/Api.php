@@ -301,7 +301,13 @@ class Api extends CI_Controller {
 		if ( ! is_array($body)) {
 			$body = $this->input->post();
 		}
-		$this->db->insert('enquiries', array(
+		$project_code = '';
+		if ( ! empty($body['projectCode'])) {
+			$project_code = (string) $body['projectCode'];
+		} elseif ( ! empty($body['projectId'])) {
+			$project_code = (string) $body['projectId'];
+		}
+		$row = array(
 			'name' => isset($body['name']) ? $body['name'] : '',
 			'phone' => isset($body['phone']) ? $body['phone'] : '',
 			'email' => isset($body['email']) ? $body['email'] : '',
@@ -310,7 +316,11 @@ class Api extends CI_Controller {
 			'source' => isset($body['source']) ? $body['source'] : 'contact',
 			'status' => 'new',
 			'created_at' => date('Y-m-d H:i:s'),
-		));
+		);
+		if ($this->db->field_exists('project_code', 'enquiries')) {
+			$row['project_code'] = $project_code;
+		}
+		$this->db->insert('enquiries', $row);
 		echo json_encode(array(
 			'success' => TRUE,
 			'enquiryId' => 'ENQ-' . $this->db->insert_id(),
@@ -329,7 +339,13 @@ class Api extends CI_Controller {
 			$body = $this->input->post();
 		}
 		$project = isset($body['projectName']) ? $body['projectName'] : '';
-		$this->db->insert('site_visits', array(
+		$project_code = '';
+		if ( ! empty($body['projectCode'])) {
+			$project_code = (string) $body['projectCode'];
+		} elseif ( ! empty($body['projectId'])) {
+			$project_code = (string) $body['projectId'];
+		}
+		$row = array(
 			'name' => isset($body['name']) ? $body['name'] : '',
 			'phone' => isset($body['phone']) ? $body['phone'] : '',
 			'email' => isset($body['email']) ? $body['email'] : '',
@@ -338,7 +354,11 @@ class Api extends CI_Controller {
 			'message' => isset($body['message']) ? $body['message'] : '',
 			'status' => 'new',
 			'created_at' => date('Y-m-d H:i:s'),
-		));
+		);
+		if ($this->db->field_exists('project_code', 'site_visits')) {
+			$row['project_code'] = $project_code;
+		}
+		$this->db->insert('site_visits', $row);
 		$id = 'ADS-CBE-' . $this->db->insert_id();
 		echo json_encode(array(
 			'success' => TRUE,

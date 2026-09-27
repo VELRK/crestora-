@@ -65,6 +65,7 @@ CREATE TABLE enquiries (
   email VARCHAR(160) DEFAULT '',
   message TEXT,
   project_name VARCHAR(200) DEFAULT '',
+  project_code VARCHAR(64) DEFAULT '',
   source VARCHAR(40) DEFAULT 'contact',
   status VARCHAR(40) DEFAULT 'new',
   created_at DATETIME
@@ -76,6 +77,7 @@ CREATE TABLE site_visits (
   phone VARCHAR(40) DEFAULT '',
   email VARCHAR(160) DEFAULT '',
   project_name VARCHAR(200) DEFAULT '',
+  project_code VARCHAR(64) DEFAULT '',
   visit_date VARCHAR(40) DEFAULT '',
   message TEXT,
   status VARCHAR(40) DEFAULT 'new',

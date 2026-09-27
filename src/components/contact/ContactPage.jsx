@@ -29,10 +29,12 @@ export default function ContactPage({ onNavigate, showToast }) {
   const whatsappLabel = page.whatsappLabel || `Chat on WhatsApp (${phone})`;
   const mapUrl = page.mapUrl || "https://maps.google.com/?q=GKNM+Hospital+Avinashi+Road+Coimbatore";
   const mapEmbed = page.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.353368297072!2d76.9822452!3d11.0120893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859b867c2d829%3A0x7d6f51f49615a13c!2sGKNM%20Hospital%2C%20Avinashi%20Rd%2C%20Pappanaickenpalayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641037!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin";
+  const projects = site.projects || [];
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
+    projectId: "",
     subject: "General Inquiry",
     message: "",
   });
@@ -66,13 +68,17 @@ export default function ContactPage({ onNavigate, showToast }) {
     }
 
     setIsSubmitting(true);
+    const picked = projects.find((p) => p.id === formData.projectId);
     crestoraApi
       .submitEnquiry({
         name: formData.name,
         phone: formData.phone,
         email: formData.email,
+        projectName: picked?.title || "",
+        projectCode: formData.projectId || "",
+        projectId: formData.projectId || "",
         message: `${formData.subject || ""} ${formData.message || ""}`.trim(),
-        source: "contact",
+        source: formData.projectId ? "project" : "contact",
       })
       .then(() => {
         setIsSubmitting(false);
@@ -91,6 +97,7 @@ export default function ContactPage({ onNavigate, showToast }) {
       name: "",
       phone: "",
       email: "",
+      projectId: "",
       subject: "General Inquiry",
       message: "",
     });
@@ -318,6 +325,26 @@ export default function ContactPage({ onNavigate, showToast }) {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="sc-form-group">
+                    <label className="sc-form-label" htmlFor="sc-project">
+                      Property / project
+                    </label>
+                    <select
+                      id="sc-project"
+                      name="projectId"
+                      className="sc-form-select"
+                      value={formData.projectId}
+                      onChange={handleChange}
+                    >
+                      <option value="">General enquiry (not project-specific)</option>
+                      {projects.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.title}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="sc-form-group">

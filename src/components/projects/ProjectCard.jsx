@@ -43,6 +43,7 @@ export default function ProjectCard({
   const displayTitle = (title || "").toUpperCase();
 
   const displayConfig =
+    project.bhk ||
     project.configuration ||
     (project.category === "villa"
       ? `${project.beds || 3}, ${Number(project.beds || 3) + 1} BHK Villas`
