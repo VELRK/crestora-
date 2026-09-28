@@ -648,8 +648,6 @@ function crestora_project_admin_schema()
 		'approval' => '',
 		'reraNumber' => '',
 		'dtcpNumber' => '',
-		'isFeatured' => FALSE,
-		'isPopular' => FALSE,
 		'image' => '',
 		'gallery' => array(''),
 		'highlights' => array(''),
@@ -692,6 +690,8 @@ function crestora_prune_project_payload($payload, $original = array())
 	$keep[] = 'mapUrl';
 	$keep[] = 'videoUrl';
 	$keep[] = 'bhk';
+	$keep[] = 'isFeatured';
+	$keep[] = 'isPopular';
 	$out = array();
 	foreach ($keep as $key) {
 		if (array_key_exists($key, $payload)) {
@@ -700,6 +700,11 @@ function crestora_prune_project_payload($payload, $original = array())
 	}
 	if (empty($out['id']) && is_array($original) && ! empty($original['id'])) {
 		$out['id'] = $original['id'];
+	}
+	foreach (array('isFeatured', 'isPopular') as $flag) {
+		if ( ! array_key_exists($flag, $out) && is_array($original) && array_key_exists($flag, $original)) {
+			$out[$flag] = $original[$flag];
+		}
 	}
 	return $out;
 }
@@ -835,7 +840,28 @@ function crestora_sync_project($payload)
 	if (empty($payload['cityName']) && $picked !== '') {
 		$payload['cityName'] = $picked;
 	}
+	$payload['isFeatured'] = ! empty($payload['isFeatured']);
+	$payload['isPopular'] = ! empty($payload['isPopular']);
 	return $payload;
+}
+
+function crestora_hydrate_project_from_row($item, $row)
+{
+	if ( ! is_array($item)) {
+		$item = array();
+	}
+	if (is_array($row)) {
+		if (empty($item['id']) && ! empty($row['code'])) {
+			$item['id'] = $row['code'];
+		}
+		if ( ! array_key_exists('isFeatured', $item) || ! $item['isFeatured']) {
+			$item['isFeatured'] = ! empty($row['is_featured']);
+		}
+		if ( ! array_key_exists('isPopular', $item) || ! $item['isPopular']) {
+			$item['isPopular'] = ! empty($row['is_popular']);
+		}
+	}
+	return crestora_sync_project($item);
 }
 
 function fieldform_asset_url($url)

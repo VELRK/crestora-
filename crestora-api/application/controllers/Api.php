@@ -122,7 +122,7 @@ class Api extends CI_Controller {
 		foreach ($rows as $row) {
 			$item = json_decode($row['payload'], TRUE);
 			if ($item) {
-				$list[] = crestora_sync_project($item);
+				$list[] = crestora_hydrate_project_from_row($item, $row);
 			}
 		}
 		$status = $this->input->get('status');
@@ -174,10 +174,7 @@ class Api extends CI_Controller {
 		if ( ! is_array($item)) {
 			$item = array();
 		}
-		if (empty($item['id'])) {
-			$item['id'] = $row['code'];
-		}
-		return crestora_sync_project($item);
+		return crestora_hydrate_project_from_row($item, $row);
 	}
 
 	public function project($id = '')
@@ -204,10 +201,7 @@ class Api extends CI_Controller {
 			if ( ! is_array($item)) {
 				continue;
 			}
-			if (empty($item['id'])) {
-				$item['id'] = $row['code'];
-			}
-			$item = crestora_sync_project($item);
+			$item = crestora_hydrate_project_from_row($item, $row);
 			if ($item['id'] === $current['id'] || $row['code'] === $current['id'] || ( ! empty($current['slug']) && isset($item['slug']) && $item['slug'] === $current['slug'])) {
 				continue;
 			}

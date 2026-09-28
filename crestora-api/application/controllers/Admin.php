@@ -281,6 +281,12 @@ class Admin extends CI_Controller {
 				}
 			}
 			$payload = crestora_prune_project_payload($payload, $original);
+			if ( ! array_key_exists('isFeatured', $payload)) {
+				$payload['isFeatured'] = ! empty($original['isFeatured']) || ! empty($row['is_featured']);
+			}
+			if ( ! array_key_exists('isPopular', $payload)) {
+				$payload['isPopular'] = ! empty($original['isPopular']) || ! empty($row['is_popular']);
+			}
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			$location = trim(isset($payload['location']) ? $payload['location'] : '');
 			$category = trim(isset($payload['category']) ? $payload['category'] : '');
