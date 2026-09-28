@@ -204,60 +204,7 @@ export default function ExclusiveProjectsPage({
             </a>
           </div>
 
-          {/* Hero Content */}
-          <div className="exclusive-hero-content">
-            <div className="exclusive-prestige-badge">
-              <Sparkles size={14} className="exclusive-badge-icon" />
-              <span className="exclusive-badge-text">
-                THE CRESTORA SIGNATURE PORTFOLIO • EXCLUSIVE DEVELOPMENTS
-              </span>
-            </div>
 
-            <h1 className="exclusive-hero-title">
-              Exclusive <span className="exclusive-gold-text">Signature Projects</span> &amp; Enclaves
-            </h1>
-
-            <p className="exclusive-hero-desc">
-              Explore our handpicked collection of DTCP &amp; RERA approved gated villa communities,
-              master-planned townships, and prime corridor land parcels engineered for generational
-              capital appreciation and uncompromised luxury living.
-            </p>
-          </div>
-
-          {/* 4-Box Prestige Metrics Ribbon */}
-          <div className="exclusive-stat-ribbon">
-            <div className="exclusive-stat-card">
-              <div className="exclusive-stat-val">
-                <span>{projects.length}</span>
-                <span className="exclusive-stat-val-gold">+</span>
-              </div>
-              <div className="exclusive-stat-lbl">Active Signature Developments</div>
-            </div>
-
-            <div className="exclusive-stat-card">
-              <div className="exclusive-stat-val">
-                <span>100</span>
-                <span className="exclusive-stat-val-gold">%</span>
-              </div>
-              <div className="exclusive-stat-lbl">DTCP &amp; TN RERA Sanctioned</div>
-            </div>
-
-            <div className="exclusive-stat-card">
-              <div className="exclusive-stat-val">
-                <span>Prime</span>
-                <span className="exclusive-stat-val-gold">Spines</span>
-              </div>
-              <div className="exclusive-stat-lbl">Avinashi Rd, IT Corridor, Bypass</div>
-            </div>
-
-            <div className="exclusive-stat-card">
-              <div className="exclusive-stat-val">
-                <span>Tier-1</span>
-                <span className="exclusive-stat-val-gold">Banks</span>
-              </div>
-              <div className="exclusive-stat-lbl">SBI, HDFC &amp; ICICI Pre-Approved</div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -491,8 +438,8 @@ export default function ExclusiveProjectsPage({
                   p.status === "upcoming"
                     ? "Pre-Launch"
                     : p.status === "completed"
-                    ? "Completed"
-                    : "Ongoing";
+                      ? "Completed"
+                      : "Ongoing";
 
                 // Format plot / land size
                 const sizeText = p.area || (p.sqft ? `${p.sqft} sq.ft` : "1,200 - 3,500 sq.ft");
@@ -606,7 +553,7 @@ export default function ExclusiveProjectsPage({
                       </div>
 
                       {/* Amenity Highlights */}
-                      {p.amenities && p.amenities.length > 0 && (
+                      {/* {p.amenities && p.amenities.length > 0 && (
                         <div className="exclusive-amenities-row">
                           {p.amenities.slice(0, 3).map((amenity, idx) => (
                             <span key={idx} className="exclusive-amenity-chip">
@@ -615,10 +562,10 @@ export default function ExclusiveProjectsPage({
                             </span>
                           ))}
                         </div>
-                      )}
+                      )} */}
 
                       {/* DTCP & RERA Approvals Tag */}
-                      <div className="exclusive-approvals-row">
+                      {/* <div className="exclusive-approvals-row">
                         <span className="exclusive-approval-tag">
                           <CheckCircle2 size={13} />
                           <span>{p.badge || "DTCP & RERA Approved"}</span>
@@ -628,7 +575,7 @@ export default function ExclusiveProjectsPage({
                             RERA: {p.reraNumber}
                           </span>
                         )}
-                      </div>
+                      </div> */}
 
                       {/* Action Buttons */}
                       <div className="exclusive-actions-row">
@@ -647,7 +594,7 @@ export default function ExclusiveProjectsPage({
                           onClick={() => onBookSiteVisit && onBookSiteVisit(p)}
                         >
                           <Calendar size={13} />
-                          <span>VIP VISIT</span>
+                          <span>ENQUIRE NOW</span>
                         </button>
                       </div>
                     </div>
@@ -665,8 +612,8 @@ export default function ExclusiveProjectsPage({
                   p.status === "upcoming"
                     ? "Pre-Launch"
                     : p.status === "completed"
-                    ? "Completed"
-                    : "Ongoing";
+                      ? "Completed"
+                      : "Ongoing";
                 const sizeText = p.area || (p.sqft ? `${p.sqft} sq.ft` : "1,200 - 3,500 sq.ft");
                 const unitsText = p.totalUnits || (p.plots ? `${p.plots} Plots` : "Gated Enclave");
 
