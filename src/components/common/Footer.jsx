@@ -80,6 +80,25 @@ export default function Footer({ onNavigate }) {
               </button>
               <button
                 type="button"
+                onClick={() => onNavigate && onNavigate("exclusive-projects")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dfb743",
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: 0,
+                }}
+              >
+                <span>Exclusive Signature Projects</span>
+                <span>★</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => onNavigate && onNavigate("contact")}
                 style={{
                   background: "none",

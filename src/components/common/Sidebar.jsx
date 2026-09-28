@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logoImg from "../../assets/logo.jpeg";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
-import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight } from "lucide-react";
+import { X, ChevronDown, Phone, Mail, MapPin, Compass, ArrowRight, Sparkles } from "lucide-react";
 export default function Sidebar({
   isOpen,
   onClose,
@@ -246,6 +246,47 @@ export default function Sidebar({
               </div>
             )}
           </div>
+
+          {/* Exclusive Projects */}
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate && onNavigate("exclusive-projects");
+              onClose();
+            }}
+            style={{
+              textAlign: "left",
+              padding: "12px 0",
+              fontSize: "15px",
+              fontWeight: "700",
+              color: activePage === "exclusive-projects" ? "#dfb743" : "#ffffff",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "none",
+              border: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Sparkles size={16} color="#dfb743" />
+              <span>EXCLUSIVE PROJECTS</span>
+            </span>
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: "800",
+                background: "rgba(197, 155, 39, 0.2)",
+                color: "#dfb743",
+                padding: "2px 8px",
+                borderRadius: "4px",
+                border: "1px solid rgba(197, 155, 39, 0.4)",
+                letterSpacing: "0.5px",
+              }}
+            >
+              PRESTIGE
+            </span>
+          </button>
 
           {/* Collapsible Categories */}
           <div>

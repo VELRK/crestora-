@@ -31,6 +31,7 @@ import AboutPage from "./components/about/AboutPage";
 import BlogListPage from "./components/blogs/BlogListPage";
 import BlogDetailsPage from "./components/blogs/BlogDetailsPage";
 import ContactPage from "./components/contact/ContactPage";
+import ExclusiveProjectsPage from "./components/exclusive/ExclusiveProjectsPage";
 
 import { useSite } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
@@ -166,6 +167,10 @@ export default function App() {
         setActivePage("projects");
         return;
       }
+      if (path === "/exclusive-projects" || path === "/exclusive") {
+        setActivePage("exclusive-projects");
+        return;
+      }
       if (path === "/contact") {
         setActivePage("contact");
         return;
@@ -234,6 +239,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     const paths = {
       projects: "/projects",
+      "exclusive-projects": "/exclusive-projects",
       about: "/about",
       blogs: "/blogs",
       contact: "/contact",
@@ -504,6 +510,17 @@ export default function App() {
             onBookSiteVisit={() => handleOpenBookVisit()}
             showToast={showToast}
           />
+        ) : activePage === "exclusive-projects" ? (
+          /* ==================== EXCLUSIVE PROJECTS SIGNATURE PAGE VIEW ==================== */
+          <ExclusiveProjectsPage
+            projects={projects}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onSelectProject={handleSelectProject}
+            onBookSiteVisit={(project) => handleOpenBookVisit(project)}
+            onNavigate={handleNavigate}
+            showToast={showToast}
+          />
         ) : activePage === "project-details" ? (
           /* ==================== SEPARATE PROJECT DETAILS VIEW ==================== */
           <ProjectDetailsPage
@@ -624,7 +641,7 @@ export default function App() {
           </button>
           <button
             type="button"
-            className={`mbb-item ${activePage === "projects" ? "active" : ""}`}
+            className={`mbb-item ${activePage === "projects" || activePage === "exclusive-projects" ? "active" : ""}`}
             onClick={() => handleNavigate("projects")}
           >
             <Building2 size={18} />

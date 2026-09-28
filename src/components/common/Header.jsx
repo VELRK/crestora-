@@ -51,6 +51,7 @@ export default function Header({
   const isProjectsActive =
     (activePage === "projects" && !isCategoriesActive && !isLocationsActive) ||
     activePage === "project-details";
+  const isExclusiveActive = activePage === "exclusive-projects";
   const isBlogsActive = activePage === "blogs" || activePage === "blog-details";
   const isContactActive = activePage === "contact";
 
@@ -185,6 +186,19 @@ export default function Header({
                   </a>
                 ))}
               </div>
+            </div>
+
+            {/* Exclusive Projects */}
+            <div className="nav-link-item">
+              <button
+                type="button"
+                className={`nav-link-btn ${isExclusiveActive ? "active" : ""}`}
+                onClick={() => onNavigate && onNavigate("exclusive-projects")}
+                style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}
+              >
+                <Sparkles size={12} style={{ color: "#dfb743" }} />
+                <span>EXCLUSIVE PROJECTS</span>
+              </button>
             </div>
 
             {/* Categories Dropdown */}
