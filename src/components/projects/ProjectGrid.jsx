@@ -1,5 +1,6 @@
 import React from "react";
 import ProjectCard from "./ProjectCard";
+import { ProjectCardSkeleton } from "../common/ShimmerSkeletons";
 import { Search, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 
 export default function ProjectGrid({
@@ -13,7 +14,18 @@ export default function ProjectGrid({
   totalPages = 1,
   onPageChange,
   viewMode = "list",
+  loading = false,
 }) {
+  if (loading && projects.length === 0) {
+    return (
+      <div className={viewMode === "list" ? "projects-list-container" : "projects-responsive-grid"}>
+        {[1, 2, 3, 4, 5, 6].map((idx) => (
+          <ProjectCardSkeleton key={idx} viewMode={viewMode} />
+        ))}
+      </div>
+    );
+  }
+
   if (projects.length === 0) {
     return (
       <div

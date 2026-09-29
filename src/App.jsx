@@ -379,7 +379,7 @@ export default function App() {
   return (
     <div className="crestora-app">
       {/* 1. Preloader */}
-      <Preloader />
+      <Preloader ready={site.ready} logo={logo} />
 
       {/* 2. Classic Sticky Header */}
       <Header
@@ -541,6 +541,7 @@ export default function App() {
             onBackToProjects={() => handleNavigate("projects")}
             onSelectProject={handleSelectProject}
             showToast={showToast}
+            isReady={site.ready}
           />
         ) : (
           /* ==================== PROJECTS / DEVELOPMENTS PAGE VIEW ==================== */
@@ -580,6 +581,7 @@ export default function App() {
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
                   viewMode={viewMode}
+                  loading={!site.ready}
                 />
               </div>
             </div>

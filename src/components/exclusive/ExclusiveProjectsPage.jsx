@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSite } from "../../services/SiteData.jsx";
 import { formatINR } from "../../services/api";
+import { ProjectCardSkeleton } from "../common/ShimmerSkeletons";
 import "./ExclusiveProjectsPage.css";
 import {
   Sparkles,
@@ -381,8 +382,14 @@ export default function ExclusiveProjectsPage({
           ========================================================================= */}
       <section className="exclusive-content-section">
         <div className="crestora-container">
-          {/* If No Results */}
-          {filteredProjects.length === 0 ? (
+          {/* If Loading or No Results */}
+          {!site.ready && filteredProjects.length === 0 ? (
+            <div className={viewMode === "grid" ? "exclusive-grid-layout" : "exclusive-list-layout"}>
+              {[1, 2, 3, 4, 5, 6].map((idx) => (
+                <ProjectCardSkeleton key={idx} viewMode={viewMode === "grid" ? "grid" : "list"} />
+              ))}
+            </div>
+          ) : filteredProjects.length === 0 ? (
             <div className="exclusive-empty-state">
               <div className="exclusive-empty-icon">
                 <Search size={32} />

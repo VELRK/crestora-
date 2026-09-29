@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { crestoraApi, formatINR } from "../../services/api";
 import ProjectCard from "./ProjectCard";
+import { ProjectDetailsSkeleton } from "../common/ShimmerSkeletons";
 import {
   ArrowLeft,
   MapPin,
@@ -369,6 +370,7 @@ export default function ProjectDetailsPage({
   onBackToProjects,
   onSelectProject,
   showToast,
+  isReady = true,
 }) {
   const [activeImage, setActiveImage] = useState(project?.image || "");
   const [activeTab, setActiveTab] = useState("overview");
@@ -593,6 +595,9 @@ export default function ProjectDetailsPage({
   }, [availableTabs, activeTab]);
 
   if (!project) {
+    if (!isReady) {
+      return <ProjectDetailsSkeleton />;
+    }
     return (
       <div className="project-details-page empty-state-wrap">
         <div
