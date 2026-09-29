@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   MapPin,
   ShieldCheck,
-  Heart,
   Share2,
   Download,
   Phone,
@@ -364,8 +363,6 @@ function buildAmenityCards(project) {
 export default function ProjectDetailsPage({
   project,
   allProjects = [],
-  favorites = new Set(),
-  onToggleFavorite,
   onBookSiteVisit,
   onBackToProjects,
   onSelectProject,
@@ -512,7 +509,6 @@ export default function ProjectDetailsPage({
   const videoEmbed = youtubeEmbedUrl(videoUrl);
   const youtubeWatchUrl = resolveYoutubeWatchUrl(videoUrl);
   const fullGallery = gallery && gallery.length > 0 ? gallery : [image];
-  const isFavorite = favorites.has(id);
   const specCtx = {
     title,
     location,
@@ -807,22 +803,6 @@ export default function ProjectDetailsPage({
           <div className="pdp-header-actions">
             <button
               type="button"
-              className={`pdp-action-icon-btn ${isFavorite ? "active" : ""}`}
-              onClick={() => onToggleFavorite && onToggleFavorite(id)}
-              title={isFavorite ? "Saved in Favorites" : "Save Property"}
-            >
-              <Heart
-                size={17}
-                fill={isFavorite ? "#dfb743" : "none"}
-                color={isFavorite ? "#dfb743" : "#ffffff"}
-              />
-              <span className="d-none-mobile">
-                {isFavorite ? "SAVED" : "SAVE"}
-              </span>
-            </button>
-
-            <button
-              type="button"
               className="pdp-action-icon-btn"
               onClick={handleShare}
               title="Share Development"
@@ -830,8 +810,6 @@ export default function ProjectDetailsPage({
               <Share2 size={16} />
               <span className="d-none-mobile">SHARE</span>
             </button>
-
-
           </div>
         </div>
       </div>
@@ -1753,8 +1731,6 @@ export default function ProjectDetailsPage({
                 <ProjectCard
                   key={item.id}
                   project={item}
-                  isFavorite={favorites.has(item.id)}
-                  onToggleFavorite={onToggleFavorite}
                   onSelectProject={onSelectProject}
                   onBookSiteVisit={onBookSiteVisit}
                 />

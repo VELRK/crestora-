@@ -20,7 +20,6 @@ export default function Header({
   onOpenSidebar,
   onOpenSearch,
   onOpenBookVisit,
-  favoritesCount = 0,
 }) {
   const site = useSite();
   const settings = site.settings || {};

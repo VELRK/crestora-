@@ -614,29 +614,6 @@
   color: #6ee7b7;
 }
 
-.exclusive-fav-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(9, 26, 56, 0.7);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.exclusive-fav-btn:hover,
-.exclusive-fav-btn.is-fav {
-  background: #ffffff;
-  color: #ef4444;
-  border-color: #ffffff;
-  transform: scale(1.08);
-}
-
 /* Media Bottom Price Strip */
 .exclusive-media-bottom {
   position: absolute;

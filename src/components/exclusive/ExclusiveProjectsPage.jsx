@@ -13,7 +13,6 @@ import {
   List,
   ChevronDown,
   X,
-  Heart,
   Phone,
   MessageCircle,
   CheckCircle2,
@@ -28,8 +27,6 @@ import {
 
 export default function ExclusiveProjectsPage({
   projects = [],
-  favorites = new Set(),
-  onToggleFavorite,
   onSelectProject,
   onBookSiteVisit,
   onNavigate,
@@ -412,7 +409,6 @@ export default function ExclusiveProjectsPage({
             /* ================= GRID VIEW ================= */
             <div className="exclusive-grid-layout">
               {filteredProjects.map((p) => {
-                const isFav = favorites.has(p.id);
                 const displayPrice = p.priceDisplay || formatINR(p.price);
                 const statusLabel =
                   p.status === "upcoming"
@@ -450,26 +446,11 @@ export default function ExclusiveProjectsPage({
                           <span>{p.tag || "EXCLUSIVE"}</span>
                         </span>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                          <span
-                            className={`exclusive-status-badge status-${p.status || "ongoing"}`}
-                          >
-                            {statusLabel}
-                          </span>
-
-                          <button
-                            type="button"
-                            className={`exclusive-fav-btn ${isFav ? "is-fav" : ""}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (onToggleFavorite) onToggleFavorite(p.id);
-                            }}
-                            title={isFav ? "Remove from favorites" : "Save to favorites"}
-                            aria-label="Toggle favorite"
-                          >
-                            <Heart size={16} fill={isFav ? "currentColor" : "none"} />
-                          </button>
-                        </div>
+                        <span
+                          className={`exclusive-status-badge status-${p.status || "ongoing"}`}
+                        >
+                          {statusLabel}
+                        </span>
                       </div>
 
                       {/* Bottom Approval Strip (if available) */}
@@ -599,7 +580,6 @@ export default function ExclusiveProjectsPage({
             /* ================= ARCHITECTURAL LEDGER / LIST VIEW ================= */
             <div className="exclusive-ledger-layout">
               {filteredProjects.map((p) => {
-                const isFav = favorites.has(p.id);
                 const displayPrice = p.priceDisplay || formatINR(p.price);
                 const statusLabel =
                   p.status === "upcoming"
@@ -630,19 +610,6 @@ export default function ExclusiveProjectsPage({
                           <Sparkles size={11} />
                           <span>{p.tag || "EXCLUSIVE"}</span>
                         </span>
-
-                        <button
-                          type="button"
-                          className={`exclusive-fav-btn ${isFav ? "is-fav" : ""}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onToggleFavorite) onToggleFavorite(p.id);
-                          }}
-                          title={isFav ? "Remove from favorites" : "Save to favorites"}
-                          aria-label="Toggle favorite"
-                        >
-                          <Heart size={16} fill={isFav ? "currentColor" : "none"} />
-                        </button>
                       </div>
 
                       <div className="exclusive-media-bottom">

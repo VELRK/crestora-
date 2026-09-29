@@ -2,14 +2,11 @@ import React from "react";
 import { formatINR } from "../../services/api";
 import {
   MapPin,
-  Heart,
   Check,
 } from "lucide-react";
 
 export default function ProjectCard({
   project,
-  isFavorite = false,
-  onToggleFavorite,
   onSelectProject,
   onBookSiteVisit,
   viewMode = "grid",
@@ -99,24 +96,6 @@ export default function ProjectCard({
               <span className="cpc-status-dot"></span>
               {statusText}
             </span>
-
-            <button
-              type="button"
-              className={`cpc-wishlist-btn ${isFavorite ? "is-fav" : ""}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite && onToggleFavorite(id);
-              }}
-              aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
-              title={isFavorite ? "Saved in Wishlist" : "Save Property"}
-            >
-              <Heart
-                size={16}
-                fill={isFavorite ? "#dfb743" : "none"}
-                color={isFavorite ? "#dfb743" : "#163057"}
-                strokeWidth={2.2}
-              />
-            </button>
           </div>
 
           {/* Bottom Approval Tag over image */}
@@ -250,24 +229,6 @@ export default function ProjectCard({
             <span className="cpc-status-dot"></span>
             {statusText}
           </span>
-
-          <button
-            type="button"
-            className={`cpc-wishlist-btn ${isFavorite ? "is-fav" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite && onToggleFavorite(id);
-            }}
-            aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
-            title={isFavorite ? "Saved in Wishlist" : "Save Property"}
-          >
-            <Heart
-              size={16}
-              fill={isFavorite ? "#dfb743" : "none"}
-              color={isFavorite ? "#dfb743" : "#163057"}
-              strokeWidth={2.2}
-            />
-          </button>
         </div>
 
         {/* Bottom Approval on Media (if available) */}

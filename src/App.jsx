@@ -62,16 +62,6 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState("list");
 
-  // Favorites state persisted in localStorage
-  const [favorites, setFavorites] = useState(() => {
-    try {
-      const saved = localStorage.getItem("crestora_favorites");
-      return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch {
-      return new Set();
-    }
-  });
-
   // Modal and drawer UI states
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -81,36 +71,12 @@ export default function App() {
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Sync favorites with localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem("crestora_favorites", JSON.stringify(Array.from(favorites)));
-    } catch (e) {
-      console.error("Could not persist favorites:", e);
-    }
-  }, [favorites]);
-
   // Toast notification helper
   const showToast = (message) => {
     setToastMessage(message);
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
-  };
-
-  // Toggle favorite status
-  const handleToggleFavorite = (id) => {
-    setFavorites((prev) => {
-      const updated = new Set(prev);
-      if (updated.has(id)) {
-        updated.delete(id);
-        showToast("Removed from saved favorites");
-      } else {
-        updated.add(id);
-        showToast("Added to your saved Crestora projects!");
-      }
-      return updated;
-    });
   };
 
   // Keep the address as a real path, and still open older # links.
@@ -389,7 +355,6 @@ export default function App() {
         onOpenSidebar={() => setIsSidebarOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
         onOpenBookVisit={() => handleOpenBookVisit()}
-        favoritesCount={favorites.size}
       />
 
       {/* 3. Mobile Slide-out Menu Drawer */}
@@ -464,8 +429,6 @@ export default function App() {
             {/* 9. Featured Residences & Plots Grid */}
             <HomeFeaturedProperties
               featuredProjects={projects.filter((p) => p.isPopular || p.isFeatured)}
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
               onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onViewAll={() => handleNavigate("projects")}
@@ -523,8 +486,6 @@ export default function App() {
           /* ==================== EXCLUSIVE PROJECTS SIGNATURE PAGE VIEW ==================== */
           <ExclusiveProjectsPage
             projects={projects}
-            favorites={favorites}
-            onToggleFavorite={handleToggleFavorite}
             onSelectProject={handleSelectProject}
             onBookSiteVisit={(project) => handleOpenBookVisit(project)}
             onNavigate={handleNavigate}
@@ -535,8 +496,6 @@ export default function App() {
           <ProjectDetailsPage
             project={selectedProject || projects[0]}
             allProjects={projects}
-            favorites={favorites}
-            onToggleFavorite={handleToggleFavorite}
             onBookSiteVisit={(project) => handleOpenBookVisit(project)}
             onBackToProjects={() => handleNavigate("projects")}
             onSelectProject={handleSelectProject}
@@ -572,8 +531,6 @@ export default function App() {
                 {/* Projects Grid with Pagination */}
                 <ProjectGrid
                   projects={displayedProjects}
-                  favorites={favorites}
-                  onToggleFavorite={handleToggleFavorite}
                   onSelectProject={handleSelectProject}
                   onBookSiteVisit={(project) => handleOpenBookVisit(project)}
                   onResetFilters={handleResetFilters}

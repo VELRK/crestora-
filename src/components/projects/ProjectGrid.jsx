@@ -5,8 +5,6 @@ import { Search, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 
 export default function ProjectGrid({
   projects = [],
-  favorites = new Set(),
-  onToggleFavorite,
   onSelectProject,
   onBookSiteVisit,
   onResetFilters,
@@ -81,8 +79,6 @@ export default function ProjectGrid({
           <ProjectCard
             key={project.id}
             project={project}
-            isFavorite={favorites.has(project.id)}
-            onToggleFavorite={onToggleFavorite}
             onSelectProject={onSelectProject}
             onBookSiteVisit={onBookSiteVisit}
             viewMode={viewMode}

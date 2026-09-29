@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { formatINR } from "../../services/api";
-import { X, MapPin, ShieldCheck, Heart, CheckCircle2, Phone, Calendar } from "lucide-react";
+import { X, MapPin, ShieldCheck, CheckCircle2, Phone, Calendar } from "lucide-react";
 
 export default function PropertyDetailsModal({
   project,
   onClose,
-  isFavorite,
-  onToggleFavorite,
   onBookSiteVisit,
 }) {
   const [activeImg, setActiveImg] = useState(null);

@@ -5,8 +5,6 @@ import { ArrowRight } from "lucide-react";
 
 export default function HomeFeaturedProperties({
   featuredProjects = [],
-  favorites = new Set(),
-  onToggleFavorite,
   onSelectProject,
   onBookSiteVisit,
   onViewAll,
@@ -43,8 +41,6 @@ export default function HomeFeaturedProperties({
             <ProjectCard
               key={project.id}
               project={project}
-              isFavorite={favorites.has(project.id)}
-              onToggleFavorite={onToggleFavorite}
               onSelectProject={onSelectProject}
               onBookSiteVisit={onBookSiteVisit}
             />

@@ -3916,31 +3916,6 @@ ol {
   box-shadow: 0 0 8px #3b82f6;
 }
 
-.cpc-wishlist-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.cpc-wishlist-btn:hover {
-  transform: scale(1.1);
-  background: #ffffff;
-}
-
-.cpc-wishlist-btn.is-fav {
-  background: #163057;
-  border-color: #dfb743;
-}
-
 .cpc-bottom-media-bar {
   position: absolute;
   bottom: 12px;
