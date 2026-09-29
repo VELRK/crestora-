@@ -198,33 +198,39 @@ function buildSpecificationRows(project = {}, ctx = {}) {
     return list;
   }
 
-  const rows = [
-    {
+  const rows = [];
+  if (ctx.title) {
+    rows.push({
       label: "Project Name",
       value: ctx.title,
       category: "Overview",
       icon: "Landmark",
-    },
-    {
+    });
+  }
+  if (ctx.location) {
+    rows.push({
       label: "Location & Corridor",
       value: ctx.location,
       category: "Overview",
       icon: "MapPin",
-    },
-    {
+    });
+  }
+  if (ctx.typeName) {
+    rows.push({
       label: "Development Type",
-      value: ctx.typeName || (ctx.category === "villa" ? "Exclusive Luxury Villas" : "Gated Villa Plots"),
+      value: ctx.typeName,
       category: "Overview",
       icon: "Building2",
-    },
-    {
+    });
+  }
+  if (ctx.statusLabel) {
+    rows.push({
       label: "Project Status",
-      value: ctx.statusLabel || "Ready for Construction & Registration",
+      value: ctx.statusLabel,
       category: "Overview",
       icon: "TrendingUp",
-    },
-  ];
-
+    });
+  }
   if (ctx.reraNumber) {
     rows.push({
       label: "TNRERA Reg. No.",
@@ -235,7 +241,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       verified: true,
     });
   }
-
   if (ctx.dtcpNumber || ctx.approval) {
     rows.push({
       label: "DTCP Sanction No.",
@@ -246,15 +251,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       verified: true,
     });
   }
-
-  rows.push({
-    label: "Land Title & Ownership",
-    value: "100% Clear Marketable Freehold Title (Vasthu Compliant)",
-    category: "Legal & Approvals",
-    icon: "Award",
-    verified: true,
-  });
-
   if (ctx.totalArea) {
     rows.push({
       label: "Total Land Parcel",
@@ -263,7 +259,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       icon: "Maximize2",
     });
   }
-
   if (ctx.totalUnits) {
     rows.push({
       label: "Total Units / Plots",
@@ -272,7 +267,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       icon: "Layers",
     });
   }
-
   if (ctx.area) {
     rows.push({
       label: "Plot / Built-up Area",
@@ -281,7 +275,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       icon: "Ruler",
     });
   }
-
   if (ctx.bhk) {
     rows.push({
       label: "Configuration",
@@ -290,41 +283,6 @@ function buildSpecificationRows(project = {}, ctx = {}) {
       icon: "Home",
     });
   }
-
-  rows.push({
-    label: "Internal Road Network",
-    value: "30 & 40 Feet Wide Heavy-Duty Tar Roads",
-    category: "Dimensions & Layout",
-    icon: "Milestone",
-  });
-
-  rows.push({
-    label: "Potable Water Supply",
-    value: "Dedicated Siruvani Drinking Water Pipeline & Borewell",
-    category: "Utilities & Infra",
-    icon: "Droplets",
-  });
-
-  rows.push({
-    label: "Electrical Infrastructure",
-    value: "Underground Cabling with Solar LED Street Illumination",
-    category: "Utilities & Infra",
-    icon: "Zap",
-  });
-
-  rows.push({
-    label: "Drainage & Sewerage",
-    value: "Engineered Storm Water & Underground Sewerage Network",
-    category: "Utilities & Infra",
-    icon: "Droplets",
-  });
-
-  rows.push({
-    label: "Perimeter & Security",
-    value: "Compound Wall Enclosure with 24/7 Security Cabin & CCTV",
-    category: "Utilities & Infra",
-    icon: "ShieldCheck",
-  });
 
   return rows.map(normalizeSpecItem);
 }
@@ -603,32 +561,42 @@ export default function ProjectDetailsPage({
     return specRows.filter((r) => r.category === activeSpecCategory);
   }, [specRows, activeSpecCategory]);
 
-  const quickStats = useMemo(() => [
-    {
-      label: "Total Land Extent",
-      value: totalArea || "10+ Acres",
-      icon: Maximize2,
-      sub: "Master Planned",
-    },
-    {
-      label: "Inventory / Units",
-      value: totalUnits || "Exclusive Plots",
-      icon: Layers,
-      sub: "Residential Enclave",
-    },
-    {
-      label: "Govt. Approval",
-      value: (reraNumber && dtcpNumber) ? "DTCP & TNRERA" : (reraNumber || dtcpNumber || "Approved Layout"),
-      icon: ShieldCheck,
-      sub: "Verified Sanctions",
-    },
-    {
-      label: "Configuration",
-      value: bhk || typeName || "Plotted Layout",
-      icon: Home,
-      sub: "Vasthu Compliant",
-    },
-  ], [totalArea, totalUnits, reraNumber, dtcpNumber, bhk, typeName]);
+  const quickStats = useMemo(() => {
+    const list = [];
+    if (totalArea) {
+      list.push({
+        label: "Total Land Extent",
+        value: totalArea,
+        icon: Maximize2,
+        sub: "Master Planned",
+      });
+    }
+    if (totalUnits) {
+      list.push({
+        label: "Inventory / Units",
+        value: totalUnits,
+        icon: Layers,
+        sub: "Residential Enclave",
+      });
+    }
+    if (reraNumber || dtcpNumber || approval) {
+      list.push({
+        label: "Govt. Approval",
+        value: (reraNumber && dtcpNumber) ? "DTCP & TNRERA" : (reraNumber || dtcpNumber || approval),
+        icon: ShieldCheck,
+        sub: "Verified Sanctions",
+      });
+    }
+    if (bhk || typeName) {
+      list.push({
+        label: "Configuration",
+        value: bhk || typeName,
+        icon: Home,
+        sub: "Vasthu Compliant",
+      });
+    }
+    return list;
+  }, [totalArea, totalUnits, reraNumber, dtcpNumber, approval, bhk, typeName]);
 
   const handleCopySpec = (text, label) => {
     if (navigator?.clipboard?.writeText) {
@@ -644,9 +612,34 @@ export default function ProjectDetailsPage({
   };
   const amenityCards = buildAmenityCards({ amenityDetails, amenities });
   const extraOverview = (overviewParagraphs || []).filter((p) => p && String(p).trim());
-  const planImage = masterPlanImage || fullGallery[1] || fullGallery[0];
   const plotSizeCards = (plotSizes || []).filter((p) => p?.badge || p?.sqft);
   const proximityItems = (proximity || []).filter((p) => p?.landmark);
+
+  const hasOverview = Boolean(description || extraOverview.length > 0 || highlights.length > 0);
+  const hasSpecs = specRows.length > 0;
+  const hasAmenities = amenityCards.length > 0;
+  const hasMasterPlan = Boolean(masterPlanImage || plotSizeCards.length > 0);
+  const hasVideo = Boolean(videoEmbed);
+  const hasProximity = proximityItems.length > 0;
+  const hasMap = Boolean(mapEmbedUrl || project.mapUrl || (project.location && project.location.trim()));
+
+  const availableTabs = useMemo(() => {
+    const tabs = [];
+    if (hasOverview) tabs.push("overview");
+    if (hasSpecs) tabs.push("specs");
+    if (hasAmenities) tabs.push("amenities");
+    if (hasMasterPlan) tabs.push("master-plan");
+    if (hasVideo) tabs.push("video");
+    if (hasProximity) tabs.push("connectivity");
+    if (hasMap) tabs.push("map");
+    return tabs;
+  }, [hasOverview, hasSpecs, hasAmenities, hasMasterPlan, hasVideo, hasProximity, hasMap]);
+
+  useEffect(() => {
+    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
+      setActiveTab(availableTabs[0]);
+    }
+  }, [availableTabs, activeTab]);
 
   // Form Submit handler
   const handleFormSubmit = (e) => {
@@ -720,6 +713,21 @@ export default function ProjectDetailsPage({
       navigator.clipboard?.writeText(window.location.href);
       if (showToast) showToast("Link copied to clipboard!");
     }
+  };
+
+  // Master Plan Download trigger
+  const handleDownloadMasterPlan = () => {
+    if (!masterPlanImage) return;
+    if (showToast) {
+      showToast(`Master Plan for ${title} is ready! Starting download...`);
+    }
+    const link = document.createElement("a");
+    link.href = masterPlanImage;
+    const isPdf = masterPlanImage.toLowerCase().endsWith(".pdf");
+    link.download = `${title.replace(/\s+/g, "_")}_Master_Plan.${isPdf ? "pdf" : "jpg"}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Brochure Download trigger
@@ -858,26 +866,34 @@ export default function ProjectDetailsPage({
               <div className="pdp-location-row">
                 <MapPin size={16} className="pdp-map-icon" />
                 <span>{location}</span>
-                <span className="pdp-loc-dot">•</span>
-                <a
-                  href="#location-map"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById("location-map")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="pdp-map-link"
-                >
-                  View on Map <Map size={12} />
-                </a>
-                <span className="pdp-loc-dot">•</span>
-                <a
-                  href={mapHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pdp-map-link"
-                >
-                  Open in Google Maps <ExternalLink size={12} />
-                </a>
+                {hasMap && (
+                  <>
+                    <span className="pdp-loc-dot">•</span>
+                    <a
+                      href="#location-map"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        document.getElementById("location-map")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="pdp-map-link"
+                    >
+                      View on Map <Map size={12} />
+                    </a>
+                  </>
+                )}
+                {mapHref && (
+                  <>
+                    <span className="pdp-loc-dot">•</span>
+                    <a
+                      href={mapHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pdp-map-link"
+                    >
+                      Open in Google Maps <ExternalLink size={12} />
+                    </a>
+                  </>
+                )}
               </div>
             </div>
 
@@ -1020,35 +1036,43 @@ export default function ProjectDetailsPage({
           <div className="pdp-details-col">
             {/* Quick Section Anchor Nav */}
             <nav className="pdp-section-jump-tabs" aria-label="Project Sections">
-              <a
-                href="#overview"
-                className={`pdp-tab-item ${activeTab === "overview" ? "active" : ""}`}
-                onClick={() => setActiveTab("overview")}
-              >
-                Overview
-              </a>
-              <a
-                href="#specs"
-                className={`pdp-tab-item ${activeTab === "specs" ? "active" : ""}`}
-                onClick={() => setActiveTab("specs")}
-              >
-                Specifications
-              </a>
-              <a
-                href="#amenities"
-                className={`pdp-tab-item ${activeTab === "amenities" ? "active" : ""}`}
-                onClick={() => setActiveTab("amenities")}
-              >
-                Amenities
-              </a>
-              <a
-                href="#master-plan"
-                className={`pdp-tab-item ${activeTab === "master-plan" ? "active" : ""}`}
-                onClick={() => setActiveTab("master-plan")}
-              >
-                Master Layout
-              </a>
-              {videoEmbed ? (
+              {hasOverview && (
+                <a
+                  href="#overview"
+                  className={`pdp-tab-item ${activeTab === "overview" ? "active" : ""}`}
+                  onClick={() => setActiveTab("overview")}
+                >
+                  Overview
+                </a>
+              )}
+              {hasSpecs && (
+                <a
+                  href="#specs"
+                  className={`pdp-tab-item ${activeTab === "specs" ? "active" : ""}`}
+                  onClick={() => setActiveTab("specs")}
+                >
+                  Specifications
+                </a>
+              )}
+              {hasAmenities && (
+                <a
+                  href="#amenities"
+                  className={`pdp-tab-item ${activeTab === "amenities" ? "active" : ""}`}
+                  onClick={() => setActiveTab("amenities")}
+                >
+                  Amenities
+                </a>
+              )}
+              {hasMasterPlan && (
+                <a
+                  href="#master-plan"
+                  className={`pdp-tab-item ${activeTab === "master-plan" ? "active" : ""}`}
+                  onClick={() => setActiveTab("master-plan")}
+                >
+                  Master Layout
+                </a>
+              )}
+              {hasVideo && (
                 <a
                   href="#video-tour"
                   className={`pdp-tab-item ${activeTab === "video" ? "active" : ""}`}
@@ -1056,55 +1080,59 @@ export default function ProjectDetailsPage({
                 >
                   Video Tour
                 </a>
-              ) : null}
-              <a
-                href="#connectivity"
-                className={`pdp-tab-item ${activeTab === "connectivity" ? "active" : ""}`}
-                onClick={() => setActiveTab("connectivity")}
-              >
-                Proximity
-              </a>
-              <a
-                href="#location-map"
-                className={`pdp-tab-item ${activeTab === "map" ? "active" : ""}`}
-                onClick={() => setActiveTab("map")}
-              >
-                Location Map
-              </a>
-
-
+              )}
+              {hasProximity && (
+                <a
+                  href="#connectivity"
+                  className={`pdp-tab-item ${activeTab === "connectivity" ? "active" : ""}`}
+                  onClick={() => setActiveTab("connectivity")}
+                >
+                  Proximity
+                </a>
+              )}
+              {hasMap && (
+                <a
+                  href="#location-map"
+                  className={`pdp-tab-item ${activeTab === "map" ? "active" : ""}`}
+                  onClick={() => setActiveTab("map")}
+                >
+                  Location Map
+                </a>
+              )}
             </nav>
 
             {/* SECTION 1: Overview */}
-            <section id="overview" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <span className="pdp-gold-eyebrow">DEVELOPMENT OVERVIEW</span>
-                <h2 className="pdp-section-heading">
-                  About <span>{title}</span>
-                </h2>
-              </div>
+            {hasOverview && (
+              <section id="overview" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">DEVELOPMENT OVERVIEW</span>
+                  <h2 className="pdp-section-heading">
+                    About <span>{title}</span>
+                  </h2>
+                </div>
 
-              <div className="pdp-narrative-text">
-                {description ? <p>{description}</p> : null}
-                {extraOverview.map((paragraph, idx) => (
-                  <p key={idx}>{paragraph}</p>
-                ))}
-              </div>
-
-              {/* Architectural Highlights Grid */}
-              {highlights.length > 0 && (
-                <div className="pdp-highlights-grid">
-                  {highlights.map((highlight, idx) => (
-                    <div key={idx} className="pdp-highlight-item">
-                      <div className="pdp-highlight-icon-wrap">
-                        <CheckCircle2 size={18} color="#dfb743" />
-                      </div>
-                      <div className="pdp-highlight-text">{highlight}</div>
-                    </div>
+                <div className="pdp-narrative-text">
+                  {description ? <p>{description}</p> : null}
+                  {extraOverview.map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
                   ))}
                 </div>
-              )}
-            </section>
+
+                {/* Architectural Highlights Grid */}
+                {highlights.length > 0 && (
+                  <div className="pdp-highlights-grid">
+                    {highlights.map((highlight, idx) => (
+                      <div key={idx} className="pdp-highlight-item">
+                        <div className="pdp-highlight-icon-wrap">
+                          <CheckCircle2 size={18} color="#dfb743" />
+                        </div>
+                        <div className="pdp-highlight-text">{highlight}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* SECTION 2: Why Choose / Theme Features */}
             {whyPoints.length > 0 && (
@@ -1136,177 +1164,181 @@ export default function ProjectDetailsPage({
             )}
 
             {/* SECTION 3: Technical Specifications Matrix */}
-            <section id="specs" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <div className="pdp-specs-header-meta">
-                  <span className="pdp-gold-eyebrow">TECHNICAL DETAILS</span>
-                  <span className="pdp-specs-verified-seal">
-                    <ShieldCheck size={13} color="#059669" />
-                    <span>Government Sanctioned &amp; Compliant</span>
-                  </span>
+            {hasSpecs && (
+              <section id="specs" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <div className="pdp-specs-header-meta">
+                    <span className="pdp-gold-eyebrow">TECHNICAL DETAILS</span>
+                    <span className="pdp-specs-verified-seal">
+                      <ShieldCheck size={13} color="#059669" />
+                      <span>Government Sanctioned &amp; Compliant</span>
+                    </span>
+                  </div>
+                  <div className="pdp-section-title-split">
+                    <h2 className="pdp-section-heading" style={{ margin: 0 }}>
+                      Project <span>Specifications</span>
+                    </h2>
+                    <div className="pdp-specs-header-actions">
+                      <button
+                        type="button"
+                        className="crestora-btn crestora-btn-outline pdp-specs-header-btn"
+                        onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+                      >
+                        <FileCheck size={14} />
+                        <span>Request Legal Dossier</span>
+                      </button>
+                    </div>
+                  </div>
+                  <p style={{ color: "#64748b", margin: "10px 0 0", fontSize: "14px", lineHeight: "1.6" }}>
+                    {specsIntro ||
+                      `Comprehensive engineering specifications, government sanction identifiers, land dimensions, and infrastructure details for ${title}.`}
+                  </p>
                 </div>
-                <div className="pdp-section-title-split">
-                  <h2 className="pdp-section-heading" style={{ margin: 0 }}>
-                    Project <span>Specifications</span>
-                  </h2>
-                  <div className="pdp-specs-header-actions">
+
+                {/* Quick High-Impact Technical Metrics */}
+                {quickStats.length > 0 && (
+                  <div className="pdp-specs-quick-stats">
+                    {quickStats.map((stat, idx) => {
+                      const StatIcon = stat.icon;
+                      return (
+                        <div key={idx} className="pdp-spec-stat-card">
+                          <div className="pdp-spec-stat-icon">
+                            <StatIcon size={20} />
+                          </div>
+                          <div className="pdp-spec-stat-info">
+                            <div className="pdp-spec-stat-label">{stat.label}</div>
+                            <div className="pdp-spec-stat-val">{stat.value}</div>
+                            <div className="pdp-spec-stat-sub">{stat.sub}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Category Filter Tabs */}
+                {specCategories.length > 2 && (
+                  <div className="pdp-specs-nav" role="tablist" aria-label="Specification Categories">
+                    {specCategories.map((catKey) => {
+                      const count = catKey === "all" ? specRows.length : specRows.filter((r) => r.category === catKey).length;
+                      const displayLabel = catKey === "all" ? "All Specifications" : catKey;
+                      return (
+                        <button
+                          key={catKey}
+                          type="button"
+                          className={`pdp-specs-tab-btn ${activeSpecCategory === catKey ? "active" : ""}`}
+                          onClick={() => setActiveSpecCategory(catKey)}
+                          role="tab"
+                          aria-selected={activeSpecCategory === catKey}
+                        >
+                          <span>{displayLabel}</span>
+                          <span className="pdp-tab-count">{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Specifications Cards Grid */}
+                {filteredSpecRows.length > 0 ? (
+                  <div className="pdp-specs-grid">
+                    {filteredSpecRows.map((item, idx) => {
+                      const IconComp = resolveLucideIcon(item.icon, Building2);
+                      const isCopied = copiedSpec === item.label;
+                      return (
+                        <div
+                          key={idx}
+                          className={`pdp-spec-card ${item.verified ? "highlighted-approval" : ""}`}
+                        >
+                          <div className="pdp-spec-icon-box">
+                            <IconComp size={20} />
+                          </div>
+                          <div className="pdp-spec-content">
+                            <div className="pdp-spec-top-meta">
+                              <span className="pdp-spec-label">{item.label}</span>
+                              {item.category && item.category !== "Overview" ? (
+                                <span className="pdp-spec-category-tag">{item.category}</span>
+                              ) : null}
+                            </div>
+                            <div className="pdp-spec-val-row">
+                              <div className="pdp-spec-val">{item.value}</div>
+                              {item.copyable ? (
+                                <button
+                                  type="button"
+                                  className={`pdp-spec-copy-btn ${isCopied ? "copied" : ""}`}
+                                  onClick={() => handleCopySpec(item.value, item.label)}
+                                  title={`Copy ${item.label}`}
+                                  aria-label={`Copy ${item.label}`}
+                                >
+                                  {isCopied ? (
+                                    <>
+                                      <Check size={12} />
+                                      <span>Copied!</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy size={12} />
+                                      <span>Copy</span>
+                                    </>
+                                  )}
+                                </button>
+                              ) : null}
+                            </div>
+                            {item.verified ? (
+                              <div className="pdp-spec-verified-badge">
+                                <ShieldCheck size={12} />
+                                <span>Verified Government Sanction</span>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
+                {/* Compliance & Document Trust Banner */}
+                <div className="pdp-specs-compliance-banner">
+                  <div className="pdp-compliance-left">
+                    <div className="pdp-compliance-shield">
+                      <ShieldCheck size={26} />
+                    </div>
+                    <div className="pdp-compliance-text">
+                      <h4>100% Legal Transparency &amp; Verified Clear Titles</h4>
+                      <p>
+                        All plot layouts, internal road widths, and underground service networks adhere strictly to DTCP and TNRERA sanction guidelines. Certified parent documents and encumbrance certificates are available for verification.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pdp-compliance-action">
                     <button
                       type="button"
-                      className="crestora-btn crestora-btn-outline pdp-specs-header-btn"
+                      className="pdp-compliance-btn"
                       onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
                     >
-                      <FileCheck size={14} />
-                      <span>Request Legal Dossier</span>
+                      <FileCheck size={15} />
+                      <span>REQUEST LEGAL DOSSIER</span>
                     </button>
                   </div>
                 </div>
-                <p style={{ color: "#64748b", margin: "10px 0 0", fontSize: "14px", lineHeight: "1.6" }}>
-                  {specsIntro ||
-                    `Comprehensive engineering specifications, government sanction identifiers, land dimensions, and infrastructure details for ${title}.`}
-                </p>
-              </div>
-
-              {/* Quick High-Impact Technical Metrics */}
-              <div className="pdp-specs-quick-stats">
-                {quickStats.map((stat, idx) => {
-                  const StatIcon = stat.icon;
-                  return (
-                    <div key={idx} className="pdp-spec-stat-card">
-                      <div className="pdp-spec-stat-icon">
-                        <StatIcon size={20} />
-                      </div>
-                      <div className="pdp-spec-stat-info">
-                        <div className="pdp-spec-stat-label">{stat.label}</div>
-                        <div className="pdp-spec-stat-val">{stat.value}</div>
-                        <div className="pdp-spec-stat-sub">{stat.sub}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Category Filter Tabs */}
-              {specCategories.length > 2 && (
-                <div className="pdp-specs-nav" role="tablist" aria-label="Specification Categories">
-                  {specCategories.map((catKey) => {
-                    const count = catKey === "all" ? specRows.length : specRows.filter((r) => r.category === catKey).length;
-                    const displayLabel = catKey === "all" ? "All Specifications" : catKey;
-                    return (
-                      <button
-                        key={catKey}
-                        type="button"
-                        className={`pdp-specs-tab-btn ${activeSpecCategory === catKey ? "active" : ""}`}
-                        onClick={() => setActiveSpecCategory(catKey)}
-                        role="tab"
-                        aria-selected={activeSpecCategory === catKey}
-                      >
-                        <span>{displayLabel}</span>
-                        <span className="pdp-tab-count">{count}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Specifications Cards Grid */}
-              {filteredSpecRows.length > 0 ? (
-                <div className="pdp-specs-grid">
-                  {filteredSpecRows.map((item, idx) => {
-                    const IconComp = resolveLucideIcon(item.icon, Building2);
-                    const isCopied = copiedSpec === item.label;
-                    return (
-                      <div
-                        key={idx}
-                        className={`pdp-spec-card ${item.verified ? "highlighted-approval" : ""}`}
-                      >
-                        <div className="pdp-spec-icon-box">
-                          <IconComp size={20} />
-                        </div>
-                        <div className="pdp-spec-content">
-                          <div className="pdp-spec-top-meta">
-                            <span className="pdp-spec-label">{item.label}</span>
-                            {item.category && item.category !== "Overview" ? (
-                              <span className="pdp-spec-category-tag">{item.category}</span>
-                            ) : null}
-                          </div>
-                          <div className="pdp-spec-val-row">
-                            <div className="pdp-spec-val">{item.value}</div>
-                            {item.copyable ? (
-                              <button
-                                type="button"
-                                className={`pdp-spec-copy-btn ${isCopied ? "copied" : ""}`}
-                                onClick={() => handleCopySpec(item.value, item.label)}
-                                title={`Copy ${item.label}`}
-                                aria-label={`Copy ${item.label}`}
-                              >
-                                {isCopied ? (
-                                  <>
-                                    <Check size={12} />
-                                    <span>Copied!</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy size={12} />
-                                    <span>Copy</span>
-                                  </>
-                                )}
-                              </button>
-                            ) : null}
-                          </div>
-                          {item.verified ? (
-                            <div className="pdp-spec-verified-badge">
-                              <ShieldCheck size={12} />
-                              <span>Verified Government Sanction</span>
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
-
-              {/* Compliance & Document Trust Banner */}
-              <div className="pdp-specs-compliance-banner">
-                <div className="pdp-compliance-left">
-                  <div className="pdp-compliance-shield">
-                    <ShieldCheck size={26} />
-                  </div>
-                  <div className="pdp-compliance-text">
-                    <h4>100% Legal Transparency &amp; Verified Clear Titles</h4>
-                    <p>
-                      All plot layouts, internal road widths, and underground service networks adhere strictly to DTCP and TNRERA sanction guidelines. Certified parent documents and encumbrance certificates are available for verification.
-                    </p>
-                  </div>
-                </div>
-                <div className="pdp-compliance-action">
-                  <button
-                    type="button"
-                    className="pdp-compliance-btn"
-                    onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
-                  >
-                    <FileCheck size={15} />
-                    <span>REQUEST LEGAL DOSSIER</span>
-                  </button>
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* SECTION 4: Amenities & Infrastructure */}
-            <section id="amenities" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <span className="pdp-gold-eyebrow">PREMIUM INFRASTRUCTURE</span>
-                <h2 className="pdp-section-heading">
-                  Community <span>Amenities</span>
-                </h2>
-                {amenitiesIntro ? (
-                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                    {amenitiesIntro}
-                  </p>
-                ) : null}
-              </div>
+            {hasAmenities && (
+              <section id="amenities" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">PREMIUM INFRASTRUCTURE</span>
+                  <h2 className="pdp-section-heading">
+                    Community <span>Amenities</span>
+                  </h2>
+                  {amenitiesIntro ? (
+                    <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                      {amenitiesIntro}
+                    </p>
+                  ) : null}
+                </div>
 
-              {amenityCards.length > 0 ? (
                 <div className="pdp-amenities-grid">
                   {amenityCards.map((item, idx) => {
                     const IconComp = resolveLucideIcon(item.icon, CheckCircle2);
@@ -1323,62 +1355,66 @@ export default function ProjectDetailsPage({
                     );
                   })}
                 </div>
-              ) : null}
-            </section>
+              </section>
+            )}
 
             {/* SECTION 5: Master Plan & Plot Configurations */}
-            <section id="master-plan" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <span className="pdp-gold-eyebrow">ARCHITECTURAL BLUEPRINT</span>
-                <h2 className="pdp-section-heading">
-                  Master Layout <span>Plan</span>
-                </h2>
-                {masterPlanIntro ? (
-                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                    {masterPlanIntro}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="pdp-master-plan-box">
-                <div className="pdp-plan-visual-wrap">
-                  <img
-                    src={planImage}
-                    alt={`${title} Master Plan Layout`}
-                    className="pdp-plan-img"
-                  />
-                  <div className="pdp-plan-overlay">
-                    <button
-                      type="button"
-                      className="crestora-btn crestora-btn-gold pdp-plan-download-btn"
-                      onClick={handleDownloadBrochure}
-                    >
-                      <Download size={15} />
-                      <span className="pdp-btn-text-full">DOWNLOAD HIGH-RES MASTER PLAN (PDF)</span>
-                      <span className="pdp-btn-text-short">DOWNLOAD PLAN (PDF)</span>
-                    </button>
-                  </div>
+            {hasMasterPlan && (
+              <section id="master-plan" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">ARCHITECTURAL BLUEPRINT</span>
+                  <h2 className="pdp-section-heading">
+                    Master Layout <span>Plan</span>
+                  </h2>
+                  {masterPlanIntro ? (
+                    <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                      {masterPlanIntro}
+                    </p>
+                  ) : null}
                 </div>
 
-                {plotSizeCards.length > 0 ? (
-                  <div className="pdp-plot-sizes-strip">
-                    {plotSizeCards.map((size, idx) => (
-                      <div
-                        key={idx}
-                        className={`pdp-plot-size-card${size.highlight ? " highlight" : ""}`}
-                      >
-                        <div className="pdp-size-badge">{size.badge}</div>
-                        <div className="pdp-size-sqft">{size.sqft}</div>
-                        {size.ideal ? <div className="pdp-size-ideal">{size.ideal}</div> : null}
+                <div className="pdp-master-plan-box">
+                  {masterPlanImage ? (
+                    <div className="pdp-plan-visual-wrap">
+                      <img
+                        src={masterPlanImage}
+                        alt={`${title} Master Plan Layout`}
+                        className="pdp-plan-img"
+                      />
+                      <div className="pdp-plan-overlay">
+                        <button
+                          type="button"
+                          className="crestora-btn crestora-btn-gold pdp-plan-download-btn"
+                          onClick={handleDownloadMasterPlan}
+                        >
+                          <Download size={15} />
+                          <span className="pdp-btn-text-full">DOWNLOAD HIGH-RES MASTER PLAN (PDF)</span>
+                          <span className="pdp-btn-text-short">DOWNLOAD PLAN (PDF)</span>
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </section>
+                    </div>
+                  ) : null}
+
+                  {plotSizeCards.length > 0 ? (
+                    <div className="pdp-plot-sizes-strip">
+                      {plotSizeCards.map((size, idx) => (
+                        <div
+                          key={idx}
+                          className={`pdp-plot-size-card${size.highlight ? " highlight" : ""}`}
+                        >
+                          <div className="pdp-size-badge">{size.badge}</div>
+                          <div className="pdp-size-sqft">{size.sqft}</div>
+                          {size.ideal ? <div className="pdp-size-ideal">{size.ideal}</div> : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </section>
+            )}
 
             {/* SECTION: Video Walkthrough */}
-            {videoEmbed ? (
+            {hasVideo && (
               <section id="video-tour" className="pdp-section-block">
                 <div className="pdp-section-header">
                   <span className="pdp-gold-eyebrow">EXCLUSIVE 4K VIRTUAL TOUR</span>
@@ -1435,23 +1471,23 @@ export default function ProjectDetailsPage({
                   </div>
                 </div>
               </section>
-            ) : null}
+            )}
 
             {/* SECTION 6: Location & Connectivity Table */}
-            {/* <section id="connectivity" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <span className="pdp-gold-eyebrow">STRATEGIC PROXIMITY</span>
-                <h2 className="pdp-section-heading">
-                  Location &amp; <span>Connectivity</span>
-                </h2>
-                {proximityIntro ? (
-                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                    {proximityIntro}
-                  </p>
-                ) : null}
-              </div>
+            {hasProximity && (
+              <section id="connectivity" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">STRATEGIC PROXIMITY</span>
+                  <h2 className="pdp-section-heading">
+                    Location &amp; <span>Connectivity</span>
+                  </h2>
+                  {proximityIntro ? (
+                    <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                      {proximityIntro}
+                    </p>
+                  ) : null}
+                </div>
 
-              {proximityItems.length > 0 ? (
                 <div className="pdp-connectivity-grid">
                   {proximityItems.map((item, idx) => (
                     <div key={idx} className="pdp-proximity-card">
@@ -1473,91 +1509,93 @@ export default function ProjectDetailsPage({
                     </div>
                   ))}
                 </div>
-              ) : null}
-            </section> */}
+              </section>
+            )}
 
             {/* SECTION 7: Interactive Location Map & Navigation */}
-            <section id="location-map" className="pdp-section-block">
-              <div className="pdp-section-header">
-                <span className="pdp-gold-eyebrow">GEOGRAPHIC LOCATION &amp; MAP</span>
-                <div className="pdp-section-title-split">
-                  <h2 className="pdp-section-heading" style={{ margin: 0 }}>
-                    Location <span>Map &amp; Directions</span>
-                  </h2>
-                  <div className="pdp-map-header-actions">
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${title} ${location}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="crestora-btn crestora-btn-gold pdp-map-dir-btn"
-                    >
-                      <Navigation size={14} />
-                      <span>Get Driving Directions</span>
-                    </a>
-                    <a
-                      href={mapHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="crestora-btn crestora-btn-outline pdp-map-ext-btn"
-                    >
-                      <span>Open Google Maps</span>
-                      <ExternalLink size={13} />
-                    </a>
-                  </div>
-                </div>
-                <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
-                  Explore the exact location of {title} in {location}. Zoom and pan the interactive map below or click to start turn-by-turn navigation.
-                </p>
-              </div>
-
-              <div className="pdp-interactive-map-card">
-                <div className="pdp-map-info-bar">
-                  <div className="pdp-map-info-left">
-                    <div className="pdp-map-pin-badge">
-                      <MapPin size={18} color="#dfb743" />
-                    </div>
-                    <div>
-                      <div className="pdp-map-address-title">{title}</div>
-                      <div className="pdp-map-address-text">{location}</div>
+            {hasMap && (
+              <section id="location-map" className="pdp-section-block">
+                <div className="pdp-section-header">
+                  <span className="pdp-gold-eyebrow">GEOGRAPHIC LOCATION &amp; MAP</span>
+                  <div className="pdp-section-title-split">
+                    <h2 className="pdp-section-heading" style={{ margin: 0 }}>
+                      Location <span>Map &amp; Directions</span>
+                    </h2>
+                    <div className="pdp-map-header-actions">
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${title} ${location}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="crestora-btn crestora-btn-gold pdp-map-dir-btn"
+                      >
+                        <Navigation size={14} />
+                        <span>Get Driving Directions</span>
+                      </a>
+                      <a
+                        href={mapHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="crestora-btn crestora-btn-outline pdp-map-ext-btn"
+                      >
+                        <span>Open Google Maps</span>
+                        <ExternalLink size={13} />
+                      </a>
                     </div>
                   </div>
-                  <div className="pdp-map-info-right">
-                    <span className="pdp-map-status-pill">
-                      <ShieldCheck size={13} color="#10b981" />
-                      <span>Geotagged &amp; Verified Site</span>
-                    </span>
-                  </div>
+                  <p style={{ color: "#64748b", margin: "8px 0 0", fontSize: "14px" }}>
+                    Explore the exact location of {title} in {location}. Zoom and pan the interactive map below or click to start turn-by-turn navigation.
+                  </p>
                 </div>
 
-                <div className="pdp-map-embed-wrapper">
-                  <iframe
-                    title={`${title} Location Map`}
-                    src={mapEmbedUrl}
-                    width="100%"
-                    height="380"
-                    style={{ border: 0, display: "block" }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                </div>
-
-                <div className="pdp-map-cta-bar">
-                  <div className="pdp-map-cta-text">
-                    <strong>Planning a visit to {title}?</strong>
-                    <span>We offer complimentary door-step cab pickup and expert site accompaniment.</span>
+                <div className="pdp-interactive-map-card">
+                  <div className="pdp-map-info-bar">
+                    <div className="pdp-map-info-left">
+                      <div className="pdp-map-pin-badge">
+                        <MapPin size={18} color="#dfb743" />
+                      </div>
+                      <div>
+                        <div className="pdp-map-address-title">{title}</div>
+                        <div className="pdp-map-address-text">{location}</div>
+                      </div>
+                    </div>
+                    <div className="pdp-map-info-right">
+                      <span className="pdp-map-status-pill">
+                        <ShieldCheck size={13} color="#10b981" />
+                        <span>Geotagged &amp; Verified Site</span>
+                      </span>
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    className="crestora-btn crestora-btn-gold pdp-map-pickup-btn"
-                    onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
-                  >
-                    <span>SCHEDULE FREE CAB PICKUP</span>
-                    <span className="btn-arrow-hover">→</span>
-                  </button>
+
+                  <div className="pdp-map-embed-wrapper">
+                    <iframe
+                      title={`${title} Location Map`}
+                      src={mapEmbedUrl}
+                      width="100%"
+                      height="380"
+                      style={{ border: 0, display: "block" }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+
+                  <div className="pdp-map-cta-bar">
+                    <div className="pdp-map-cta-text">
+                      <strong>Planning a visit to {title}?</strong>
+                      <span>We offer complimentary door-step cab pickup and expert site accompaniment.</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="crestora-btn crestora-btn-gold pdp-map-pickup-btn"
+                      onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+                    >
+                      <span>SCHEDULE FREE CAB PICKUP</span>
+                      <span className="btn-arrow-hover">→</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
 
           </div>
