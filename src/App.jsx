@@ -33,6 +33,7 @@ import BlogDetailsPage from "./components/blogs/BlogDetailsPage";
 import ContactPage from "./components/contact/ContactPage";
 import ExclusiveProjectsPage from "./components/exclusive/ExclusiveProjectsPage";
 
+import { crestoraApi } from "./services/api";
 import { useSite } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
@@ -145,6 +146,14 @@ export default function App() {
           setActivePage("project-details");
           return;
         }
+        crestoraApi
+          .project(id)
+          .then((res) => {
+            if (res?.data) {
+              setSelectedProject(res.data);
+            }
+          })
+          .catch(() => {});
         setActivePage("project-details");
         return;
       }
