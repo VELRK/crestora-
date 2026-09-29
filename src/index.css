@@ -5220,11 +5220,426 @@ ol {
   line-height: 1.5;
 }
 
-/* Technical Specifications Table */
+/* Technical Specifications Section */
+.pdp-specs-header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.pdp-specs-verified-seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.pdp-specs-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp-specs-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border-radius: 6px;
+}
+
+/* Quick Metrics / Executive Stat Cards */
+.pdp-specs-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 22px 0 26px;
+}
+
+.pdp-spec-stat-card {
+  background: #ffffff;
+  border: 1px solid #e9edf2;
+  border-radius: 12px;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.pdp-spec-stat-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: #dfb743;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.pdp-spec-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(223, 183, 67, 0.6);
+  box-shadow: 0 10px 24px -4px rgba(223, 183, 67, 0.16);
+}
+
+.pdp-spec-stat-card:hover::after {
+  opacity: 1;
+}
+
+.pdp-spec-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fbf7ee 0%, #fef3c7 100%);
+  color: #b48518;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(223, 183, 67, 0.25);
+}
+
+.pdp-spec-stat-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.pdp-spec-stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdp-spec-stat-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0b1a2e;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdp-spec-stat-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Category Filter Tabs */
+.pdp-specs-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.pdp-specs-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pdp-specs-tab-btn:hover {
+  background: #f1f5f9;
+  color: #0b1a2e;
+  border-color: #cbd5e1;
+}
+
+.pdp-specs-tab-btn.active {
+  background: #0b1a2e;
+  color: #ffffff;
+  border-color: #0b1a2e;
+  box-shadow: 0 4px 12px rgba(11, 26, 46, 0.16);
+}
+
+.pdp-specs-tab-btn.active .pdp-tab-count {
+  background: #dfb743;
+  color: #0b1a2e;
+}
+
+.pdp-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+/* Specification Cards Grid */
+.pdp-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pdp-spec-card {
+  background: #ffffff;
+  border: 1px solid #e8ecf2;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.pdp-spec-card:hover {
+  transform: translateY(-2px);
+  border-color: #dfb743;
+  box-shadow: 0 10px 24px -4px rgba(223, 183, 67, 0.18);
+}
+
+.pdp-spec-card.highlighted-approval {
+  background: linear-gradient(145deg, #ffffff 0%, #fffdf8 100%);
+  border-color: rgba(223, 183, 67, 0.4);
+}
+
+.pdp-spec-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fbf7ee;
+  color: #b48518;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(223, 183, 67, 0.25);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.pdp-spec-card:hover .pdp-spec-icon-box {
+  background: #dfb743;
+  color: #0b1a2e;
+  transform: scale(1.06);
+}
+
+.pdp-spec-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdp-spec-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.pdp-spec-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.pdp-spec-category-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.pdp-spec-val-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pdp-spec-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1a2e;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.pdp-spec-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pdp-spec-copy-btn:hover {
+  background: #dfb743;
+  color: #0b1a2e;
+  border-color: #dfb743;
+}
+
+.pdp-spec-copy-btn.copied {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.pdp-spec-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+/* Compliance Banner */
+.pdp-specs-compliance-banner {
+  margin-top: 24px;
+  background: linear-gradient(135deg, #0b1a2e 0%, #163057 100%);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(11, 26, 46, 0.16);
+  border: 1px solid rgba(223, 183, 67, 0.35);
+}
+
+.pdp-compliance-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.pdp-compliance-shield {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(223, 183, 67, 0.15);
+  border: 1.5px solid #dfb743;
+  color: #dfb743;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pdp-compliance-text h4 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.pdp-compliance-text p {
+  margin: 0;
+  font-size: 12.5px;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.pdp-compliance-action {
+  flex-shrink: 0;
+}
+
+.pdp-compliance-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #dfb743;
+  color: #0b1a2e;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pdp-compliance-btn:hover {
+  background: #f0c958;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(223, 183, 67, 0.35);
+}
+
+/* Backward-compatible fallback for pdp-specs-table */
 .pdp-specs-table-wrap {
   overflow-x: auto;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .pdp-specs-table {
@@ -6693,7 +7108,106 @@ body:has(.project-details-page) .side-action-rail {
     line-height: 1.4;
   }
 
-  /* Specifications Table -> Mobile Cards */
+  /* Technical Specifications Section -> Mobile Responsive */
+  .pdp-specs-quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 16px 0 20px;
+  }
+
+  .pdp-spec-stat-card {
+    padding: 12px 12px;
+    gap: 10px;
+  }
+
+  .pdp-spec-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .pdp-spec-stat-label {
+    font-size: 10px;
+  }
+
+  .pdp-spec-stat-val {
+    font-size: 13.5px;
+  }
+
+  .pdp-spec-stat-sub {
+    font-size: 10px;
+  }
+
+  .pdp-specs-nav {
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .pdp-specs-tab-btn {
+    padding: 6px 12px;
+    font-size: 11.5px;
+  }
+
+  .pdp-specs-grid {
+    grid-template-columns: 100%;
+    gap: 12px;
+  }
+
+  .pdp-spec-card {
+    padding: 14px 14px;
+    gap: 12px;
+  }
+
+  .pdp-spec-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .pdp-spec-val-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pdp-spec-val {
+    font-size: 13.5px;
+  }
+
+  .pdp-specs-compliance-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 18px;
+    gap: 14px;
+  }
+
+  .pdp-compliance-left {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pdp-compliance-shield {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pdp-compliance-text h4 {
+    font-size: 14px;
+  }
+
+  .pdp-compliance-text p {
+    font-size: 12px;
+  }
+
+  .pdp-compliance-action {
+    width: 100%;
+  }
+
+  .pdp-compliance-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Specifications Table -> Mobile Cards Fallback */
   .pdp-specs-table-wrap {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
