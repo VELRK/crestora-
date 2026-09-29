@@ -111,29 +111,18 @@ export default function ExclusiveProjectsPage({
       list = list.filter((p) => (p.status || "").toLowerCase() === statusFilter.toLowerCase());
     }
 
-    // 5. Budget Filter
-    if (budgetFilter === "under-50") {
-      list = list.filter((p) => p.price && p.price < 5000000);
-    } else if (budgetFilter === "50-100") {
-      list = list.filter((p) => p.price && p.price >= 5000000 && p.price <= 10000000);
-    } else if (budgetFilter === "above-100") {
-      list = list.filter((p) => p.price && p.price > 10000000);
-    }
-
     // 6. Sorting
-    if (sortBy === "price-desc") {
-      list.sort((a, b) => (b.price || 0) - (a.price || 0));
-    } else if (sortBy === "price-asc") {
-      list.sort((a, b) => (a.price || 0) - (b.price || 0));
-    } else if (sortBy === "rating") {
+    if (sortBy === "rating") {
       list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortBy === "title-asc") {
+      list.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
     } else {
-      // 'curated': prioritize flagship/featured, then price
+      // 'curated': prioritize flagship/featured
       list.sort((a, b) => {
         const aScore = (a.isFeatured ? 2 : 0) + (a.isPopular ? 1 : 0);
         const bScore = (b.isFeatured ? 2 : 0) + (b.isPopular ? 1 : 0);
         if (aScore !== bScore) return bScore - aScore;
-        return (b.price || 0) - (a.price || 0);
+        return (a.title || "").localeCompare(b.title || "");
       });
     }
 
@@ -272,21 +261,6 @@ export default function ExclusiveProjectsPage({
                   <ChevronDown size={14} className="exclusive-select-icon" />
                 </div>
 
-                {/* Budget Select */}
-                <div className="exclusive-select-wrap">
-                  <select
-                    value={budgetFilter}
-                    onChange={(e) => setBudgetFilter(e.target.value)}
-                    className="exclusive-select"
-                  >
-                    <option value="all">All Price Portfolios</option>
-                    <option value="under-50">Under ₹50 Lakhs</option>
-                    <option value="50-100">₹50L – ₹1.00 Crore</option>
-                    <option value="above-100">₹1.00 Crore &amp; Above</option>
-                  </select>
-                  <ChevronDown size={14} className="exclusive-select-icon" />
-                </div>
-
                 {/* Sort By */}
                 <div className="exclusive-select-wrap">
                   <select
@@ -295,9 +269,8 @@ export default function ExclusiveProjectsPage({
                     className="exclusive-select"
                   >
                     <option value="curated">Curated Collection</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="price-asc">Price: Low to High</option>
                     <option value="rating">Highest Rated</option>
+                    <option value="title-asc">Project Name (A-Z)</option>
                   </select>
                   <ChevronDown size={14} className="exclusive-select-icon" />
                 </div>
@@ -492,18 +465,17 @@ export default function ExclusiveProjectsPage({
                         </div>
                       </div>
 
-                      {/* Bottom Price Strip */}
-                      <div className="exclusive-media-bottom">
-                        <div className="exclusive-media-price">
-                          <span className="exclusive-media-price-label">Starting Investment</span>
-                          <span className="exclusive-media-price-val">{displayPrice}</span>
+                      {/* Bottom Approval Strip (if available) */}
+                      {(p.reraNumber || p.dtcpNumber || p.approval) && (
+                        <div className="exclusive-media-bottom">
+                          <div className="exclusive-media-price">
+                            <span className="exclusive-media-price-label">Approval Status</span>
+                            <span className="exclusive-media-price-val" style={{ fontSize: "12px", letterSpacing: "0.5px" }}>
+                              {p.reraNumber ? `RERA: ${p.reraNumber}` : p.dtcpNumber ? `DTCP: ${p.dtcpNumber}` : p.approval}
+                            </span>
+                          </div>
                         </div>
-                        {p.pricePerSqft && (
-                          <span className="exclusive-media-psqft">
-                            ₹{Number(p.pricePerSqft).toLocaleString("en-IN")} / sq.ft
-                          </span>
-                        )}
-                      </div>
+                      )}
                     </div>
 
                     {/* Card Body */}
@@ -511,7 +483,7 @@ export default function ExclusiveProjectsPage({
                       {/* Meta: Type + Location */}
                       <div className="exclusive-card-meta">
                         <span className="exclusive-type-pill">
-                          {p.typeName || p.category || "Villa Plots"}
+                          {p.typeName || p.category || "Residential"}
                         </span>
                         <span className="exclusive-loc-text">
                           <MapPin size={12} color="#c59b27" />
@@ -526,30 +498,44 @@ export default function ExclusiveProjectsPage({
                       >
                         {p.title}
                       </h3>
-                      <p className="exclusive-card-tagline">
-                        {p.tagline || p.description || "Exclusive Master-Planned Gated Community."}
-                      </p>
+                      {p.tagline ? (
+                        <p className="exclusive-card-tagline">
+                          {p.tagline}
+                        </p>
+                      ) : p.description ? (
+                        <p className="exclusive-card-tagline">
+                          {p.description}
+                        </p>
+                      ) : null}
 
-                      {/* 4-Box Specs Grid */}
+                      {/* Specs Grid: Render only fields present in API */}
                       <div className="exclusive-specs-grid">
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Plot / Unit Area</span>
-                          <span className="exclusive-spec-val">{sizeText}</span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Total Inventory</span>
-                          <span className="exclusive-spec-val">{unitsText}</span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Vasthu Orientation</span>
-                          <span className="exclusive-spec-val">100% Vasthu Compliant</span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Corridor Spine</span>
-                          <span className="exclusive-spec-val">
-                            {p.locality ? p.locality.toUpperCase() : "COIMBATORE"}
-                          </span>
-                        </div>
+                        {(p.area || p.sqft) && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Plot / Unit Area</span>
+                            <span className="exclusive-spec-val">{p.area || `${p.sqft} sq.ft`}</span>
+                          </div>
+                        )}
+                        {(p.totalUnits || p.plots) && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Total Inventory</span>
+                            <span className="exclusive-spec-val">{p.totalUnits || `${p.plots} Units`}</span>
+                          </div>
+                        )}
+                        {p.bhk && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Configuration</span>
+                            <span className="exclusive-spec-val">{p.bhk}</span>
+                          </div>
+                        )}
+                        {p.locality && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Corridor Spine</span>
+                            <span className="exclusive-spec-val">
+                              {p.locality.toUpperCase()}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Amenity Highlights */}
@@ -685,24 +671,32 @@ export default function ExclusiveProjectsPage({
 
                       {/* Specs */}
                       <div className="exclusive-specs-grid" style={{ maxWidth: "520px" }}>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Plot / Unit Area</span>
-                          <span className="exclusive-spec-val">{sizeText}</span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Inventory Size</span>
-                          <span className="exclusive-spec-val">{unitsText}</span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Approvals</span>
-                          <span className="exclusive-spec-val" style={{ color: "#059669" }}>
-                            {p.badge || "DTCP & RERA"}
-                          </span>
-                        </div>
-                        <div className="exclusive-spec-item">
-                          <span className="exclusive-spec-lbl">Vasthu</span>
-                          <span className="exclusive-spec-val">100% Compliant</span>
-                        </div>
+                        {(p.area || p.sqft) && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Plot / Unit Area</span>
+                            <span className="exclusive-spec-val">{p.area || `${p.sqft} sq.ft`}</span>
+                          </div>
+                        )}
+                        {(p.totalUnits || p.plots) && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Inventory Size</span>
+                            <span className="exclusive-spec-val">{p.totalUnits || `${p.plots} Units`}</span>
+                          </div>
+                        )}
+                        {p.bhk && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Configuration</span>
+                            <span className="exclusive-spec-val">{p.bhk}</span>
+                          </div>
+                        )}
+                        {(p.reraNumber || p.dtcpNumber || p.badge || p.approval) && (
+                          <div className="exclusive-spec-item">
+                            <span className="exclusive-spec-lbl">Approvals</span>
+                            <span className="exclusive-spec-val" style={{ color: "#059669" }}>
+                              {p.reraNumber ? `RERA: ${p.reraNumber}` : p.dtcpNumber ? `DTCP: ${p.dtcpNumber}` : p.badge || p.approval}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Amenities */}
@@ -718,20 +712,8 @@ export default function ExclusiveProjectsPage({
                       )}
                     </div>
 
-                    {/* Right Action & Pricing Column */}
+                    {/* Right Action Column */}
                     <div className="exclusive-ledger-aside">
-                      <div className="exclusive-ledger-price-block">
-                        <span className="exclusive-media-price-label" style={{ color: "#64748b" }}>
-                          Exclusive Investment
-                        </span>
-                        <div className="exclusive-ledger-price">{displayPrice}</div>
-                        {p.pricePerSqft && (
-                          <div className="exclusive-ledger-psqft">
-                            ₹{Number(p.pricePerSqft).toLocaleString("en-IN")} / sq.ft
-                          </div>
-                        )}
-                      </div>
-
                       <div className="exclusive-ledger-actions">
                         <button
                           type="button"

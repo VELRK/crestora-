@@ -11,8 +11,9 @@ const STORAGE_KEY_ENQUIRIES = "adissia_enquiries";
 
 // Format Indian Currency Helper: e.g. 4500000 -> "₹45.0 Lakhs", 12500000 -> "₹1.25 Cr"
 export function formatINR(amount) {
-  if (amount == null || isNaN(amount)) return "₹0";
+  if (amount == null || amount === "" || isNaN(amount)) return "";
   const num = Number(amount);
+  if (num <= 0) return "";
   if (num >= 10000000) {
     const cr = (num / 10000000).toFixed(2).replace(/\.00$/, "");
     return `₹${cr} Cr`;

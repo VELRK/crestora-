@@ -151,34 +151,51 @@ export default function AdissiaProjectsShowcase({
               </div>
             </div>
 
-            {/* Right Col: 2x2 Stats Grid */}
+            {/* Right Col: Stats Grid */}
             <div className="split-right-stats">
-              <div className="grid-stat-box">
-                <div className="grid-stat-val">{activeProject.typeName || "PLOTS"}</div>
-                <div className="grid-stat-label">Property Type</div>
-              </div>
-
-              <div className="grid-stat-box">
-                <div className="grid-stat-val">
-                  {activeProject.totalArea ? activeProject.totalArea.split(" ")[0] : "10"}{" "}
-                  <small>{activeProject.totalArea ? activeProject.totalArea.split(" ")[1] : "Acres"}</small>
+              {activeProject.typeName && (
+                <div className="grid-stat-box">
+                  <div className="grid-stat-val">{activeProject.typeName}</div>
+                  <div className="grid-stat-label">Property Type</div>
                 </div>
-                <div className="grid-stat-label">Total Land Area</div>
-              </div>
+              )}
 
-              <div className="grid-stat-box">
-                <div className="grid-stat-val" style={{ fontSize: "24px" }}>
-                  {activeProject.area ? activeProject.area.replace(" sq.ft", "") : "640 - 3,302"}
+              {activeProject.totalArea && (
+                <div className="grid-stat-box">
+                  <div className="grid-stat-val">
+                    {activeProject.totalArea.split(" ")[0]}{" "}
+                    <small>{activeProject.totalArea.split(" ")[1] || ""}</small>
+                  </div>
+                  <div className="grid-stat-label">Total Land Area</div>
                 </div>
-                <div className="grid-stat-label">Size (SQ.FT)</div>
-              </div>
+              )}
 
-              <div className="grid-stat-box">
-                <div className="grid-stat-val">
-                  {activeProject.totalUnits ? activeProject.totalUnits.split(" ")[0] : "168"}
+              {activeProject.area && (
+                <div className="grid-stat-box">
+                  <div className="grid-stat-val" style={{ fontSize: "24px" }}>
+                    {activeProject.area.replace(/ sq\.?ft/i, "")}
+                  </div>
+                  <div className="grid-stat-label">Size (SQ.FT)</div>
                 </div>
-                <div className="grid-stat-label">No. of Total Units</div>
-              </div>
+              )}
+
+              {activeProject.totalUnits && (
+                <div className="grid-stat-box">
+                  <div className="grid-stat-val">
+                    {activeProject.totalUnits.split(" ")[0]}
+                  </div>
+                  <div className="grid-stat-label">No. of Total Units</div>
+                </div>
+              )}
+
+              {activeProject.reraNumber && (
+                <div className="grid-stat-box">
+                  <div className="grid-stat-val" style={{ fontSize: "14px", color: "#c59b27" }}>
+                    {activeProject.reraNumber}
+                  </div>
+                  <div className="grid-stat-label">RERA Number</div>
+                </div>
+              )}
             </div>
           </div>
 

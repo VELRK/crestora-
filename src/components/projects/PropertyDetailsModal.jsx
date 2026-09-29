@@ -111,14 +111,11 @@ export default function PropertyDetailsModal({
             </div>
           )}
 
-          {/* Pricing & Location Overview */}
+          {/* Location Overview */}
           <div className="modal-pricing-row">
             <div>
-              <div className="modal-price-val">
-                {displayPrice}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#274f9a", fontSize: "14px", fontWeight: "600", marginTop: "4px" }}>
-                <MapPin size={15} color="#274f9a" />
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#274f9a", fontSize: "15px", fontWeight: "600" }}>
+                <MapPin size={16} color="#274f9a" />
                 <span>{project.location}</span>
               </div>
             </div>
@@ -139,25 +136,41 @@ export default function PropertyDetailsModal({
             </div>
           </div>
 
-          {/* Specifications Bar */}
-          <div className="modal-specs-bar">
-            <div>
-              <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Type</div>
-              <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.typeName}</div>
+          {/* Specifications Bar - Render only fields present in API */}
+          {(project.typeName || project.totalArea || project.area || project.reraNumber || project.dtcpNumber) && (
+            <div className="modal-specs-bar">
+              {project.typeName && (
+                <div>
+                  <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Type</div>
+                  <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.typeName}</div>
+                </div>
+              )}
+              {project.totalArea && (
+                <div>
+                  <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Total Area</div>
+                  <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.totalArea}</div>
+                </div>
+              )}
+              {project.area && (
+                <div>
+                  <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Unit Sizes</div>
+                  <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.area}</div>
+                </div>
+              )}
+              {project.reraNumber && (
+                <div>
+                  <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>RERA Number</div>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#c59b27" }}>{project.reraNumber}</div>
+                </div>
+              )}
+              {project.dtcpNumber && (
+                <div>
+                  <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>DTCP Number</div>
+                  <div style={{ fontSize: "13px", fontWeight: "600", color: "#c59b27" }}>{project.dtcpNumber}</div>
+                </div>
+              )}
             </div>
-            <div>
-              <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Total Area</div>
-              <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.totalArea || "10 Acres"}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>Unit Sizes</div>
-              <div style={{ fontSize: "15px", fontWeight: "700", color: "#163057" }}>{project.area || "1200 sq.ft"}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: "11px", color: "#718096", textTransform: "uppercase" }}>RERA Number</div>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#c59b27" }}>{project.reraNumber || "TN/11/Layout"}</div>
-            </div>
-          </div>
+          )}
 
           {/* Description */}
           <div style={{ marginBottom: "22px" }}>

@@ -4925,15 +4925,17 @@ ol {
 }
 
 .pdp-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
   text-align: center;
 }
 
 .pdp-stat-cell {
   border-right: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0 10px;
+  padding: 4px 16px;
 }
 
 .pdp-stat-cell:last-child {

@@ -34,8 +34,9 @@ export const crestoraApi = {
 };
 
 export function formatINR(amount) {
-  if (amount == null || isNaN(amount)) return "₹0";
+  if (amount == null || amount === "" || isNaN(amount)) return "";
   const num = Number(amount);
+  if (num <= 0) return "";
   if (num >= 10000000) {
     const cr = (num / 10000000).toFixed(2).replace(/\.00$/, "");
     return `₹${cr} Cr`;

@@ -42,28 +42,13 @@ export default function ProjectCard({
   // Derive values matching the reference image layout
   const displayTitle = (title || "").toUpperCase();
 
-  const displayConfig =
-    project.bhk ||
-    project.configuration ||
-    (project.category === "villa"
-      ? `${project.beds || 3}, ${Number(project.beds || 3) + 1} BHK Villas`
-      : project.category === "farmlands"
-      ? "Hillside Farmlands & Cottages"
-      : project.category === "commercial"
-      ? "Commercial & Retail Frontage"
-      : "2, 3, 4 BHK");
+  const displayConfig = project.bhk || project.configuration || "";
 
   const displayPlotSize =
     project.plotSize ||
-    (area ? area.replace(/sq\.?ft/i, "Sq.Ft.") : "760 - 4203 Sq.Ft.");
+    (area ? area.replace(/sq\.?ft/i, "Sq.Ft.") : "");
 
-  const displayPossession =
-    project.possession ||
-    (status === "completed"
-      ? "Ready to Move"
-      : status === "upcoming"
-      ? "Pre-Launch"
-      : "Ready to Move");
+  const displayPossession = project.possession || "";
 
   const displayType =
     project.typeLabel ||
@@ -71,9 +56,9 @@ export default function ProjectCard({
       ? "Plots"
       : project.category === "villa"
       ? "Villas"
-      : project.typeName || "Plots");
+      : project.typeName || "");
 
-  const displayUnits = totalUnits || "225 Plots";
+  const displayUnits = totalUnits || (project.plots ? `${project.plots} Plots` : "");
 
   const locShort = locality
     ? locality.charAt(0).toUpperCase() + locality.slice(1)
@@ -85,9 +70,9 @@ export default function ProjectCard({
 
   const displaySubtitle =
     project.subtitle ||
-    (project.category === "plots"
-      ? `Residential Land / Plot, 2, 3, 4 BHK Villas in ${locShort}, ${cityShort}`
-      : `${typeName || "Luxury Residential"}, ${displayConfig} in ${locShort}, ${cityShort}`);
+    project.tagline ||
+    project.description ||
+    (displayType ? `${displayType} in ${locShort}, ${cityShort}` : "");
 
   // =========================================================================
   // 1. LIST VIEW MODE (Horizontal Card matching user's reference image 1-to-1)
@@ -134,12 +119,14 @@ export default function ProjectCard({
             </button>
           </div>
 
-          {/* Bottom Price Tag over image */}
-          <div className="plc-media-bottom">
-            <span className="plc-price-badge">
-              {displayPrice} <small>Onwards</small>
-            </span>
-          </div>
+          {/* Bottom Approval Tag over image */}
+          {(project.reraNumber || project.dtcpNumber || project.badge) && (
+            <div className="plc-media-bottom">
+              <span className="plc-price-badge" style={{ fontSize: "11px", fontWeight: "700" }}>
+                {project.reraNumber ? `RERA: ${project.reraNumber}` : project.dtcpNumber ? `DTCP: ${project.dtcpNumber}` : project.badge}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Right Content Section (Exact Match to User Reference Image) */}
@@ -154,10 +141,12 @@ export default function ProjectCard({
               {displayTitle}
             </h3>
 
-            <span className="plc-rera-badge">
-              <Check size={13} strokeWidth={2.6} className="plc-check-icon" />
-              <span>RERA APPROVED</span>
-            </span>
+            {(project.reraNumber || project.approval?.includes("RERA") || project.badge?.includes("RERA")) && (
+              <span className="plc-rera-badge">
+                <Check size={13} strokeWidth={2.6} className="plc-check-icon" />
+                <span>RERA APPROVED</span>
+              </span>
+            )}
           </div>
 
           {/* Location Line with Pin */}
@@ -167,45 +156,59 @@ export default function ProjectCard({
           </div>
 
           {/* Subtitle / Description */}
-          <div className="plc-subtitle-text">
-            {displaySubtitle}
-          </div>
-
-          {/* Divider 1 */}
-          <div className="plc-divider"></div>
-
-          {/* Dual Column Specs: CONFIGURATION & PLOT SIZE */}
-          <div className="plc-specs-row">
-            <div className="plc-spec-col">
-              <span className="plc-spec-label">CONFIGURATION</span>
-              <span className="plc-spec-value">{displayConfig}</span>
+          {displaySubtitle && (
+            <div className="plc-subtitle-text">
+              {displaySubtitle}
             </div>
+          )}
 
-            <div className="plc-spec-vdivider"></div>
+          {/* Dual Column Specs: CONFIGURATION & PLOT SIZE (only if available) */}
+          {(displayConfig || displayPlotSize) && (
+            <>
+              <div className="plc-divider"></div>
+              <div className="plc-specs-row">
+                {displayConfig && (
+                  <div className="plc-spec-col">
+                    <span className="plc-spec-label">CONFIGURATION</span>
+                    <span className="plc-spec-value">{displayConfig}</span>
+                  </div>
+                )}
 
-            <div className="plc-spec-col">
-              <span className="plc-spec-label">PLOT SIZE</span>
-              <span className="plc-spec-value">{displayPlotSize}</span>
-            </div>
-          </div>
+                {displayConfig && displayPlotSize && <div className="plc-spec-vdivider"></div>}
 
-          {/* Divider 2 */}
+                {displayPlotSize && (
+                  <div className="plc-spec-col">
+                    <span className="plc-spec-label">PLOT SIZE</span>
+                    <span className="plc-spec-value">{displayPlotSize}</span>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Divider */}
           <div className="plc-divider"></div>
 
           {/* Bottom Meta & Action Row */}
           <div className="plc-bottom-row">
             <div className="plc-meta-pills">
-              <span className="plc-meta-item">
-                <span className="plc-meta-lbl">Possession:</span> {displayPossession}
-              </span>
-              <span className="plc-dot-sep">•</span>
-              <span className="plc-meta-item">
-                <span className="plc-meta-lbl">Type:</span> {displayType}
-              </span>
-              <span className="plc-dot-sep">•</span>
-              <span className="plc-meta-item">
-                <span className="plc-meta-lbl">Units:</span> {displayUnits}
-              </span>
+              {displayPossession && (
+                <span className="plc-meta-item">
+                  <span className="plc-meta-lbl">Possession:</span> {displayPossession}
+                </span>
+              )}
+              {displayPossession && displayType && <span className="plc-dot-sep">•</span>}
+              {displayType && (
+                <span className="plc-meta-item">
+                  <span className="plc-meta-lbl">Type:</span> {displayType}
+                </span>
+              )}
+              {(displayPossession || displayType) && displayUnits && <span className="plc-dot-sep">•</span>}
+              {displayUnits && (
+                <span className="plc-meta-item">
+                  <span className="plc-meta-lbl">Units:</span> {displayUnits}
+                </span>
+              )}
             </div>
 
             <button
@@ -267,17 +270,14 @@ export default function ProjectCard({
           </button>
         </div>
 
-        {/* Bottom Price on Media */}
-        <div className="cpc-bottom-media-bar">
-          <span className="cpc-media-price">
-            {displayPrice} <small>Onwards</small>
-          </span>
-          {pricePerSqft && (
-            <span className="cpc-media-sqft">
-              ₹{Number(pricePerSqft).toLocaleString("en-IN")}/sq.ft
+        {/* Bottom Approval on Media (if available) */}
+        {(project.reraNumber || project.dtcpNumber || project.badge) && (
+          <div className="cpc-bottom-media-bar">
+            <span className="cpc-media-price" style={{ fontSize: "11px", fontWeight: "700" }}>
+              {project.reraNumber ? `RERA: ${project.reraNumber}` : project.dtcpNumber ? `DTCP: ${project.dtcpNumber}` : project.badge}
             </span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* 2. Card Content Body (Clean reference-styled layout) */}
@@ -292,10 +292,12 @@ export default function ProjectCard({
             {displayTitle}
           </h3>
 
-          <span className="plc-rera-badge">
-            <Check size={12} strokeWidth={2.6} className="plc-check-icon" />
-            <span>RERA APPROVED</span>
-          </span>
+          {(project.reraNumber || project.approval?.includes("RERA") || project.badge?.includes("RERA")) && (
+            <span className="plc-rera-badge">
+              <Check size={12} strokeWidth={2.6} className="plc-check-icon" />
+              <span>RERA APPROVED</span>
+            </span>
+          )}
         </div>
 
         {/* Location with Pin */}
@@ -305,39 +307,49 @@ export default function ProjectCard({
         </div>
 
         {/* Subtitle */}
-        <p className="cpc-subtitle-text" title={displaySubtitle}>
-          {displaySubtitle}
-        </p>
+        {displaySubtitle && (
+          <p className="cpc-subtitle-text" title={displaySubtitle}>
+            {displaySubtitle}
+          </p>
+        )}
 
-        {/* Divider 1 */}
-        <div className="plc-divider"></div>
+        {/* Dual Specs (CONFIGURATION & PLOT SIZE) - only if present */}
+        {(displayConfig || displayPlotSize) && (
+          <>
+            <div className="plc-divider"></div>
+            <div className="plc-specs-row">
+              {displayConfig && (
+                <div className="plc-spec-col">
+                  <span className="plc-spec-label">CONFIGURATION</span>
+                  <span className="plc-spec-value">{displayConfig}</span>
+                </div>
+              )}
 
-        {/* Dual Specs (CONFIGURATION & PLOT SIZE) */}
-        <div className="plc-specs-row">
-          <div className="plc-spec-col">
-            <span className="plc-spec-label">CONFIGURATION</span>
-            <span className="plc-spec-value">{displayConfig}</span>
-          </div>
+              {displayConfig && displayPlotSize && <div className="plc-spec-vdivider"></div>}
 
-          <div className="plc-spec-vdivider"></div>
+              {displayPlotSize && (
+                <div className="plc-spec-col">
+                  <span className="plc-spec-label">PLOT SIZE</span>
+                  <span className="plc-spec-value">{displayPlotSize}</span>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
-          <div className="plc-spec-col">
-            <span className="plc-spec-label">PLOT SIZE</span>
-            <span className="plc-spec-value">{displayPlotSize}</span>
-          </div>
-        </div>
-
-        {/* Divider 2 */}
+        {/* Divider */}
         <div className="plc-divider"></div>
 
         {/* Possession, Type & Units */}
-        <div className="cpc-meta-bottom-line">
-          <span><strong>Possession:</strong> {displayPossession}</span>
-          <span>•</span>
-          <span><strong>Type:</strong> {displayType}</span>
-          <span>•</span>
-          <span><strong>Units:</strong> {displayUnits}</span>
-        </div>
+        {(displayPossession || displayType || displayUnits) && (
+          <div className="cpc-meta-bottom-line">
+            {displayPossession && <span><strong>Possession:</strong> {displayPossession}</span>}
+            {displayPossession && displayType && <span>•</span>}
+            {displayType && <span><strong>Type:</strong> {displayType}</span>}
+            {(displayPossession || displayType) && displayUnits && <span>•</span>}
+            {displayUnits && <span><strong>Units:</strong> {displayUnits}</span>}
+          </div>
+        )}
 
         {/* Action Button Row */}
         <div className="cpc-actions-row">

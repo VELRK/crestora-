@@ -263,7 +263,7 @@ export default function ProjectDetailsPage({
           setSimilarProjects(res.data);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       cancelled = true;
     };
@@ -367,14 +367,14 @@ export default function ProjectDetailsPage({
     const request =
       enquiryType === "enquiry"
         ? crestoraApi.submitEnquiry({
-            ...payload,
-            message: `Property enquiry for ${title}`,
-            source: "project",
-          })
+          ...payload,
+          message: `Property enquiry for ${title}`,
+          source: "project",
+        })
         : crestoraApi.bookSiteVisit({
-            ...payload,
-            message: `Site visit request for ${title}`,
-          });
+          ...payload,
+          message: `Site visit request for ${title}`,
+        });
     request
       .then((res) => {
         if (!res?.success) {
@@ -533,19 +533,23 @@ export default function ProjectDetailsPage({
                   {status === "upcoming"
                     ? "Pre-Launch Project"
                     : status === "completed"
-                    ? "Completed Landmark"
-                    : "Ongoing Development"}
+                      ? "Completed Landmark"
+                      : "Ongoing Development"}
                 </span>
 
-                <span className="pdp-cert-tag">
-                  <ShieldCheck size={14} color="#dfb743" />
-                  <span>{badge || "DTCP & RERA Approved"}</span>
-                </span>
+                {(badge || approval) && (
+                  <span className="pdp-cert-tag">
+                    <ShieldCheck size={14} color="#dfb743" />
+                    <span>{badge || approval}</span>
+                  </span>
+                )}
 
-                <span className="pdp-cert-tag vasthu">
-                  <Compass size={14} color="#dfb743" />
-                  <span>100% Vasthu Compliant</span>
-                </span>
+                {project.vasthu && (
+                  <span className="pdp-cert-tag vasthu">
+                    <Compass size={14} color="#dfb743" />
+                    <span>{project.vasthu}</span>
+                  </span>
+                )}
               </div>
 
               <h1 className="pdp-main-title">{title}</h1>
@@ -578,71 +582,79 @@ export default function ProjectDetailsPage({
               </div>
             </div>
 
-            <div className="pdp-price-col">
-              <div className="pdp-price-label">Starting Investment</div>
-              <div className="pdp-price-amount">
-                {displayPrice} <span className="pdp-period">Onwards</span>
-              </div>
-              {pricePerSqft && (
-                <div className="pdp-price-sqft">
-                  ₹{Number(pricePerSqft).toLocaleString("en-IN")} per sq.ft
+            {(reraNumber || dtcpNumber) && (
+              <div className="pdp-price-col">
+                <div className="pdp-price-label">Approvals & Sanctions</div>
+                <div className="pdp-approval-code">
+                  {reraNumber && (
+                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#163057" }}>
+                      RERA: <span style={{ color: "#c59b27" }}>{reraNumber}</span>
+                    </div>
+                  )}
+                  {dtcpNumber && (
+                    <div style={{ fontSize: "14px", fontWeight: "700", color: "#163057", marginTop: "4px" }}>
+                      DTCP: <span style={{ color: "#c59b27" }}>{dtcpNumber}</span>
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="pdp-approval-code">
-                {reraNumber && <span>RERA: {reraNumber}</span>}
-                {dtcpNumber && <span>DTCP: {dtcpNumber}</span>}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </header>
 
       {/* 3. Key Stats Luxury Ribbon */}
-      <section className="pdp-stats-ribbon">
-        <div className="crestora-container">
-          <div className="pdp-stats-grid">
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">DEVELOPMENT TYPE</span>
-              <strong className="pdp-stat-val">{typeName || "Villa Plots"}</strong>
-            </div>
+      {(typeName || totalArea || bhk || area || totalUnits || approval) && (
+        <section className="pdp-stats-ribbon">
+          <div className="crestora-container">
+            <div className="pdp-stats-grid">
+              {typeName && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">DEVELOPMENT TYPE</span>
+                  <strong className="pdp-stat-val">{typeName}</strong>
+                </div>
+              )}
 
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">TOTAL LAND EXTENT</span>
-              <strong className="pdp-stat-val">{totalArea || "10 Acres"}</strong>
-            </div>
+              {totalArea && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">TOTAL LAND EXTENT</span>
+                  <strong className="pdp-stat-val">{totalArea}</strong>
+                </div>
+              )}
 
-            {bhk ? (
-              <div className="pdp-stat-cell">
-                <span className="pdp-stat-lbl">CONFIGURATION</span>
-                <strong className="pdp-stat-val">{bhk}</strong>
-              </div>
-            ) : null}
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">PLOT / UNIT SIZES</span>
-              <strong className="pdp-stat-val">
-                {area ? area : "640 – 3,302 sq.ft"}
-              </strong>
-            </div>
+              {bhk && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">CONFIGURATION</span>
+                  <strong className="pdp-stat-val">{bhk}</strong>
+                </div>
+              )}
 
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">TOTAL NUMBER OF UNITS</span>
-              <strong className="pdp-stat-val">{totalUnits || "168 Units"}</strong>
-            </div>
+              {area && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">PLOT / UNIT SIZES</span>
+                  <strong className="pdp-stat-val">{area}</strong>
+                </div>
+              )}
 
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">LEGAL CLEARANCE</span>
-              <strong className="pdp-stat-val" style={{ color: "#10b981" }}>
-                100% Clear Title
-              </strong>
-            </div>
+              {totalUnits && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">TOTAL NUMBER OF UNITS</span>
+                  <strong className="pdp-stat-val">{totalUnits}</strong>
+                </div>
+              )}
 
-            <div className="pdp-stat-cell">
-              <span className="pdp-stat-lbl">BANK FINANCING</span>
-              <strong className="pdp-stat-val">Up to 80% Pre-Approved</strong>
+              {approval && (
+                <div className="pdp-stat-cell">
+                  <span className="pdp-stat-lbl">LEGAL CLEARANCE</span>
+                  <strong className="pdp-stat-val" style={{ color: "#10b981" }}>
+                    {approval}
+                  </strong>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 4. Interactive Visual Gallery Showcase */}
       <section className="pdp-gallery-section">
@@ -970,7 +982,7 @@ export default function ProjectDetailsPage({
                         title="Watch on YouTube"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff0000">
-                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                         </svg>
                         <span>Watch on YouTube</span>
                         <ExternalLink size={13} />
@@ -1013,7 +1025,7 @@ export default function ProjectDetailsPage({
             ) : null}
 
             {/* SECTION 6: Location & Connectivity Table */}
-            <section id="connectivity" className="pdp-section-block">
+            {/* <section id="connectivity" className="pdp-section-block">
               <div className="pdp-section-header">
                 <span className="pdp-gold-eyebrow">STRATEGIC PROXIMITY</span>
                 <h2 className="pdp-section-heading">
@@ -1049,7 +1061,7 @@ export default function ProjectDetailsPage({
                   ))}
                 </div>
               ) : null}
-            </section>
+            </section> */}
 
             {/* SECTION 7: Interactive Location Map & Navigation */}
             <section id="location-map" className="pdp-section-block">
@@ -1296,12 +1308,7 @@ export default function ProjectDetailsPage({
 
       {/* 7. Mobile Sticky Bottom Action Bar */}
       <div className="pdp-mobile-bottom-bar" aria-label="Quick Actions">
-        <div className="pdp-mobile-price">
-          <span className="lbl">From</span>
-          <strong className="val">{displayPrice}</strong>
-        </div>
-
-        <div className="pdp-mobile-btns">
+        <div className="pdp-mobile-btns" style={{ width: "100%", display: "flex", gap: "10px" }}>
           <a
             href={`https://wa.me/919159066666?text=${encodeURIComponent(
               `Hi Crestora Properties, please send me details for ${title}.`
@@ -1310,6 +1317,7 @@ export default function ProjectDetailsPage({
             rel="noopener noreferrer"
             className="pdp-mob-btn whatsapp"
             title="Chat on WhatsApp"
+            style={{ flex: "0 0 54px" }}
           >
             <MessageCircle size={18} />
           </a>
@@ -1318,6 +1326,7 @@ export default function ProjectDetailsPage({
             type="button"
             className="pdp-mob-btn book"
             onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
+            style={{ flex: 1 }}
           >
             <span>BOOK SITE VISIT</span>
           </button>
