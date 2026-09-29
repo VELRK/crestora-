@@ -1126,7 +1126,7 @@ export default function ProjectDetailsPage({
                 </div>
 
                 {/* Architectural Highlights Grid */}
-                {highlights.length > 0 && (
+                {/* {highlights.length > 0 && (
                   <div className="pdp-highlights-grid">
                     {highlights.map((highlight, idx) => (
                       <div key={idx} className="pdp-highlight-item">
@@ -1137,12 +1137,12 @@ export default function ProjectDetailsPage({
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
               </section>
             )}
 
             {/* SECTION 2: Why Choose / Theme Features */}
-            {whyPoints.length > 0 && (
+            {/* {whyPoints.length > 0 && (
               <section className="pdp-section-block">
                 <div className="pdp-section-header">
                   <span className="pdp-gold-eyebrow">DISTINCTIVE ADVANTAGES</span>
@@ -1168,7 +1168,7 @@ export default function ProjectDetailsPage({
                   ))}
                 </div>
               </section>
-            )}
+            )} */}
 
             {/* SECTION 3: Technical Specifications Matrix */}
             {hasSpecs && (
