@@ -463,53 +463,29 @@ export default function ProjectDetailsPage({
     };
   }, [project?.id, project?.slug, fallbackSimilar]);
 
-  if (!project) {
-    return (
-      <div className="project-details-page empty-state-wrap">
-        <div
-          className="crestora-container"
-          style={{ textAlign: "center", padding: "100px 20px" }}
-        >
-          <h2>Project Not Found</h2>
-          <p style={{ color: "#64748b", margin: "16px 0 24px" }}>
-            The development you are looking for is currently unavailable or has been relocated.
-          </p>
-          <button
-            type="button"
-            className="crestora-btn crestora-btn-fill"
-            onClick={onBackToProjects}
-          >
-            <span className="btn-arrow-normal">←</span>
-            <span className="btn-text">RETURN TO ALL PROJECTS</span>
-            <span className="btn-arrow-hover">←</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  const currentProject = project || {};
   const {
-    id,
-    title,
-    tagline,
-    location,
-    cityName,
-    price,
-    priceDisplay,
-    pricePerSqft,
-    badge,
-    approval,
-    reraNumber,
-    dtcpNumber,
-    image,
+    id = "",
+    title = "",
+    tagline = "",
+    location = "",
+    cityName = "",
+    price = 0,
+    priceDisplay = "",
+    pricePerSqft = 0,
+    badge = "",
+    approval = "",
+    reraNumber = "",
+    dtcpNumber = "",
+    image = "",
     gallery = [],
-    totalArea,
-    totalUnits,
-    area,
-    typeName,
-    status,
-    statusLabel,
-    description,
+    totalArea = "",
+    totalUnits = "",
+    area = "",
+    typeName = "",
+    status = "",
+    statusLabel = "",
+    description = "",
     highlights = [],
     whyPoints = [],
     overviewParagraphs = [],
@@ -526,11 +502,11 @@ export default function ProjectDetailsPage({
     mapUrl = "",
     videoUrl = "",
     bhk = "",
-  } = project;
+  } = currentProject;
 
   const displayPrice = priceDisplay || formatINR(price);
-  const mapHref = resolveMapHref(project);
-  const mapEmbedUrl = resolveMapEmbedUrl(project);
+  const mapHref = resolveMapHref(currentProject);
+  const mapEmbedUrl = resolveMapEmbedUrl(currentProject);
   const videoEmbed = youtubeEmbedUrl(videoUrl);
   const youtubeWatchUrl = resolveYoutubeWatchUrl(videoUrl);
   const fullGallery = gallery && gallery.length > 0 ? gallery : [image];
@@ -545,11 +521,11 @@ export default function ProjectDetailsPage({
     totalUnits,
     area,
     bhk,
-    typeName: project.typeName || project.type,
-    statusLabel: project.statusLabel || project.status,
-    category: project.category,
+    typeName: currentProject.typeName || currentProject.type,
+    statusLabel: currentProject.statusLabel || currentProject.status,
+    category: currentProject.category,
   };
-  const specRows = buildSpecificationRows(project, specCtx);
+  const specRows = buildSpecificationRows(currentProject, specCtx);
 
   const specCategories = useMemo(() => {
     const cats = new Set(specRows.map((r) => r.category).filter(Boolean));
@@ -598,6 +574,49 @@ export default function ProjectDetailsPage({
     return list;
   }, [totalArea, totalUnits, reraNumber, dtcpNumber, approval, bhk, typeName]);
 
+  const availableTabs = useMemo(() => {
+    const tabs = [];
+    if (Boolean(description || (overviewParagraphs || []).some((p) => p && String(p).trim()) || highlights.length > 0)) tabs.push("overview");
+    if (specRows.length > 0) tabs.push("specs");
+    if (buildAmenityCards({ amenityDetails, amenities }).length > 0) tabs.push("amenities");
+    if (Boolean(masterPlanImage || (plotSizes || []).some((p) => p?.badge || p?.sqft))) tabs.push("master-plan");
+    if (Boolean(videoEmbed)) tabs.push("video");
+    if ((proximity || []).some((p) => p?.landmark)) tabs.push("connectivity");
+    if (Boolean(mapEmbedUrl || currentProject.mapUrl || (currentProject.location && currentProject.location.trim()))) tabs.push("map");
+    return tabs;
+  }, [description, overviewParagraphs, highlights, specRows, amenityDetails, amenities, masterPlanImage, plotSizes, videoEmbed, proximity, mapEmbedUrl, currentProject.mapUrl, currentProject.location]);
+
+  useEffect(() => {
+    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
+      setActiveTab(availableTabs[0]);
+    }
+  }, [availableTabs, activeTab]);
+
+  if (!project) {
+    return (
+      <div className="project-details-page empty-state-wrap">
+        <div
+          className="crestora-container"
+          style={{ textAlign: "center", padding: "100px 20px" }}
+        >
+          <h2>Project Not Found</h2>
+          <p style={{ color: "#64748b", margin: "16px 0 24px" }}>
+            The development you are looking for is currently unavailable or has been relocated.
+          </p>
+          <button
+            type="button"
+            className="crestora-btn crestora-btn-fill"
+            onClick={onBackToProjects}
+          >
+            <span className="btn-arrow-normal">←</span>
+            <span className="btn-text">RETURN TO ALL PROJECTS</span>
+            <span className="btn-arrow-hover">←</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const handleCopySpec = (text, label) => {
     if (navigator?.clipboard?.writeText) {
       navigator.clipboard.writeText(text);
@@ -623,23 +642,6 @@ export default function ProjectDetailsPage({
   const hasProximity = proximityItems.length > 0;
   const hasMap = Boolean(mapEmbedUrl || project.mapUrl || (project.location && project.location.trim()));
 
-  const availableTabs = useMemo(() => {
-    const tabs = [];
-    if (hasOverview) tabs.push("overview");
-    if (hasSpecs) tabs.push("specs");
-    if (hasAmenities) tabs.push("amenities");
-    if (hasMasterPlan) tabs.push("master-plan");
-    if (hasVideo) tabs.push("video");
-    if (hasProximity) tabs.push("connectivity");
-    if (hasMap) tabs.push("map");
-    return tabs;
-  }, [hasOverview, hasSpecs, hasAmenities, hasMasterPlan, hasVideo, hasProximity, hasMap]);
-
-  useEffect(() => {
-    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
-      setActiveTab(availableTabs[0]);
-    }
-  }, [availableTabs, activeTab]);
 
   // Form Submit handler
   const handleFormSubmit = (e) => {
