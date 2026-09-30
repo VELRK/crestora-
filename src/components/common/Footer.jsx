@@ -27,12 +27,14 @@ export default function Footer({ onNavigate }) {
                 alt="Crestora Properties"
                 style={{ width: "52px", height: "52px", borderRadius: "8px", objectFit: "cover", border: "1px solid #c59b27" }}
               />
-              <div>
-                <div style={{ fontFamily: "Montserrat, sans-serif", fontWeight: "800", fontSize: "19px", letterSpacing: "1px", color: "#ffffff" }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ fontFamily: "var(--font-brand, 'Cinzel', serif)", fontWeight: "700", fontSize: "20px", letterSpacing: "2px", color: "#ffffff", lineHeight: 1.05 }}>
                   CRESTORA
                 </div>
-                <div style={{ fontSize: "10px", letterSpacing: "1.5px", color: "#dfb743", textTransform: "uppercase" }}>
-                  PROPERTIES
+                <div style={{ fontFamily: "var(--font-brand, 'Cinzel', serif)", fontSize: "8px", letterSpacing: "2.6px", color: "#dfb743", textTransform: "uppercase", fontWeight: "600", marginTop: "3.5px", display: "flex", alignItems: "center", gap: "6px", width: "100%" }}>
+                  <span style={{ height: "1px", flex: 1, background: "#dfb743", opacity: 0.8 }}></span>
+                  <span>PROPERTIES</span>
+                  <span style={{ height: "1px", flex: 1, background: "#dfb743", opacity: 0.8 }}></span>
                 </div>
               </div>
             </div>

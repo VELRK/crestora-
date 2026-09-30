@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700;800&display=swap');
+
 /* ==========================================================================
    Crestora Properties - Classic Luxury Real Estate Stylesheet
    Inspired by Adissia Developers (adissia.com)
@@ -35,6 +37,7 @@
   /* Typography */
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Montserrat', 'Inter', sans-serif;
+  --font-brand: 'Cinzel', 'Playfair Display', Georgia, serif;
 
   /* Elevations & Transitions */
   --shadow-sm: 0 4px 12px rgba(10, 28, 56, 0.05);
@@ -453,13 +456,13 @@ ol {
 }
 
 .brand-main-title {
-  font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 800;
+  font-family: var(--font-brand);
+  font-size: 21px;
+  font-weight: 700;
   color: var(--crestora-navy);
-  letter-spacing: 1.2px;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.05;
   transition: color 0.25s ease;
 }
 
@@ -470,24 +473,29 @@ ol {
 .brand-gold-sub {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 3.5px;
+  width: 100%;
 }
 
 .brand-gold-sub .gold-line {
   height: 1px;
-  width: 12px;
+  flex: 1;
   background: var(--crestora-gold);
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 .brand-gold-sub .gold-text {
-  font-size: 8.5px;
-  letter-spacing: 2.2px;
-  font-weight: 700;
+  font-family: var(--font-brand);
+  font-size: 8px;
+  letter-spacing: 2.8px;
+  font-weight: 600;
   color: var(--crestora-gold);
   text-transform: uppercase;
   line-height: 1;
+  white-space: nowrap;
+  padding-left: 2px;
 }
 
 /* Nav Links & Dropdowns */
@@ -2982,12 +2990,13 @@ ol {
   }
 
   .brand-main-title {
-    font-size: 16px;
-    letter-spacing: 0.8px;
+    font-size: 17px;
+    letter-spacing: 1.5px;
   }
 
   .brand-gold-sub .gold-text {
     font-size: 7px;
+    letter-spacing: 2px;
   }
 
   .header-actions {
@@ -3733,13 +3742,13 @@ ol {
   }
 
   .brand-main-title {
-    font-size: 14.5px;
-    letter-spacing: 0.6px;
+    font-size: 15px;
+    letter-spacing: 1.2px;
   }
 
   .brand-gold-sub .gold-text {
     font-size: 6.5px;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.6px;
   }
 
   .header-btn-visit {

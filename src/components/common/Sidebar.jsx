@@ -131,12 +131,14 @@ export default function Sidebar({
                 style={{ width: "140%", height: "140%", objectFit: "cover", objectPosition: "center 20%" }}
               />
             </div>
-            <div>
-              <div style={{ fontFamily: "Montserrat, sans-serif", fontWeight: "800", fontSize: "17px", letterSpacing: "1px", color: "#ffffff" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ fontFamily: "var(--font-brand, 'Cinzel', serif)", fontWeight: "700", fontSize: "17px", letterSpacing: "1.8px", color: "#ffffff", lineHeight: 1.05 }}>
                 CRESTORA
               </div>
-              <div style={{ fontSize: "8.5px", letterSpacing: "1.8px", color: "#dfb743", textTransform: "uppercase", fontWeight: "700" }}>
-                PROPERTIES
+              <div style={{ fontFamily: "var(--font-brand, 'Cinzel', serif)", fontSize: "7.5px", letterSpacing: "2.4px", color: "#dfb743", textTransform: "uppercase", fontWeight: "600", marginTop: "3px", display: "flex", alignItems: "center", gap: "5px" }}>
+                <span style={{ height: "1px", flex: 1, background: "#dfb743", opacity: 0.8 }}></span>
+                <span>PROPERTIES</span>
+                <span style={{ height: "1px", flex: 1, background: "#dfb743", opacity: 0.8 }}></span>
               </div>
             </div>
           </div>
