@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { crestoraApi } from "../../services/api";
 import { useSite } from "../../services/SiteData.jsx";
-import { X, Calendar, Clock, MapPin, CheckCircle, Car } from "lucide-react";
+import { X, CheckCircle } from "lucide-react";
 
 export default function BookSiteVisitModal({
   isOpen,
@@ -16,8 +16,6 @@ export default function BookSiteVisitModal({
     email: "",
     projectId: "",
     projectName: "",
-    preferredDate: "",
-    preferredSlot: "Morning (10:00 AM - 1:00 PM)",
     needPickup: false,
     pickupAddress: "",
   });
@@ -89,7 +87,7 @@ export default function BookSiteVisitModal({
     try {
       const res = await crestoraApi.bookSiteVisit({
         ...formData,
-        visitDate: formData.preferredDate,
+        visitDate: "",
         message: formData.pickupAddress,
       });
       if (res.success) {
@@ -133,9 +131,7 @@ export default function BookSiteVisitModal({
               </p>
               <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", padding: "16px", borderRadius: "4px", textAlign: "left", marginBottom: "20px", fontSize: "13.5px" }}>
                 <p style={{ margin: "0 0 6px" }}><strong>Development:</strong> {formData.projectName}</p>
-                <p style={{ margin: "0 0 6px" }}><strong>Client:</strong> {formData.name} ({formData.phone})</p>
-                {formData.preferredDate && <p style={{ margin: "0 0 6px" }}><strong>Date:</strong> {formData.preferredDate}</p>}
-                <p style={{ margin: 0 }}><strong>Slot:</strong> {formData.preferredSlot}</p>
+                <p style={{ margin: 0 }}><strong>Client:</strong> {formData.name} ({formData.phone})</p>
               </div>
               <p style={{ fontSize: "13px", color: "#718096", marginBottom: "24px" }}>
                 Our Coimbatore relationship manager will contact you within 2 business hours to confirm transportation details.
@@ -214,35 +210,6 @@ export default function BookSiteVisitModal({
                   className="crestora-input"
                 />
               </div>
-
-              {/* Date & Time Slot Grid */}
-              <div className="form-row-2col">
-                <div className="crestora-form-group">
-                  <label>Preferred Date</label>
-                  <input
-                    type="date"
-                    name="preferredDate"
-                    value={formData.preferredDate}
-                    onChange={handleChange}
-                    min={new Date().toISOString().split("T")[0]}
-                    className="crestora-input"
-                  />
-                </div>
-                <div className="crestora-form-group">
-                  <label>Time Slot</label>
-                  <select
-                    name="preferredSlot"
-                    value={formData.preferredSlot}
-                    onChange={handleChange}
-                    className="crestora-input"
-                  >
-                    <option value="Morning (10:00 AM - 1:00 PM)">Morning (10:00 AM - 1:00 PM)</option>
-                    <option value="Afternoon (1:00 PM - 4:00 PM)">Afternoon (1:00 PM - 4:00 PM)</option>
-                    <option value="Evening (4:00 PM - 6:30 PM)">Evening (4:00 PM - 6:30 PM)</option>
-                  </select>
-                </div>
-              </div>
-
 
               {/* Submit Button */}
               <button
