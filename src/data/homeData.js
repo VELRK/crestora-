@@ -6,6 +6,7 @@
 import banner1 from '../assets/banner/banner-1.png';
 import banner2 from '../assets/banner/banner-2.png';
 import banner3 from '../assets/banner/banner-3.png';
+import whyCbePresenter from '../assets/whycbe.png';
 
 export const HERO_SLIDES = [
   {
@@ -232,7 +233,7 @@ export const CITY_SPOTLIGHT = {
         desc: "Rapid expansion of TIDEL Park Phase 2, CHIL SEZ, and tier-1 corporate campuses creating tens of thousands of high-paying jobs."
       }
     ],
-    image: "https://cdn.sanity.io/images/hxiv51wl/production/57db01af332475d153a7dbbebc2c21634275574e-694x752.png",
+    image: whyCbePresenter,
     rightPoints: [
       {
         title: "DIVERSE ECONOMIC RESILIENCE",
