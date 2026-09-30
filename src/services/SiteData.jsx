@@ -193,29 +193,7 @@ export function SiteProvider({ children }) {
         const apiHome = home.data || {};
         const apiFilters = filters.data || {};
         const posts = blogs.data?.posts?.length ? blogs.data.posts : BLOGS_DATA;
-        const rawList = Array.isArray(projects?.data) ? projects.data : [];
-        const exclusiveIds = new Set(["p1", "p2", "p4", "p5", "p7", "p8", "p9"]);
-        const projectList = rawList.map((p) => {
-          const isEx =
-            p.exclusive === true ||
-            p.exclusive === 1 ||
-            p.exclusive === "1" ||
-            p.exclusive === "true" ||
-            p.isExclusive === true ||
-            p.isExclusive === 1 ||
-            p.isExclusive === "1" ||
-            p.isExclusive === "true" ||
-            p.is_exclusive === 1 ||
-            p.is_exclusive === "1" ||
-            p.is_exclusive === true ||
-            exclusiveIds.has(p.id);
-          return {
-            ...p,
-            exclusive: isEx,
-            isExclusive: isEx,
-            projectName: p.projectName || p.fullProjectName || p.title,
-          };
-        });
+        const projectList = Array.isArray(projects?.data) ? projects.data : [];
         const categories = categoryOptions(apiHome.categories, apiFilters.categories);
         const localities = locationOptions(apiHome.locations, apiFilters.localities?.length ? apiFilters.localities : []);
         const budgets =
@@ -272,15 +250,7 @@ export function useSite() {
 
 export function projectMatchesCategory(project, categoryKey) {
   if (!categoryKey || !project) return false;
-  if (Array.isArray(project.categories) && project.categories.includes(categoryKey)) {
-    return true;
-  }
   return project.category === categoryKey || project.type === categoryKey;
-}
-
-export function projectIsExclusive(project) {
-  if (!project) return false;
-  return Boolean(project.isExclusive || project.isFeatured || project.isPopular);
 }
 
 export function countProjectsForCategory(projects, categoryKey) {

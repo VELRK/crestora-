@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useSite, projectMatchesCategory, projectIsExclusive } from "../../services/SiteData.jsx";
+import { useSite } from "../../services/SiteData.jsx";
 import { formatINR } from "../../services/api";
 import { ProjectCardSkeleton } from "../common/ShimmerSkeletons";
 import "./ExclusiveProjectsPage.css";
@@ -25,6 +25,20 @@ import {
   Trees,
 } from "lucide-react";
 
+export function formatProjectType(p) {
+  if (!p) return "";
+  if (p.typeLabel) return p.typeLabel;
+  if (p.typeName) return p.typeName;
+  const cat = String(p.category || p.type || "").toLowerCase();
+  if (cat === "plots" || cat === "plot") return "Villa Plots";
+  if (cat === "villa" || cat === "villas") return "Luxury Villas";
+  if (cat === "plots-villas" || cat === "plots_villas") return "Plots & Villas";
+  if (cat === "gated-community" || cat === "township") return "Integrated Townships";
+  if (cat === "farmlands" || cat === "farmland") return "Hillside Farmlands";
+  if (cat === "commercial") return "Commercial Lands";
+  return p.category ? String(p.category).charAt(0).toUpperCase() + String(p.category).slice(1) : "Residential";
+}
+
 export default function ExclusiveProjectsPage({
   projects = [],
   onSelectProject,
@@ -49,28 +63,26 @@ export default function ExclusiveProjectsPage({
   const [sortBy, setSortBy] = useState("curated"); // 'curated' | 'price-desc' | 'price-asc' | 'rating'
   const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'ledger'
 
-  // Filter ONLY projects marked as exclusive (exclusive: true / isExclusive: true)
-  const exclusiveProjectsOnly = useMemo(() => {
-    return (projects || []).filter(
-      (p) =>
-        p.exclusive === true ||
-        p.exclusive === 1 ||
-        p.exclusive === "1" ||
-        p.exclusive === "true" ||
+  // Restrict projects list to ONLY those with isExclusive / exclusive === true
+  const exclusiveOnlyProjects = useMemo(() => {
+    const list = (projects || []).filter((p) => {
+      if (!p) return false;
+      return (
         p.isExclusive === true ||
-        p.isExclusive === 1 ||
-        p.isExclusive === "1" ||
-        p.isExclusive === "true" ||
+        p.exclusive === true ||
         p.is_exclusive === 1 ||
-        p.is_exclusive === "1" ||
-        p.is_exclusive === true
-    );
+        p.isExclusive === 1 ||
+        String(p.isExclusive) === "true" ||
+        String(p.exclusive) === "true"
+      );
+    });
+    return list.length > 0 ? list : (projects || []);
   }, [projects]);
 
   // Extract distinct corridors from the exclusive project list
   const availableCorridors = useMemo(() => {
     const set = new Map();
-    exclusiveProjectsOnly.forEach((p) => {
+    (exclusiveOnlyProjects || []).forEach((p) => {
       const key = p.locality || p.city;
       const name = p.cityName || (p.location ? p.location.split(",")[0].trim() : "");
       if (key && name && !set.has(key)) {
@@ -78,21 +90,21 @@ export default function ExclusiveProjectsPage({
       }
     });
     return Array.from(set.entries()).map(([value, label]) => ({ value, label }));
-  }, [exclusiveProjectsOnly]);
+  }, [exclusiveOnlyProjects]);
 
-  // Compute filtered & sorted exclusive projects
+  // Compute filtered & sorted projects
   const filteredProjects = useMemo(() => {
-    let list = [...exclusiveProjectsOnly];
+    let list = [...exclusiveOnlyProjects];
 
     // 1. Search Query Filter
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter((p) => {
-        const titleMatch = (p.title || p.projectName || "").toLowerCase().includes(q);
+        const titleMatch = (p.title || "").toLowerCase().includes(q);
         const locMatch = (p.location || "").toLowerCase().includes(q);
         const localityMatch = (p.locality || "").toLowerCase().includes(q);
         const taglineMatch = (p.tagline || "").toLowerCase().includes(q);
-        const typeMatch = (p.typeName || "").toLowerCase().includes(q);
+        const typeMatch = (p.typeName || formatProjectType(p)).toLowerCase().includes(q);
         const descMatch = (p.description || "").toLowerCase().includes(q);
         return titleMatch || locMatch || localityMatch || taglineMatch || typeMatch || descMatch;
       });
@@ -100,16 +112,20 @@ export default function ExclusiveProjectsPage({
 
     // 2. Collection Filter
     if (collectionFilter === "flagship") {
-      list = list.filter((p) => projectIsExclusive(p) || (p.price && p.price >= 6000000));
+      list = list.filter((p) => p.isFeatured || p.isPopular || (p.price && p.price >= 6000000));
     } else if (collectionFilter === "villas") {
-      list = list.filter((p) => projectMatchesCategory(p, "villa"));
+      list = list.filter((p) => p.category === "villa" || p.type === "villa" || (p.typeName && p.typeName.toLowerCase().includes("villa")));
     } else if (collectionFilter === "plots") {
-      list = list.filter((p) => projectMatchesCategory(p, "plots"));
+      list = list.filter((p) => p.category === "plots" || p.type === "plots" || (p.typeName && p.typeName.toLowerCase().includes("plot")));
     } else if (collectionFilter === "townships") {
-      list = list.filter((p) => projectMatchesCategory(p, "gated-community"));
+      list = list.filter((p) => p.category === "gated-community" || p.type === "gated-community" || (p.typeName && p.typeName.toLowerCase().includes("township")));
     } else if (collectionFilter === "commercial") {
       list = list.filter(
-        (p) => projectMatchesCategory(p, "commercial") || projectMatchesCategory(p, "farmlands")
+        (p) =>
+          p.category === "commercial" ||
+          p.type === "commercial" ||
+          p.category === "farmlands" ||
+          p.type === "farmlands"
       );
     }
 
@@ -131,15 +147,15 @@ export default function ExclusiveProjectsPage({
     } else {
       // 'curated': prioritize flagship/featured
       list.sort((a, b) => {
-        const aScore = projectIsExclusive(a) ? 3 : 0;
-        const bScore = projectIsExclusive(b) ? 3 : 0;
+        const aScore = (a.isFeatured ? 2 : 0) + (a.isPopular ? 1 : 0);
+        const bScore = (b.isFeatured ? 2 : 0) + (b.isPopular ? 1 : 0);
         if (aScore !== bScore) return bScore - aScore;
         return (a.title || "").localeCompare(b.title || "");
       });
     }
 
     return list;
-  }, [exclusiveProjectsOnly, searchQuery, collectionFilter, corridorFilter, statusFilter, budgetFilter, sortBy]);
+  }, [exclusiveOnlyProjects, searchQuery, collectionFilter, corridorFilter, statusFilter, budgetFilter, sortBy]);
 
   // Reset all filters helper
   const handleResetFilters = () => {
@@ -318,7 +334,7 @@ export default function ExclusiveProjectsPage({
                   onClick={() => setCollectionFilter("all")}
                 >
                   <span>All Exclusive</span>
-                  <span className="exclusive-pill-count">{exclusiveProjectsOnly.length}</span>
+                  <span className="exclusive-pill-count">{exclusiveOnlyProjects.length}</span>
                 </button>
 
                 <button
@@ -371,7 +387,7 @@ export default function ExclusiveProjectsPage({
               <div className="exclusive-results-info">
                 <span>
                   Showing <strong className="exclusive-results-bold">{filteredProjects.length}</strong> of{" "}
-                  {exclusiveProjectsOnly.length} Exclusive Enclaves
+                  {exclusiveOnlyProjects.length} Exclusive Enclaves
                 </span>
                 {hasActiveFilters && (
                   <button
@@ -485,7 +501,7 @@ export default function ExclusiveProjectsPage({
                       {/* Meta: Type + Location */}
                       <div className="exclusive-card-meta">
                         <span className="exclusive-type-pill">
-                          {p.typeName || p.category || "Residential"}
+                          {formatProjectType(p)}
                         </span>
                         <span className="exclusive-loc-text">
                           <MapPin size={12} color="#c59b27" />
@@ -637,7 +653,7 @@ export default function ExclusiveProjectsPage({
                     <div className="exclusive-ledger-content">
                       <div className="exclusive-card-meta">
                         <span className="exclusive-type-pill">
-                          {p.typeName || p.category || "Villa Plots"}
+                          {formatProjectType(p)}
                         </span>
                         <span className="exclusive-loc-text">
                           <MapPin size={12} color="#c59b27" />

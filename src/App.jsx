@@ -34,7 +34,7 @@ import ContactPage from "./components/contact/ContactPage";
 import ExclusiveProjectsPage from "./components/exclusive/ExclusiveProjectsPage";
 
 import { crestoraApi } from "./services/api";
-import { useSite, projectMatchesCategory, projectIsExclusive } from "./services/SiteData.jsx";
+import { useSite } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
 
@@ -277,7 +277,9 @@ export default function App() {
 
     // Property Type / Category
     if (filters.type && filters.type !== "all") {
-      result = result.filter((p) => projectMatchesCategory(p, filters.type));
+      result = result.filter(
+        (p) => p.type === filters.type || p.category === filters.type
+      );
     }
 
     // Location / Locality
@@ -426,7 +428,7 @@ export default function App() {
 
             {/* 9. Featured Residences & Plots Grid */}
             <HomeFeaturedProperties
-              featuredProjects={projects.filter((p) => projectIsExclusive(p))}
+              featuredProjects={projects.filter((p) => p.isPopular || p.isFeatured)}
               onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onViewAll={() => handleNavigate("projects")}
@@ -483,20 +485,7 @@ export default function App() {
         ) : activePage === "exclusive-projects" ? (
           /* ==================== EXCLUSIVE PROJECTS SIGNATURE PAGE VIEW ==================== */
           <ExclusiveProjectsPage
-            projects={projects.filter(
-              (p) =>
-                p.exclusive === true ||
-                p.exclusive === 1 ||
-                p.exclusive === "1" ||
-                p.exclusive === "true" ||
-                p.isExclusive === true ||
-                p.isExclusive === 1 ||
-                p.isExclusive === "1" ||
-                p.isExclusive === "true" ||
-                p.is_exclusive === 1 ||
-                p.is_exclusive === "1" ||
-                p.is_exclusive === true
-            )}
+            projects={projects}
             onSelectProject={handleSelectProject}
             onBookSiteVisit={(project) => handleOpenBookVisit(project)}
             onNavigate={handleNavigate}

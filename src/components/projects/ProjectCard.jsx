@@ -37,7 +37,7 @@ export default function ProjectCard({
       : "Ongoing";
 
   // Derive values matching the reference image layout
-  const displayTitle = (project.fullProjectName || project.projectName || title || "").toUpperCase();
+  const displayTitle = (title || "").toUpperCase();
 
   const displayConfig = project.bhk || project.configuration || "";
 
@@ -49,17 +49,20 @@ export default function ProjectCard({
 
   const displayType =
     project.typeLabel ||
+    project.typeName ||
     (project.category === "plots" || project.type === "plots"
-      ? "Plots"
+      ? "Villa Plots"
       : project.category === "villa" || project.type === "villa"
-      ? "Villas"
+      ? "Luxury Villas"
+      : project.category === "plots-villas" || project.category === "plots_villas"
+      ? "Plots & Villas"
       : project.category === "farmlands" || project.type === "farmlands"
-      ? "Farmlands"
+      ? "Hillside Farmlands"
       : project.category === "commercial" || project.type === "commercial"
       ? "Commercial Lands"
       : project.category === "gated-community" || project.type === "gated-community"
-      ? "Gated Communities"
-      : project.typeName || "Plots & Villas");
+      ? "Integrated Townships"
+      : project.category ? String(project.category).charAt(0).toUpperCase() + String(project.category).slice(1) : "Residential");
 
   const displayUnits = totalUnits || (project.plots ? `${project.plots} Plots` : "");
 
@@ -97,11 +100,26 @@ export default function ProjectCard({
           <div className="plc-media-gradient"></div>
 
           {/* Top Badges */}
-          <div className="plc-media-top">
+          <div className="plc-media-top" style={{ display: "flex", gap: "6px", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
             <span className={`cpc-status-pill status-${status || "ongoing"}`}>
               <span className="cpc-status-dot"></span>
               {statusText}
             </span>
+            {displayType && (
+              <span className="cpc-type-pill" style={{
+                background: "rgba(15, 23, 42, 0.8)",
+                backdropFilter: "blur(4px)",
+                color: "#ffffff",
+                padding: "3px 9px",
+                borderRadius: "20px",
+                fontSize: "10.5px",
+                fontWeight: "600",
+                letterSpacing: "0.4px",
+                border: "1px solid rgba(255, 255, 255, 0.2)"
+              }}>
+                {displayType}
+              </span>
+            )}
           </div>
 
           {/* Bottom Approval Tag over image */}
@@ -230,11 +248,26 @@ export default function ProjectCard({
         <div className="cpc-media-gradient"></div>
 
         {/* Top Badges Row */}
-        <div className="cpc-top-bar">
+        <div className="cpc-top-bar" style={{ display: "flex", gap: "6px", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
           <span className={`cpc-status-pill status-${status || "ongoing"}`}>
             <span className="cpc-status-dot"></span>
             {statusText}
           </span>
+          {displayType && (
+            <span className="cpc-type-pill" style={{
+              background: "rgba(15, 23, 42, 0.8)",
+              backdropFilter: "blur(4px)",
+              color: "#ffffff",
+              padding: "3px 9px",
+              borderRadius: "20px",
+              fontSize: "10.5px",
+              fontWeight: "600",
+              letterSpacing: "0.4px",
+              border: "1px solid rgba(255, 255, 255, 0.2)"
+            }}>
+              {displayType}
+            </span>
+          )}
         </div>
 
         {/* Bottom Approval on Media (if available) */}
