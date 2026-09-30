@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import aboutImg from "../../assets/about/about.png";
 import { useSite } from "../../services/SiteData.jsx";
-import { MapPin, Shield, CheckCircle, Landmark, TrendingUp, Layers, Home, Sparkles, Droplet, Star, Building2 } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export default function AdissiaProjectsShowcase({
   projects = [],
@@ -52,21 +51,7 @@ export default function AdissiaProjectsShowcase({
 
   if (!activeProject) return null;
 
-  // Icon selector helper
-  const renderIcon = (iconName) => {
-    const key = String(iconName || "").trim();
-    const lower = key.toLowerCase();
-    if (key === "Landmark" || lower === "landmark") return <Landmark size={22} />;
-    if (key === "ShieldCheck" || key === "Shield" || lower === "shield") return <Shield size={22} />;
-    if (key === "TrendingUp" || lower === "trending-up") return <TrendingUp size={22} />;
-    if (key === "Star" || lower === "star") return <Star size={22} />;
-    if (key === "Droplet" || lower === "droplet") return <Droplet size={22} />;
-    if (key === "Home" || lower === "home") return <Home size={22} />;
-    if (key === "Building2" || lower === "layout") return <Layers size={22} />;
-    if (key === "CheckCircle2") return <CheckCircle size={22} />;
-    if (key === "MapPin") return <MapPin size={22} />;
-    return <Sparkles size={22} />;
-  };
+
 
   return (
     <section id="landmark-projects" className="landmark-showcase-section">
@@ -199,36 +184,6 @@ export default function AdissiaProjectsShowcase({
             </div>
           </div>
 
-          {/* Lower "Why Choose [Project]" Section with Classic Arch Visual */}
-          {activeProject.whyPoints && activeProject.whyPoints.length > 0 && (
-            <div className="split-bottom-why">
-              <div className="why-features-col">
-                <h3>
-                  Why Choose <span>{activeProject.title}</span>
-                </h3>
-
-                <div className="why-feature-list">
-                  {activeProject.whyPoints.map((item, i) => (
-                    <div key={i} className="why-feature-card">
-                      <div className="why-icon-bubble">
-                        {renderIcon(item.icon)}
-                      </div>
-                      <div className="why-card-text">
-                        <h6>{item.title}</h6>
-                        <p>{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="why-arch-image-wrap">
-                <div className="why-arch-image">
-                  <img src={aboutImg} alt={activeProject.title} />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
         </>
         )}
