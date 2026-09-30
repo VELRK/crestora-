@@ -296,10 +296,10 @@ ol {
 }
 
 .topbar-container {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   height: 38px;
-  padding: 0 clamp(16px, 3vw, 40px);
+  padding: 0 clamp(14px, 1.8vw, 24px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -401,9 +401,9 @@ ol {
   align-items: center;
   justify-content: space-between;
   height: 76px;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 40px);
+  padding: 0 clamp(14px, 1.8vw, 24px);
   transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -3011,7 +3011,7 @@ ol {
   .topbar-container {
     height: 34px;
     font-size: 10px;
-    padding: 0 12px;
+    padding: 0 14px;
   }
 
   .topbar-right {
@@ -3020,8 +3020,8 @@ ol {
 
   .topbar-left {
     width: 100%;
-    justify-content: center;
-    gap: 6px;
+    justify-content: flex-start;
+    gap: 12px;
   }
 
   .d-none-tablet {
