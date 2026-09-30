@@ -34,7 +34,7 @@ import ContactPage from "./components/contact/ContactPage";
 import ExclusiveProjectsPage from "./components/exclusive/ExclusiveProjectsPage";
 
 import { crestoraApi } from "./services/api";
-import { useSite } from "./services/SiteData.jsx";
+import { useSite, projectMatchesCategory, projectIsExclusive } from "./services/SiteData.jsx";
 import logoImg from "./assets/logo.jpeg";
 import { MessageCircle, Phone, Building2, Send, Menu as MenuIcon } from "lucide-react";
 
@@ -277,9 +277,7 @@ export default function App() {
 
     // Property Type / Category
     if (filters.type && filters.type !== "all") {
-      result = result.filter(
-        (p) => p.type === filters.type || p.category === filters.type
-      );
+      result = result.filter((p) => projectMatchesCategory(p, filters.type));
     }
 
     // Location / Locality
@@ -428,7 +426,7 @@ export default function App() {
 
             {/* 9. Featured Residences & Plots Grid */}
             <HomeFeaturedProperties
-              featuredProjects={projects.filter((p) => p.isPopular || p.isFeatured)}
+              featuredProjects={projects.filter((p) => projectIsExclusive(p))}
               onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onViewAll={() => handleNavigate("projects")}

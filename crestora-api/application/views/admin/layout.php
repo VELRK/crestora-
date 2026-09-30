@@ -69,6 +69,8 @@ label{display:block;font-size:13px;font-weight:600;margin:14px 0}
 .form-stack > label{margin:0}
 .check-field{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:0 12px;border:1px solid #d3e4d8;border-radius:10px;background:#fff;font-weight:500;color:var(--ink)}
 .check-field input[type=checkbox]{width:18px;height:18px;margin:0}
+.category-multi{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;width:100%}
+.category-multi-item{width:auto;flex:0 1 auto;min-height:38px;height:auto;padding:8px 12px}
 .url-field{display:flex;align-items:stretch;width:100%;min-width:0;height:42px;margin-top:0;border:1px solid #ddd6c8;border-radius:10px;overflow:hidden;background:#fff}
 .url-prefix{display:flex;align-items:center;padding:0 12px;background:#f3faf5;color:#5c6f64;font-weight:500;white-space:nowrap}
 .url-field input{flex:1;min-width:0;width:0;margin:0;border:0;border-radius:0}

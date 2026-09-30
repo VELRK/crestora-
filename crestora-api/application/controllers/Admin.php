@@ -209,10 +209,9 @@ class Admin extends CI_Controller {
 		$payload['title'] = 'New project';
 		$payload['slug'] = 'new-project-' . time();
 		$payload['status'] = 'upcoming';
-		$payload['isFeatured'] = FALSE;
-		$payload['isPopular'] = FALSE;
+		$payload['isExclusive'] = FALSE;
 		$sort = $last ? ((int) $last['sort_order'] + 1) : 1;
-		$this->db->insert('projects', array(
+		$insert = array(
 			'code' => $code,
 			'slug' => $payload['slug'],
 			'title' => $payload['title'],
@@ -225,7 +224,14 @@ class Admin extends CI_Controller {
 			'is_active' => 0,
 			'sort_order' => $sort,
 			'payload' => fieldform_json($payload),
-		));
+		);
+		if ($this->db->field_exists('is_exclusive', 'projects')) {
+			$insert['is_exclusive'] = 0;
+		}
+		if ($this->db->field_exists('categories_json', 'projects')) {
+			$insert['categories_json'] = '[]';
+		}
+		$this->db->insert('projects', $insert);
 		redirect('admin/project/' . $code);
 	}
 
@@ -274,26 +280,28 @@ class Admin extends CI_Controller {
 					$original[$grid_key] = $posted[$grid_key];
 				}
 			}
+			if (isset($posted['categories']) && is_array($posted['categories'])) {
+				$original['categories'] = $posted['categories'];
+			} elseif ( ! isset($posted['categories'])) {
+				$original['categories'] = array();
+			}
 			$payload = crestora_sync_project(fieldform_finish(fieldform_apply($original, $posted)));
 			foreach (array('title', 'location', 'category') as $grid_key) {
 				if (array_key_exists($grid_key, $posted)) {
 					$payload[$grid_key] = $posted[$grid_key];
 				}
 			}
-			$payload = crestora_prune_project_payload($payload, $original);
-			if ( ! array_key_exists('isFeatured', $payload)) {
-				$payload['isFeatured'] = ! empty($original['isFeatured']) || ! empty($row['is_featured']);
+			if (isset($posted['categories']) && is_array($posted['categories'])) {
+				$payload['categories'] = $posted['categories'];
 			}
-			if ( ! array_key_exists('isPopular', $payload)) {
-				$payload['isPopular'] = ! empty($original['isPopular']) || ! empty($row['is_popular']);
+			$payload = crestora_sync_project(crestora_prune_project_payload($payload, $original));
+			$categories = crestora_normalize_project_categories($payload, $row);
+			$payload['categories'] = $categories;
+			if ($categories) {
+				$payload['category'] = $categories[0];
 			}
 			$title = trim(isset($payload['title']) ? $payload['title'] : '');
 			$location = trim(isset($payload['location']) ? $payload['location'] : '');
-			$category = trim(isset($payload['category']) ? $payload['category'] : '');
-			if ($category === '' && ! empty($row['category'])) {
-				$category = trim((string) $row['category']);
-				$payload['category'] = $category;
-			}
 			$missing = array();
 			if ($title === '') {
 				$missing[] = 'Title';
@@ -301,7 +309,7 @@ class Admin extends CI_Controller {
 			if ($location === '') {
 				$missing[] = 'Location';
 			}
-			if ($category === '') {
+			if ( ! $categories) {
 				$missing[] = 'Category';
 			}
 			if ($missing) {
@@ -310,7 +318,7 @@ class Admin extends CI_Controller {
 				$row['sort_order'] = (int) $this->input->post('sort_order');
 				$payload['title'] = $title;
 				$payload['location'] = $location;
-				$payload['category'] = $category;
+				$payload['categories'] = $categories;
 				$data['row'] = $row;
 				$data['item'] = $payload;
 				$data['heading'] = ($row['title'] === 'New project' || $title === '') ? 'Add project' : 'Edit project';
@@ -323,19 +331,27 @@ class Admin extends CI_Controller {
 			$slug = $this->unique_slug('projects', $this->slugify($this->input->post('slug'), $title), $code);
 			$payload['slug'] = $slug;
 			$was_draft = $this->is_project_draft($row);
-			$this->db->where('code', $code)->update('projects', array(
+			$exclusive = ! empty($payload['isExclusive']);
+			$update = array(
 				'title' => isset($payload['title']) ? $payload['title'] : $row['title'],
 				'slug' => $slug,
-				'category' => isset($payload['category']) ? $payload['category'] : $row['category'],
+				'category' => $categories ? $categories[0] : '',
 				'locality' => isset($payload['locality']) ? $payload['locality'] : $row['locality'],
 				'status' => isset($payload['status']) ? $payload['status'] : $row['status'],
 				'price' => isset($payload['price']) ? $payload['price'] : $row['price'],
-				'is_featured' => ! empty($payload['isFeatured']) ? 1 : 0,
-				'is_popular' => ! empty($payload['isPopular']) ? 1 : 0,
+				'is_featured' => $exclusive ? 1 : 0,
+				'is_popular' => $exclusive ? 1 : 0,
 				'is_active' => $this->input->post('is_active') ? 1 : ($was_draft ? 1 : 0),
 				'sort_order' => (int) $row['sort_order'],
 				'payload' => fieldform_json($payload),
-			));
+			);
+			if ($this->db->field_exists('is_exclusive', 'projects')) {
+				$update['is_exclusive'] = $exclusive ? 1 : 0;
+			}
+			if ($this->db->field_exists('categories_json', 'projects')) {
+				$update['categories_json'] = json_encode($categories, JSON_UNESCAPED_UNICODE);
+			}
+			$this->db->where('code', $code)->update('projects', $update);
 			if ($this->form_stays_open()) {
 				$this->session->set_flashdata('msg', ! empty($_POST['add_list']) ? 'Item added' : 'Item removed');
 				redirect('admin/project/' . $code);
@@ -484,11 +500,18 @@ class Admin extends CI_Controller {
 				$item[$key] = $row[$column];
 			}
 		}
-		if (empty($item['isFeatured']) && ! empty($row['is_featured'])) {
-			$item['isFeatured'] = TRUE;
+		if (empty($item['isExclusive'])) {
+			if ( ! empty($row['is_exclusive'])) {
+				$item['isExclusive'] = TRUE;
+			} elseif ( ! empty($row['is_featured']) || ! empty($row['is_popular'])) {
+				$item['isExclusive'] = TRUE;
+			}
 		}
-		if (empty($item['isPopular']) && ! empty($row['is_popular'])) {
-			$item['isPopular'] = TRUE;
+		if (empty($item['categories'])) {
+			$from_json = crestora_decode_categories_json(isset($row['categories_json']) ? $row['categories_json'] : '');
+			if ($from_json) {
+				$item['categories'] = $from_json;
+			}
 		}
 		return $item;
 	}
