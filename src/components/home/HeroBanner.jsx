@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
-import { MapPin, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export default function HeroBanner({
   onNavigateToProjects,
@@ -127,34 +127,7 @@ export default function HeroBanner({
         </div>
       </div>
 
-      {/* Slide Project Pill at Bottom Right */}
-      <div className="hero-project-pill">
-        <div>
-          <div className="hero-pill-price">{activeSlide.price}</div>
-          <div className="hero-pill-title">{activeSlide.projectName}</div>
-          <div className="hero-pill-loc" style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
-            <MapPin size={11} color="#dfb743" />
-            {activeSlide.location}
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => onBookSiteVisit && onBookSiteVisit(activeSlide)}
-          style={{
-            background: "#c59b27",
-            color: "#ffffff",
-            border: "none",
-            padding: "8px 14px",
-            fontSize: "11px",
-            fontWeight: "700",
-            letterSpacing: "1px",
-            textTransform: "uppercase",
-            cursor: "pointer    ",
-          }}
-        >
-          View
-        </button>
-      </div>
+
 
       {/* Mobile Slide Dots (displayed only on mobile) */}
       <div className="hero-mobile-dots" aria-label="Slide dots">
