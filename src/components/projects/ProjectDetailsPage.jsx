@@ -1574,7 +1574,7 @@ export default function ProjectDetailsPage({
                       className="crestora-btn crestora-btn-gold pdp-map-pickup-btn"
                       onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
                     >
-                      <span>SCHEDULE FREE CAB PICKUP</span>
+                      <span>SCHEDULE VISIT</span>
                       <span className="btn-arrow-hover">→</span>
                     </button>
                   </div>
