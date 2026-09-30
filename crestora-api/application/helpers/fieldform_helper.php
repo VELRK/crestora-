@@ -25,6 +25,9 @@ function fieldform_field_key($name)
 
 function fieldform_human_key($key)
 {
+	if ($key === 'isExclusive') {
+		return 'Exclusive project';
+	}
 	if ($key === '') {
 		return 'Item';
 	}
@@ -633,6 +636,7 @@ function crestora_project_admin_schema()
 	return array(
 		'id' => '',
 		'status' => 'ongoing',
+		'isExclusive' => FALSE,
 		'badge' => '',
 		'tagline' => '',
 		'description' => '',
@@ -690,6 +694,8 @@ function crestora_prune_project_payload($payload, $original = array())
 	$keep[] = 'mapUrl';
 	$keep[] = 'videoUrl';
 	$keep[] = 'bhk';
+	$keep[] = 'categories';
+	$keep[] = 'isExclusive';
 	$keep[] = 'isFeatured';
 	$keep[] = 'isPopular';
 	$out = array();
@@ -701,12 +707,57 @@ function crestora_prune_project_payload($payload, $original = array())
 	if (empty($out['id']) && is_array($original) && ! empty($original['id'])) {
 		$out['id'] = $original['id'];
 	}
-	foreach (array('isFeatured', 'isPopular') as $flag) {
-		if ( ! array_key_exists($flag, $out) && is_array($original) && array_key_exists($flag, $original)) {
-			$out[$flag] = $original[$flag];
-		}
+	if ( ! array_key_exists('categories', $out) && is_array($original) && ! empty($original['categories'])) {
+		$out['categories'] = $original['categories'];
 	}
 	return $out;
+}
+
+function crestora_decode_categories_json($json)
+{
+	if ($json === NULL || $json === '') {
+		return array();
+	}
+	$decoded = json_decode($json, TRUE);
+	if ( ! is_array($decoded)) {
+		return array();
+	}
+	$out = array();
+	foreach ($decoded as $key) {
+		$key = trim((string) $key);
+		if ($key !== '') {
+			$out[] = $key;
+		}
+	}
+	return array_values(array_unique($out));
+}
+
+function crestora_normalize_project_categories($payload, $row = NULL)
+{
+	$list = array();
+	if (is_array($payload) && ! empty($payload['categories']) && is_array($payload['categories'])) {
+		foreach ($payload['categories'] as $key) {
+			$key = trim((string) $key);
+			if ($key !== '') {
+				$list[] = $key;
+			}
+		}
+	}
+	if ( ! $list && is_array($payload)) {
+		$single = trim(isset($payload['category']) ? (string) $payload['category'] : '');
+		if ($single !== '') {
+			$list[] = $single;
+		}
+	}
+	if ( ! $list && is_array($row)) {
+		if ( ! empty($row['categories_json'])) {
+			$list = crestora_decode_categories_json($row['categories_json']);
+		}
+		if ( ! $list && ! empty($row['category'])) {
+			$list[] = trim((string) $row['category']);
+		}
+	}
+	return array_values(array_unique($list));
 }
 
 function crestora_blog_admin_schema()
@@ -840,8 +891,19 @@ function crestora_sync_project($payload)
 	if (empty($payload['cityName']) && $picked !== '') {
 		$payload['cityName'] = $picked;
 	}
-	$payload['isFeatured'] = ! empty($payload['isFeatured']);
-	$payload['isPopular'] = ! empty($payload['isPopular']);
+	$categories = crestora_normalize_project_categories($payload);
+	$payload['categories'] = $categories;
+	if ($categories) {
+		$payload['category'] = $categories[0];
+		$payload['type'] = $categories[0];
+		$payload['typeName'] = isset($labels[$categories[0]]) ? $labels[$categories[0]] : $categories[0];
+	}
+	$exclusive = array_key_exists('isExclusive', $payload)
+		? ! empty($payload['isExclusive'])
+		: ( ! empty($payload['isFeatured']) || ! empty($payload['isPopular']));
+	$payload['isExclusive'] = $exclusive;
+	$payload['isFeatured'] = $exclusive;
+	$payload['isPopular'] = $exclusive;
 	return $payload;
 }
 
@@ -854,11 +916,16 @@ function crestora_hydrate_project_from_row($item, $row)
 		if (empty($item['id']) && ! empty($row['code'])) {
 			$item['id'] = $row['code'];
 		}
-		if ( ! array_key_exists('isFeatured', $item) || ! $item['isFeatured']) {
-			$item['isFeatured'] = ! empty($row['is_featured']);
+		if (array_key_exists('is_exclusive', $row)) {
+			$item['isExclusive'] = ! empty($row['is_exclusive']);
+		} elseif ( ! array_key_exists('isExclusive', $item)) {
+			$item['isExclusive'] = ! empty($row['is_featured']) || ! empty($row['is_popular']);
 		}
-		if ( ! array_key_exists('isPopular', $item) || ! $item['isPopular']) {
-			$item['isPopular'] = ! empty($row['is_popular']);
+		if ( ! empty($row['categories_json'])) {
+			$from_db = crestora_decode_categories_json($row['categories_json']);
+			if ($from_db) {
+				$item['categories'] = $from_db;
+			}
 		}
 	}
 	return crestora_sync_project($item);

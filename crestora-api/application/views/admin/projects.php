@@ -25,7 +25,18 @@
 <tr>
   <td><?php if ($image !== ''): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape($r['title']); ?></td>
-  <td><?php echo html_escape($r['category']); ?></td>
+  <td><?php
+    $cats = crestora_decode_categories_json(isset($r['categories_json']) ? $r['categories_json'] : '');
+    if ( ! $cats && ! empty($r['category'])) {
+      $cats = array($r['category']);
+    }
+    $labels = crestora_category_labels();
+    $parts = array();
+    foreach ($cats as $cat_key) {
+      $parts[] = isset($labels[$cat_key]) ? $labels[$cat_key] : $cat_key;
+    }
+    echo html_escape($parts ? implode(', ', $parts) : '—');
+  ?></td>
   <td><?php echo html_escape($r['status']); ?></td>
   <td><?php echo $r['is_active'] ? 'Yes' : 'No'; ?></td>
   <td>

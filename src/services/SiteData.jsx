@@ -250,7 +250,15 @@ export function useSite() {
 
 export function projectMatchesCategory(project, categoryKey) {
   if (!categoryKey || !project) return false;
+  if (Array.isArray(project.categories) && project.categories.includes(categoryKey)) {
+    return true;
+  }
   return project.category === categoryKey || project.type === categoryKey;
+}
+
+export function projectIsExclusive(project) {
+  if (!project) return false;
+  return Boolean(project.isExclusive || project.isFeatured || project.isPopular);
 }
 
 export function countProjectsForCategory(projects, categoryKey) {

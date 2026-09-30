@@ -37,11 +37,13 @@ CREATE TABLE projects (
   slug VARCHAR(180) NOT NULL,
   title VARCHAR(255) NOT NULL,
   category VARCHAR(64) DEFAULT '',
+  categories_json TEXT NULL,
   locality VARCHAR(80) DEFAULT '',
   status VARCHAR(32) DEFAULT '',
   price DECIMAL(14,2) DEFAULT 0,
   is_featured TINYINT NOT NULL DEFAULT 0,
   is_popular TINYINT NOT NULL DEFAULT 0,
+  is_exclusive TINYINT NOT NULL DEFAULT 0,
   is_active TINYINT NOT NULL DEFAULT 1,
   sort_order INT NOT NULL DEFAULT 0,
   payload LONGTEXT

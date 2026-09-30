@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useSite } from "../../services/SiteData.jsx";
+import { useSite, projectMatchesCategory, projectIsExclusive } from "../../services/SiteData.jsx";
 import { formatINR } from "../../services/api";
 import { ProjectCardSkeleton } from "../common/ShimmerSkeletons";
 import "./ExclusiveProjectsPage.css";
@@ -82,20 +82,16 @@ export default function ExclusiveProjectsPage({
 
     // 2. Collection Filter
     if (collectionFilter === "flagship") {
-      list = list.filter((p) => p.isFeatured || p.isPopular || (p.price && p.price >= 6000000));
+      list = list.filter((p) => projectIsExclusive(p) || (p.price && p.price >= 6000000));
     } else if (collectionFilter === "villas") {
-      list = list.filter((p) => p.category === "villa" || p.type === "villa");
+      list = list.filter((p) => projectMatchesCategory(p, "villa"));
     } else if (collectionFilter === "plots") {
-      list = list.filter((p) => p.category === "plots" || p.type === "plots");
+      list = list.filter((p) => projectMatchesCategory(p, "plots"));
     } else if (collectionFilter === "townships") {
-      list = list.filter((p) => p.category === "gated-community" || p.type === "gated-community");
+      list = list.filter((p) => projectMatchesCategory(p, "gated-community"));
     } else if (collectionFilter === "commercial") {
       list = list.filter(
-        (p) =>
-          p.category === "commercial" ||
-          p.type === "commercial" ||
-          p.category === "farmlands" ||
-          p.type === "farmlands"
+        (p) => projectMatchesCategory(p, "commercial") || projectMatchesCategory(p, "farmlands")
       );
     }
 
@@ -117,8 +113,8 @@ export default function ExclusiveProjectsPage({
     } else {
       // 'curated': prioritize flagship/featured
       list.sort((a, b) => {
-        const aScore = (a.isFeatured ? 2 : 0) + (a.isPopular ? 1 : 0);
-        const bScore = (b.isFeatured ? 2 : 0) + (b.isPopular ? 1 : 0);
+        const aScore = projectIsExclusive(a) ? 3 : 0;
+        const bScore = projectIsExclusive(b) ? 3 : 0;
         if (aScore !== bScore) return bScore - aScore;
         return (a.title || "").localeCompare(b.title || "");
       });

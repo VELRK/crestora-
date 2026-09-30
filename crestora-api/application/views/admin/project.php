@@ -9,8 +9,22 @@
     $title_value = isset($item['title']) ? $item['title'] : '';
     $location_value = isset($item['location']) ? $item['location'] : '';
     $locality_value = isset($item['locality']) ? (string) $item['locality'] : '';
-    $category_value = isset($item['category']) ? (string) $item['category'] : '';
     $category_labels = crestora_category_labels();
+    $selected_categories = array();
+    if ( ! empty($item['categories']) && is_array($item['categories'])) {
+      foreach ($item['categories'] as $cat_key) {
+        $cat_key = trim((string) $cat_key);
+        if ($cat_key !== '') {
+          $selected_categories[] = $cat_key;
+        }
+      }
+    }
+    if ( ! $selected_categories && ! empty($item['category'])) {
+      $selected_categories[] = (string) $item['category'];
+    }
+    if ( ! $selected_categories && ! empty($row['categories_json'])) {
+      $selected_categories = crestora_decode_categories_json($row['categories_json']);
+    }
     $location_choices = crestora_location_choices();
   ?>
   <div class="form-grid">
@@ -36,16 +50,27 @@
         <?php endif; ?>
       </select>
     </label>
-    <label>Category <span class="req">*</span>
-      <select name="payload[category]" required>
-        <option value="">Select category</option>
-        <?php foreach ($category_labels as $key => $label): ?>
-          <option value="<?php echo html_escape($key); ?>" <?php echo ((string) $key === $category_value) ? 'selected' : ''; ?>><?php echo html_escape($label); ?></option>
+    <label class="span-3">Categories <span class="req">*</span>
+      <div class="category-multi">
+        <?php foreach ($category_labels as $key => $label):
+          $checked = in_array((string) $key, $selected_categories, TRUE);
+        ?>
+          <span class="check-field category-multi-item">
+            <input type="checkbox" name="payload[categories][]" value="<?php echo html_escape($key); ?>" <?php echo $checked ? 'checked' : ''; ?> />
+            <span><?php echo html_escape($label); ?></span>
+          </span>
         <?php endforeach; ?>
-        <?php if ($category_value !== '' && ! isset($category_labels[$category_value])): ?>
-          <option value="<?php echo html_escape($category_value); ?>" selected><?php echo html_escape($category_value); ?></option>
-        <?php endif; ?>
-      </select>
+        <?php foreach ($selected_categories as $legacy_key):
+          if (isset($category_labels[$legacy_key])) {
+            continue;
+          }
+        ?>
+          <span class="check-field category-multi-item">
+            <input type="checkbox" name="payload[categories][]" value="<?php echo html_escape($legacy_key); ?>" checked />
+            <span><?php echo html_escape($legacy_key); ?> (legacy)</span>
+          </span>
+        <?php endforeach; ?>
+      </div>
     </label>
     <label>Active on site
       <span class="check-field"><input type="checkbox" name="is_active" value="1" <?php echo $row['is_active'] ? 'checked' : ''; ?> /><span>Yes</span></span>
