@@ -738,9 +738,9 @@ ol {
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg,
-      rgba(2, 25, 70, 0.88) 0%,
-      rgba(2, 25, 70, 0.65) 45%,
-      rgba(2, 25, 70, 0.25) 100%);
+      rgba(6, 17, 38, 0.94) 0%,
+      rgba(6, 17, 38, 0.80) 45%,
+      rgba(6, 17, 38, 0.35) 100%);
   z-index: 2;
 }
 
@@ -748,71 +748,108 @@ ol {
   position: relative;
   z-index: 5;
   width: 100%;
-  padding: 155px 0 80px;
+  padding: 165px 0 90px clamp(85px, 9vw, 135px);
 }
 
 .hero-text-block {
-  max-width: 720px;
+  max-width: 740px;
 }
 
 .hero-subtitle-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(197, 155, 39, 0.18);
-  border: 1px solid var(--crestora-gold);
+  gap: 10px;
+  background: rgba(197, 155, 39, 0.12);
+  border: 1px solid rgba(223, 183, 67, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 4px;
   color: var(--crestora-gold-light);
-  padding: 6px 16px;
+  padding: 8px 18px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
   margin-bottom: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .hero-title {
   color: #ffffff;
   font-family: var(--font-heading);
-  letter-spacing: -2.5px;
-  font-size: clamp(38px, 6.5vw, 70px);
+  letter-spacing: -0.5px;
+  font-size: clamp(36px, 5.5vw, 68px);
   font-weight: 300;
-  line-height: 1.05;
+  line-height: 1.1;
   margin-bottom: 24px;
   text-transform: uppercase;
 }
 
 .hero-title span {
-  font-weight: 600;
-  color: #63b3ed;
+  font-weight: 700;
+  color: #dfb743;
 }
 
 .hero-title span.gold-word {
-  color: var(--crestora-gold-light);
+  color: #f3d477;
 }
 
 .hero-desc {
-  color: rgba(255, 255, 255, 0.88);
-  font-size: clamp(16px, 1.8vw, 19px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(16px, 1.6vw, 19px);
   line-height: 1.75;
-  margin-bottom: 35px;
-  max-width: 620px;
+  margin-bottom: 38px;
+  max-width: 640px;
+  font-weight: 400;
 }
 
 .hero-btn-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 18px;
+}
+
+.hero-btn-group .crestora-btn-fill {
+  color: #ffffff;
+  background: linear-gradient(135deg, #c59b27 0%, #dfb743 100%);
+  border: 1px solid #c59b27;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  box-shadow: 0 6px 20px rgba(197, 155, 39, 0.35);
+}
+
+.hero-btn-group .crestora-btn-fill:hover {
+  background: linear-gradient(135deg, #b0891e 0%, #c59b27 100%);
+  border-color: #b0891e;
+  box-shadow: 0 10px 28px rgba(197, 155, 39, 0.5);
+  transform: translateY(-2px);
+}
+
+.hero-btn-group .crestora-btn-white {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0a1c38;
+  border: 1px solid #ffffff;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-btn-group .crestora-btn-white:hover {
+  background: #ffffff;
+  color: #c59b27;
+  border-color: #ffffff;
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Left Vertical Slider Navigation */
 .hero-slider-nav {
   position: absolute;
   top: 50%;
-  left: clamp(20px, 4vw, 50px);
+  left: clamp(16px, 2.5vw, 36px);
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
   z-index: 10;
 }
 
@@ -821,41 +858,53 @@ ol {
   border: none;
   display: flex;
   align-items: center;
-  width: 90px;
-  height: 22px;
+  width: 60px;
+  height: 28px;
   position: relative;
   cursor: pointer;
+  padding: 0;
 }
 
 .hero-nav-number {
-  color: #ffffff;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
   font-weight: 600;
   position: absolute;
   right: 0;
-  opacity: 0.6;
   transition: var(--transition);
+  font-family: var(--font-heading);
 }
 
 .hero-nav-track {
-  width: 32px;
+  width: 24px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   position: absolute;
   left: 0;
   transition: var(--transition);
 }
 
+.hero-nav-item:hover .hero-nav-track {
+  background: rgba(223, 183, 67, 0.6);
+  width: 32px;
+}
+
+.hero-nav-item:hover .hero-nav-number {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 .hero-nav-item.active .hero-nav-track {
-  width: 55px;
-  height: 3px;
-  background: var(--crestora-gold);
+  width: 42px;
+  height: 2px;
+  background: var(--crestora-gold-light);
+  box-shadow: 0 0 10px rgba(223, 183, 67, 0.6);
 }
 
 .hero-nav-item.active .hero-nav-number {
   opacity: 1;
-  color: var(--crestora-gold);
-  font-size: 16px;
+  color: var(--crestora-gold-light);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 /* Slide Info Tag at Bottom Right */
