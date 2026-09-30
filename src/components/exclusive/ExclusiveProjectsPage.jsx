@@ -49,10 +49,28 @@ export default function ExclusiveProjectsPage({
   const [sortBy, setSortBy] = useState("curated"); // 'curated' | 'price-desc' | 'price-asc' | 'rating'
   const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'ledger'
 
-  // Extract distinct corridors from the actual project list
+  // Filter ONLY projects marked as exclusive (exclusive: true / isExclusive: true)
+  const exclusiveProjectsOnly = useMemo(() => {
+    return (projects || []).filter(
+      (p) =>
+        p.exclusive === true ||
+        p.exclusive === 1 ||
+        p.exclusive === "1" ||
+        p.exclusive === "true" ||
+        p.isExclusive === true ||
+        p.isExclusive === 1 ||
+        p.isExclusive === "1" ||
+        p.isExclusive === "true" ||
+        p.is_exclusive === 1 ||
+        p.is_exclusive === "1" ||
+        p.is_exclusive === true
+    );
+  }, [projects]);
+
+  // Extract distinct corridors from the exclusive project list
   const availableCorridors = useMemo(() => {
     const set = new Map();
-    (projects || []).forEach((p) => {
+    exclusiveProjectsOnly.forEach((p) => {
       const key = p.locality || p.city;
       const name = p.cityName || (p.location ? p.location.split(",")[0].trim() : "");
       if (key && name && !set.has(key)) {
@@ -60,17 +78,17 @@ export default function ExclusiveProjectsPage({
       }
     });
     return Array.from(set.entries()).map(([value, label]) => ({ value, label }));
-  }, [projects]);
+  }, [exclusiveProjectsOnly]);
 
-  // Compute filtered & sorted projects
+  // Compute filtered & sorted exclusive projects
   const filteredProjects = useMemo(() => {
-    let list = [...(projects || [])];
+    let list = [...exclusiveProjectsOnly];
 
     // 1. Search Query Filter
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter((p) => {
-        const titleMatch = (p.title || "").toLowerCase().includes(q);
+        const titleMatch = (p.title || p.projectName || "").toLowerCase().includes(q);
         const locMatch = (p.location || "").toLowerCase().includes(q);
         const localityMatch = (p.locality || "").toLowerCase().includes(q);
         const taglineMatch = (p.tagline || "").toLowerCase().includes(q);
@@ -125,7 +143,7 @@ export default function ExclusiveProjectsPage({
     }
 
     return list;
-  }, [projects, searchQuery, collectionFilter, corridorFilter, statusFilter, budgetFilter, sortBy]);
+  }, [exclusiveProjectsOnly, searchQuery, collectionFilter, corridorFilter, statusFilter, budgetFilter, sortBy]);
 
   // Reset all filters helper
   const handleResetFilters = () => {
@@ -304,7 +322,7 @@ export default function ExclusiveProjectsPage({
                   onClick={() => setCollectionFilter("all")}
                 >
                   <span>All Exclusive</span>
-                  <span className="exclusive-pill-count">{projects.length}</span>
+                  <span className="exclusive-pill-count">{exclusiveProjectsOnly.length}</span>
                 </button>
 
                 <button
@@ -357,7 +375,7 @@ export default function ExclusiveProjectsPage({
               <div className="exclusive-results-info">
                 <span>
                   Showing <strong className="exclusive-results-bold">{filteredProjects.length}</strong> of{" "}
-                  {projects.length} Exclusive Enclaves
+                  {exclusiveProjectsOnly.length} Exclusive Enclaves
                 </span>
                 {hasActiveFilters && (
                   <button

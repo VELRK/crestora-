@@ -485,7 +485,20 @@ export default function App() {
         ) : activePage === "exclusive-projects" ? (
           /* ==================== EXCLUSIVE PROJECTS SIGNATURE PAGE VIEW ==================== */
           <ExclusiveProjectsPage
-            projects={projects}
+            projects={projects.filter(
+              (p) =>
+                p.exclusive === true ||
+                p.exclusive === 1 ||
+                p.exclusive === "1" ||
+                p.exclusive === "true" ||
+                p.isExclusive === true ||
+                p.isExclusive === 1 ||
+                p.isExclusive === "1" ||
+                p.isExclusive === "true" ||
+                p.is_exclusive === 1 ||
+                p.is_exclusive === "1" ||
+                p.is_exclusive === true
+            )}
             onSelectProject={handleSelectProject}
             onBookSiteVisit={(project) => handleOpenBookVisit(project)}
             onNavigate={handleNavigate}

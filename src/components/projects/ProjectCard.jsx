@@ -37,7 +37,7 @@ export default function ProjectCard({
       : "Ongoing";
 
   // Derive values matching the reference image layout
-  const displayTitle = (title || "").toUpperCase();
+  const displayTitle = (project.fullProjectName || project.projectName || title || "").toUpperCase();
 
   const displayConfig = project.bhk || project.configuration || "";
 
@@ -49,11 +49,17 @@ export default function ProjectCard({
 
   const displayType =
     project.typeLabel ||
-    (project.category === "plots"
+    (project.category === "plots" || project.type === "plots"
       ? "Plots"
-      : project.category === "villa"
+      : project.category === "villa" || project.type === "villa"
       ? "Villas"
-      : project.typeName || "");
+      : project.category === "farmlands" || project.type === "farmlands"
+      ? "Farmlands"
+      : project.category === "commercial" || project.type === "commercial"
+      ? "Commercial Lands"
+      : project.category === "gated-community" || project.type === "gated-community"
+      ? "Gated Communities"
+      : project.typeName || "Plots & Villas");
 
   const displayUnits = totalUnits || (project.plots ? `${project.plots} Plots` : "");
 
