@@ -11,6 +11,18 @@ export default function HomeFeaturedProperties({
 }) {
   const site = useSite();
   const copy = site.home?.featured || {};
+
+  // Display top 5 property projects
+  const allProjects = site.projects || [];
+  const popularOrFeatured = featuredProjects.length > 0 ? featuredProjects : allProjects;
+  let displayProjects = popularOrFeatured.slice(0, 5);
+
+  if (displayProjects.length < 5 && allProjects.length > displayProjects.length) {
+    const existingIds = new Set(displayProjects.map((p) => p.id));
+    const extra = allProjects.filter((p) => !existingIds.has(p.id));
+    displayProjects = [...displayProjects, ...extra].slice(0, 5);
+  }
+
   return (
     <section className="comTitle" style={{ background: "#ffffff", padding: "80px 0" }}>
       <div className="crestora-container">
@@ -35,9 +47,9 @@ export default function HomeFeaturedProperties({
           </button>
         </div>
 
-        {/* 3 Featured Cards Grid */}
+        {/* Top 5 Featured Cards Grid */}
         <div className="properties-responsive-grid">
-          {featuredProjects.slice(0, 3).map((project) => (
+          {displayProjects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
