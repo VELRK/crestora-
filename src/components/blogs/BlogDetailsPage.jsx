@@ -392,13 +392,13 @@ export default function BlogDetailsPage({
                 </p>
 
                 <div className="advisory-contact-links">
-                  <a href="tel:+919159066666" className="advisory-phone-btn">
+                  <a href="tel:+919943053044" className="advisory-phone-btn">
                     <Phone size={15} color="#dfb743" />
-                    <span>+91 91590 66666</span>
+                    <span>+91 99430 53044</span>
                   </a>
-                  <a href="mailto:info@crestoraproperties.com" className="advisory-email-btn">
+                  <a href="mailto:crestoraproperties1@gmail.com" className="advisory-email-btn">
                     <Mail size={15} color="#dfb743" />
-                    <span>info@crestoraproperties.com</span>
+                    <span>crestoraproperties1@gmail.com</span>
                   </a>
                 </div>
 

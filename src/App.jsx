@@ -51,8 +51,8 @@ const DEFAULT_FILTERS = {
 export default function App() {
   const site = useSite();
   const settings = site.settings || {};
-  const phoneTel = settings.phone_tel || "+919159066666";
-  const whatsapp = settings.whatsapp || "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.";
+  const phoneTel = settings.phone_tel || "+919943053044";
+  const whatsapp = settings.whatsapp || "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.";
   const logo = settings.logo || logoImg;
   const blogPosts = site.blogs?.posts || [];
   const projects = site.projects || [];

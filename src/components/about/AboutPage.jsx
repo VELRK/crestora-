@@ -71,7 +71,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
   const anchorIcons = [FileCheck2, Award, Building2, Compass];
   const mainImage = text("mainImage", aboutImg);
   const secondaryImage = text("secondaryImage", banner1);
-  const phoneTel = text("ctaPhone", site.settings?.phone_tel || "+919159066666");
+  const phoneTel = text("ctaPhone", site.settings?.phone_tel || "+919943053044");
   const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("all");
 
@@ -192,8 +192,8 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                   {about.founderQuote || "Land is the cornerstone of every family’s generational legacy. When you invest with Crestora, you are not merely purchasing square footage; you are anchoring your family’s future in undisputed certainty."}
                 </blockquote>
                 <div className="quote-author-wrap">
-                  <div className="quote-author-name">{about.founderName || "Dr. K. Ravindran"}</div>
-                  <div className="quote-author-title">{about.founderRole || "Founder & Managing Director • Crestora Properties"}</div>
+                  <div className="quote-author-name">{about.founderName || "Jagadeesh Palanisamy"}</div>
+                  <div className="quote-author-title">{about.founderRole || "Owner & Managing Director • Crestora Properties"}</div>
                 </div>
               </div>
             </div>

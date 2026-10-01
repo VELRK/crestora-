@@ -1687,7 +1687,7 @@ export default function ProjectDetailsPage({
               {/* Direct WhatsApp & Call Buttons */}
               <div className="pdp-direct-contact-row">
                 <a
-                  href={`https://wa.me/919159066666?text=${encodeURIComponent(
+                  href={`https://wa.me/919943053044?text=${encodeURIComponent(
                     `Hi Crestora Properties, I am interested in visiting ${title} (${location}). Please share plot details.`
                   )}`}
                   target="_blank"
@@ -1698,7 +1698,7 @@ export default function ProjectDetailsPage({
                   <span>WhatsApp Details</span>
                 </a>
 
-                <a href="tel:+919159066666" className="pdp-call-btn">
+                <a href="tel:+919943053044" className="pdp-call-btn">
                   <Phone size={17} />
                   <span>Call Now</span>
                 </a>
@@ -1744,7 +1744,7 @@ export default function ProjectDetailsPage({
       <div className="pdp-mobile-bottom-bar" aria-label="Quick Actions">
         <div className="pdp-mobile-btns" style={{ width: "100%", display: "flex", gap: "10px" }}>
           <a
-            href={`https://wa.me/919159066666?text=${encodeURIComponent(
+            href={`https://wa.me/919943053044?text=${encodeURIComponent(
               `Hi Crestora Properties, please send me details for ${title}.`
             )}`}
             target="_blank"

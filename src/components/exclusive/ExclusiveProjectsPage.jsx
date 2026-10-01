@@ -48,11 +48,11 @@ export default function ExclusiveProjectsPage({
 }) {
   const site = useSite();
   const settings = site.settings || {};
-  const phone = settings.phone || "+91 91590 66666";
-  const phoneTel = settings.phone_tel || "+919159066666";
+  const phone = settings.phone || "+91 99430 53044";
+  const phoneTel = settings.phone_tel || "+919943053044";
   const defaultWhatsapp =
     settings.whatsapp ||
-    "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20exclusive%20projects.";
+    "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20exclusive%20projects.";
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
@@ -180,7 +180,7 @@ export default function ExclusiveProjectsPage({
     const text = encodeURIComponent(
       `Hello Crestora Properties, I am interested in your exclusive project "${p.title}" located in ${p.location}. Please share the luxury brochure, master plan, and available inventory.`
     );
-    return `https://wa.me/${phoneTel.replace(/[^0-9]/g, "") || "919159066666"}?text=${text}`;
+    return `https://wa.me/${phoneTel.replace(/[^0-9]/g, "") || "919943053044"}?text=${text}`;
   };
 
   return (

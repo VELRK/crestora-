@@ -125,10 +125,10 @@ export const CORE_PILLARS = [
 
 export const LEADERSHIP_TEAM = [
   {
-    name: "Dr. K. Ravindran",
-    role: "Founder & Managing Director",
-    credentials: "B.E. Civil, M.Tech, 24+ Yrs Industry Experience",
-    bio: "A visionary civil engineer and urban development pioneer with over two decades of experience delivering premium residential communities across Tamil Nadu. Passionate about ethical transparency and structural excellence.",
+    name: "Jagadeesh Palanisamy",
+    role: "Owner & Managing Director",
+    credentials: "Owner & Founder, Crestora Properties",
+    bio: "A visionary real estate developer and leader with years of experience delivering premium residential villa plots and gated developments across Coimbatore. Committed to absolute legal transparency, DTCP/RERA compliance, and total customer trust.",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
     quote: "Real estate is not merely about square footage; it is the sacred trust of a family's life savings and aspirations.",
   },

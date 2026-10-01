@@ -11,10 +11,12 @@ export default function Sidebar({
 }) {
   const site = useSite();
   const settings = site.settings || {};
-  const phone = settings.phone || "+91 91590 66666";
-  const phoneTel = settings.phone_tel || "+919159066666";
-  const email = settings.email || "info@crestoraproperties.com";
-  const office = settings.corporate_office || "Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
+  const ownerName = settings.owner_name || "Jagadeesh Palanisamy";
+  const phone = settings.phone || "+91 99430 53044 / +91 94425 23744";
+  const phoneTel = settings.phone_tel || "+919943053044";
+  const phoneTel2 = "+919442523744";
+  const email = settings.email || "crestoraproperties1@gmail.com";
+  const office = settings.corporate_office || "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
   const cities = sectionItems(site.home?.locations) || [];
   const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");
   const menuStatuses = site.filters?.statuses || [];
@@ -483,9 +485,17 @@ export default function Sidebar({
 
         {/* Direct Contact Details */}
         <div style={{ paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.12)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", fontSize: "13.5px", color: "#cbd5e1" }}>
-            <Phone size={16} color="#dfb743" />
-            <a href={`tel:${phoneTel}`} style={{ color: "#ffffff", fontWeight: "700" }}>{phone}</a>
+          <div style={{ fontSize: "13px", color: "#dfb743", fontWeight: "700", marginBottom: "8px" }}>
+            Owner: {ownerName}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px", fontSize: "13.5px", color: "#cbd5e1" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Phone size={16} color="#dfb743" />
+              <a href={`tel:${phoneTel}`} style={{ color: "#ffffff", fontWeight: "700" }}>+91 99430 53044</a>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingLeft: "26px" }}>
+              <a href={`tel:${phoneTel2}`} style={{ color: "#ffffff", fontWeight: "700" }}>+91 94425 23744</a>
+            </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", fontSize: "13.5px", color: "#cbd5e1" }}>
             <Mail size={16} color="#dfb743" />

@@ -20,15 +20,17 @@ export default function ContactPage({ onNavigate, showToast }) {
   const site = useSite();
   const page = site.contact?.page || {};
   const settings = site.settings || {};
-  const phone = page.phone || settings.phone || "+91 91590 66666";
-  const phoneTel = page.phoneTel || settings.phone_tel || "+919159066666";
-  const email = page.email || settings.email || "info@crestoraproperties.com";
-  const address = page.address || settings.corporate_office || "3rd Floor, Harita Center, Avinashi Road, Opposite to GKNM Hospital, Coimbatore - 641 037";
+  const ownerName = page.ownerName || settings.owner_name || "Jagadeesh Palanisamy";
+  const phone = page.phone || settings.phone || "+91 99430 53044 / +91 94425 23744";
+  const phoneTel = page.phoneTel || settings.phone_tel || "+919943053044";
+  const phoneTel2 = "+919442523744";
+  const email = page.email || settings.email || "crestoraproperties1@gmail.com";
+  const address = page.address || settings.corporate_office || "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
   const hours = page.hours || settings.hours || "Monday – Sunday, 9:00 AM – 7:30 PM";
-  const whatsapp = page.whatsapp || settings.whatsapp || "https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.";
-  const whatsappLabel = page.whatsappLabel || `Chat on WhatsApp (${phone})`;
-  const mapUrl = page.mapUrl || "https://maps.google.com/?q=GKNM+Hospital+Avinashi+Road+Coimbatore";
-  const mapEmbed = page.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.353368297072!2d76.9822452!3d11.0120893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859b867c2d829%3A0x7d6f51f49615a13c!2sGKNM%20Hospital%2C%20Avinashi%20Rd%2C%20Pappanaickenpalayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641037!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin";
+  const whatsapp = page.whatsapp || settings.whatsapp || "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.";
+  const whatsappLabel = page.whatsappLabel || `Chat on WhatsApp (+91 99430 53044)`;
+  const mapUrl = page.mapUrl || "https://maps.google.com/?q=6/459+PG+Pudur+S+S+Kulam+Coimbatore+641107";
+  const mapEmbed = page.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15661.79!2d76.99!3d11.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDA0JzQ4LjAiTiA3NsKwNTknMjQuMCJF!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin";
   const projects = site.projects || [];
   const [formData, setFormData] = useState({
     name: "",
@@ -151,6 +153,20 @@ export default function ContactPage({ onNavigate, showToast }) {
               </div>
 
               <div className="sc-info-items">
+                {/* Owner Info */}
+                <div className="sc-info-row">
+                  <div className="sc-icon-circle">
+                    <User size={20} />
+                  </div>
+                  <div className="sc-info-content">
+                    <span className="sc-label">Owner</span>
+                    <span className="sc-link-primary" style={{ fontWeight: "700", color: "#1e293b", cursor: "default" }}>
+                      {ownerName}
+                    </span>
+                    <div className="sc-sub-note">Owner & Managing Director</div>
+                  </div>
+                </div>
+
                 {/* Phone */}
                 <div className="sc-info-row">
                   <div className="sc-icon-circle">
@@ -158,9 +174,14 @@ export default function ContactPage({ onNavigate, showToast }) {
                   </div>
                   <div className="sc-info-content">
                     <span className="sc-label">Call Us Directly</span>
-                    <a href={`tel:${phoneTel}`} className="sc-link-primary">
-                      {phone}
-                    </a>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                      <a href={`tel:${phoneTel}`} className="sc-link-primary">
+                        +91 99430 53044
+                      </a>
+                      <a href={`tel:${phoneTel2}`} className="sc-link-primary">
+                        +91 94425 23744
+                      </a>
+                    </div>
                     <div className="sc-sub-note">{hours}</div>
                   </div>
                 </div>

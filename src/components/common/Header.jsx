@@ -23,9 +23,9 @@ export default function Header({
 }) {
   const site = useSite();
   const settings = site.settings || {};
-  const phone = settings.phone || "+91 91590 66666";
-  const phoneTel = settings.phone_tel || "+919159066666";
-  const email = settings.email || "info@crestoraproperties.com";
+  const phone = settings.phone || "+91 99430 53044";
+  const phoneTel = settings.phone_tel || "+919943053044";
+  const email = settings.email || "crestoraproperties1@gmail.com";
   const cityLabel = "Coimbatore";
   const logo = settings.logo || logoImg;
   const menuCategories = (site.filters?.categories || []).filter((item) => item.value && item.value !== "all");

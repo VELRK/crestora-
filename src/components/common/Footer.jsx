@@ -6,13 +6,15 @@ import { Phone, Mail, MapPin, ShieldCheck, Award, CheckCircle2 } from "lucide-re
 export default function Footer({ onNavigate }) {
   const site = useSite();
   const settings = site.settings || {};
-  const phone = settings.phone || "+91 91590 66666";
-  const phoneTel = settings.phone_tel || "+919159066666";
-  const email = settings.email || "info@crestoraproperties.com";
+  const ownerName = settings.owner_name || "Jagadeesh Palanisamy";
+  const phone = settings.phone || "+91 99430 53044 / +91 94425 23744";
+  const phoneTel = settings.phone_tel || "+919943053044";
+  const phoneTel2 = "+919442523744";
+  const email = settings.email || "crestoraproperties1@gmail.com";
   const logo = settings.logo || logoImg;
   const about = settings.footer_about || "Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.";
-  const registeredOffice = settings.registered_office || "16 A 1, 2nd Floor, Huzur Road, Behind Taj Vivanta, Gopalapuram, Coimbatore - 641 018";
-  const corporateOffice = settings.corporate_office || "3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
+  const registeredOffice = settings.registered_office || "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
+  const corporateOffice = settings.corporate_office || "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
   const siteName = settings.site_name || "Crestora Properties";
   const filterCategories = (site.filters?.categories || []).filter((c) => c.value && c.value !== "all");
   const defaultCategories = [
@@ -144,14 +146,14 @@ export default function Footer({ onNavigate }) {
 
           {/* Registered & Corporate Offices */}
           <div className="footer-col">
-            <h4>COIMBATORE OFFICES</h4>
-            <div style={{ marginBottom: "16px" }}>
-              <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Registered Office:</p>
-              <p>{registeredOffice}</p>
+            <h4>COIMBATORE OFFICE</h4>
+            <div style={{ marginBottom: "12px" }}>
+              <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Owner &amp; Managing Director:</p>
+              <p style={{ color: "#dfb743", fontWeight: "600", fontSize: "14px" }}>{ownerName}</p>
             </div>
-            <div>
-              <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Corporate Office:</p>
-              <p>{corporateOffice}</p>
+            <div style={{ marginBottom: "16px" }}>
+              <p style={{ fontWeight: "700", color: "#ffffff", marginBottom: "4px" }}>Office Address:</p>
+              <p style={{ lineHeight: "1.6" }}>{corporateOffice}</p>
             </div>
             <div style={{ marginTop: "12px" }}>
               <button
@@ -198,13 +200,14 @@ export default function Footer({ onNavigate }) {
           {/* Direct Assistance & Helplines */}
           <div className="footer-col">
             <h4>CONTACT & ASSISTANCE</h4>
-            <div style={{ marginTop: "12px" }}>
+            <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "4px" }}>
               <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#a0aec0", letterSpacing: "1px" }}>Customer Support</span>
-              <a href={`tel:${phoneTel}`} className="footer-contact-link">{phone}</a>
+              <a href={`tel:${phoneTel}`} className="footer-contact-link">+91 99430 53044</a>
+              <a href={`tel:${phoneTel2}`} className="footer-contact-link">+91 94425 23744</a>
             </div>
             <div style={{ marginTop: "14px" }}>
               <span style={{ fontSize: "12px", textTransform: "uppercase", color: "#a0aec0", letterSpacing: "1px" }}>Official Inquiries</span>
-              <a href={`mailto:${email}`} className="footer-contact-link" style={{ fontSize: "14px" }}>
+              <a href={`mailto:${email}`} className="footer-contact-link" style={{ fontSize: "13.5px" }}>
                 {email}
               </a>
             </div>
