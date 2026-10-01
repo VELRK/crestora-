@@ -76,11 +76,15 @@ const data = {
   blogs: blogs.out,
   settings: {
     site_name: "Crestora Properties",
-    phone: "+91 99430 53044",
+    owner_name: "Jagadeesh Palanisamy",
+    phone: "+91 99430 53044 / +91 94425 23744",
     phone_tel: "+919943053044",
     email: "crestoraproperties1@gmail.com",
     whatsapp: "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.",
-    address: "Crestora Properties, Coimbatore, Tamil Nadu",
+    address: "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107",
+    corporate_office: "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107",
+    registered_office: "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107",
+    hours: "Monday – Sunday, 9:00 AM – 7:30 PM",
     footer_about: "Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.",
     instagram: "https://instagram.com",
     linkedin: "https://linkedin.com",
@@ -118,9 +122,15 @@ const data = {
     eyebrow: "CONTACT US",
     title: "Talk to Crestora Properties",
     intro: "Share your requirement and our Coimbatore advisory team will call you with project details, price sheets, and a site-visit slot.",
-    phone: "+91 99430 53044",
+    ownerName: "Jagadeesh Palanisamy",
+    phone: "+91 99430 53044 / +91 94425 23744",
+    phoneTel: "+919943053044",
     email: "crestoraproperties1@gmail.com",
-    address: "Crestora Properties, Coimbatore, Tamil Nadu"
+    address: "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107",
+    hours: "Monday – Sunday, 9:00 AM – 7:30 PM",
+    whatsapp: "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.",
+    whatsappLabel: "Chat on WhatsApp (+91 99430 53044)",
+    mapUrl: "https://maps.google.com/?q=6/459+PG+Pudur+S+S+Kulam+Coimbatore+641107"
   }
 };
 

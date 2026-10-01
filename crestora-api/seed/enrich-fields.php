@@ -41,9 +41,14 @@ while ($row = $res->fetch_assoc()) {
 }
 
 $extraSettings = array(
+    'owner_name' => 'Jagadeesh Palanisamy',
+    'phone' => '+91 99430 53044 / +91 94425 23744',
+    'phone_tel' => '+919943053044',
+    'email' => 'crestoraproperties1@gmail.com',
+    'whatsapp' => 'https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20am%20interested%20in%20your%20villa%20plots.',
     'hours' => 'Monday – Sunday, 9:00 AM – 7:30 PM',
-    'registered_office' => '16 A 1, 2nd Floor, Huzur Road, Behind Taj Vivanta, Gopalapuram, Coimbatore - 641 018',
-    'corporate_office' => '3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037',
+    'registered_office' => '6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107',
+    'corporate_office' => '6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107',
 );
 $stmt = $m->prepare('INSERT IGNORE INTO settings (setting_key, setting_value) VALUES (?, ?)');
 foreach ($extraSettings as $key => $value) {
@@ -55,21 +60,22 @@ foreach ($extraSettings as $key => $value) {
 $row = $m->query("SELECT payload FROM sections WHERE page='contact' AND section_key='page'")->fetch_assoc();
 $contact = json_decode($row['payload'], true);
 $contact = array_merge(array(
-    'phoneTel' => '+919159066666',
+    'ownerName' => 'Jagadeesh Palanisamy',
+    'phone' => '+91 99430 53044 / +91 94425 23744',
+    'phoneTel' => '+919943053044',
+    'email' => 'crestoraproperties1@gmail.com',
     'hours' => 'Monday – Sunday, 9:00 AM – 7:30 PM',
-    'whatsapp' => 'https://wa.me/919159066666?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.',
-    'whatsappLabel' => 'Chat on WhatsApp (+91 91590 66666)',
-    'mapUrl' => 'https://maps.google.com/?q=GKNM+Hospital+Avinashi+Road+Coimbatore',
-    'mapEmbed' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.353368297072!2d76.9822452!3d11.0120893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859b867c2d829%3A0x7d6f51f49615a13c!2sGKNM%20Hospital%2C%20Avinashi%20Rd%2C%20Pappanaickenpalayam%2C%20Coimbatore%2C%20Tamil%20Nadu%20641037!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin',
+    'whatsapp' => 'https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.',
+    'whatsappLabel' => 'Chat on WhatsApp (+91 99430 53044)',
+    'mapUrl' => 'https://maps.google.com/?q=6/459+PG+Pudur+S+S+Kulam+Coimbatore+641107',
+    'mapEmbed' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15661.79!2d76.99!3d11.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDA0JzQ4LjAiTiA3NsKwNTknMjQuMCJF!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin',
     'infoHeading' => 'Contact Information',
     'infoLead' => 'Reach out to us directly for enquiries about DTCP & RERA villa plots and residences across Coimbatore.',
     'heroBadge' => 'CRESTORA PROPERTIES',
     'heroTitle' => 'Get in Touch',
     'heroSubtitle' => 'We would love to hear from you. Speak directly with our team or send us a message below.',
 ), $contact);
-if (empty($contact['address']) || strpos($contact['address'], 'Harita') === false) {
-    $contact['address'] = '3rd Floor, Harita Center, Avinashi Road, Opposite to GKNM Hospital, Coimbatore - 641 037';
-}
+$contact['address'] = '6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107';
 $json = json_encode($contact, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 $stmt = $m->prepare("UPDATE sections SET payload = ? WHERE page='contact' AND section_key='page'");
 $stmt->bind_param('s', $json);
@@ -78,14 +84,12 @@ echo "contact fields " . count($contact) . "\n";
 
 $row = $m->query("SELECT payload FROM sections WHERE page='about' AND section_key='page'")->fetch_assoc();
 $about = json_decode($row['payload'], true);
-if (empty($about['founderName'])) {
-    $about['founderName'] = 'Dr. K. Ravindran';
-    $about['founderRole'] = 'Founder & Managing Director • Crestora Properties';
-    $about['founderQuote'] = 'Land is the cornerstone of every family’s generational legacy. When you invest with Crestora, you are not merely purchasing square footage; you are anchoring your family’s future in undisputed certainty.';
-    $json = json_encode($about, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    $stmt = $m->prepare("UPDATE sections SET payload = ? WHERE page='about' AND section_key='page'");
-    $stmt->bind_param('s', $json);
-    $stmt->execute();
-    echo "about founder fields added\n";
-}
+$about['founderName'] = 'Jagadeesh Palanisamy';
+$about['founderRole'] = 'Owner & Managing Director • Crestora Properties';
+$about['founderQuote'] = 'Land is the cornerstone of every family’s generational legacy. When you invest with Crestora, you are not merely purchasing square footage; you are anchoring your family’s future in undisputed certainty.';
+$json = json_encode($about, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+$stmt = $m->prepare("UPDATE sections SET payload = ? WHERE page='about' AND section_key='page'");
+$stmt->bind_param('s', $json);
+$stmt->execute();
+echo "about founder fields added\n";
 echo "done\n";

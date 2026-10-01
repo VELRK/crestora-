@@ -73,7 +73,7 @@ $defaults = array(
     'ctaProjectsLabel' => 'EXPLORE ALL PROJECTS',
     'ctaVisitLabel' => 'SCHEDULE SITE VISIT',
     'ctaPhoneLabel' => 'CALL DIRECT HELPLINE',
-    'ctaPhone' => '+919159066666',
+    'ctaPhone' => '+919943053044',
 );
 $added = 0;
 foreach ($defaults as $key => $value) {
