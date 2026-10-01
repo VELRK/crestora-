@@ -45,7 +45,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
   const PHILOSOPHY_LIVE = PHILOSOPHY_CARDS;
   const ACCREDITATIONS_LIVE = ACCREDITATIONS;
   const heroMetrics = [
-    { value: "6+", label: "Years of Excellence" },
+    { value: "15+", label: "Years of Excellence" },
     { value: "8+", label: "Landmark Enclaves" },
     { value: "100+", label: "Sanctioned Plots" },
     { value: "100%", label: "Title Transparency" },
@@ -230,7 +230,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                     <Award size={24} className="seal-icon" />
                   </div>
                   <div className="seal-text-wrap">
-                    <span className="seal-number">{text("sealNumber", "6+")}</span>
+                    <span className="seal-number">{text("sealNumber", "15+")}</span>
                     <span className="seal-desc">{text("sealText", "YEARS OF ETHICAL EXCELLENCE")}</span>
                   </div>
                 </div>

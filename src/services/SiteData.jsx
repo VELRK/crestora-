@@ -32,7 +32,7 @@ const STATIC_HOME = {
       "100% Vasthu Compliant Layouts",
       "Approved by SBI, HDFC & ICICI",
     ],
-    badgeValue: "6+ YRS",
+    badgeValue: "15+ YRS",
     badgeText: "Of Ethical Real Estate Leadership",
   },
   stats: STATS_DATA,

@@ -79,7 +79,7 @@ export default function AboutAdissia({ onExplore, onBookSiteVisit, onReadMore })
               />
             </div>
             <div className="about-badge-floating">
-              <h4>{strip.badgeValue || "6+ YRS"}</h4>
+              <h4>{strip.badgeValue || "15+ YRS"}</h4>
               <p>{strip.badgeText || "Of Ethical Real Estate Leadership"}</p>
             </div>
           </div>
