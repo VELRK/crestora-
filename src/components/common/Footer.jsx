@@ -14,6 +14,16 @@ export default function Footer({ onNavigate }) {
   const registeredOffice = settings.registered_office || "16 A 1, 2nd Floor, Huzur Road, Behind Taj Vivanta, Gopalapuram, Coimbatore - 641 018";
   const corporateOffice = settings.corporate_office || "3rd Floor, Harita Center, Avinashi Rd, Opp. to GKNM Hospital, Coimbatore - 641 037";
   const siteName = settings.site_name || "Crestora Properties";
+  const filterCategories = (site.filters?.categories || []).filter((c) => c.value && c.value !== "all");
+  const defaultCategories = [
+    { label: "DTCP Villa Plots", value: "plots" },
+    { label: "Luxury Gated Villas", value: "villa" },
+    { label: "Integrated Communities", value: "gated-community" },
+    { label: "Hillside & Farmlands", value: "farmlands" },
+    { label: "Commercial Lands", value: "commercial" },
+  ];
+  const categoriesList = filterCategories.length > 0 ? filterCategories : defaultCategories;
+
   return (
     <footer className="crestora-footer">
       <div className="crestora-container">
@@ -165,40 +175,23 @@ export default function Footer({ onNavigate }) {
             </div>
           </div>
 
-          {/* Ongoing & Upcoming Projects */}
+          {/* Property Categories */}
           <div className="footer-col">
-            <h4>FEATURED PROJECTS</h4>
+            <h4>PROPERTY CATEGORIES</h4>
             <ul>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "neelambur" }); }}>
-                  Crestora Regal Arch (Neelambur)
-                </a>
-              </li>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "saravanampatti" }); }}>
-                  Crestora The Crown (Saravanampatti)
-                </a>
-              </li>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "avinashi-road" }); }}>
-                  Crestora Vivaana (Avinashi Road)
-                </a>
-              </li>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "vadavalli" }); }}>
-                  Crestora One World (Vadavalli)
-                </a>
-              </li>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "kovaipudur" }); }}>
-                  Crestora New Meadows (Kovaipudur)
-                </a>
-              </li>
-              <li>
-                <a href="/projects" onClick={(e) => { e.preventDefault(); onNavigate && onNavigate("projects", { location: "peelamedu" }); }}>
-                  Crestora Commercial Hub (Peelamedu)
-                </a>
-              </li>
+              {categoriesList.map((cat) => (
+                <li key={cat.value || cat.id}>
+                  <a
+                    href="/projects"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate && onNavigate("projects", { type: cat.value, location: "all" });
+                    }}
+                  >
+                    {cat.label || cat.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
