@@ -69,9 +69,9 @@ export const HERO_SLIDES = [
 ];
 
 export const STATS_DATA = [
-  { value: "8", suffix: "+", label: "Landmark Projects", sub: "Delivered & Ongoing" },
-  { value: "100", suffix: "+", label: "VILLA PLOTS", sub: "DTCP & RERA Cleared" },
-  { value: "80", suffix: "+", label: "HAPPY FAMILIES", sub: "Residing Community" },
+  { value: "60", suffix: "+", label: "Landmark Projects", sub: "Delivered & Ongoing" },
+  { value: "1000", suffix: "+", label: "VILLA PLOTS", sub: "DTCP & RERA Cleared" },
+  { value: "600", suffix: "+", label: "HAPPY FAMILIES", sub: "Residing Community" },
 ];
 
 export const CATEGORIES_DATA = [
