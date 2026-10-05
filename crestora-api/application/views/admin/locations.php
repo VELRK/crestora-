@@ -4,15 +4,18 @@
 </div>
 <?php if ( ! empty($msg)): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
 <?php if (empty($ready)): ?><p class="ok">The locations section is not in the database yet.</p><?php endif; ?>
+<p class="order-note">Drag the handle to change the order on the website. <span class="order-status"></span></p>
 <div class="card">
 <div class="table-wrap">
-<table>
-<tr><th>Image</th><th>Name</th><th>Corridor</th><th>Actions</th></tr>
+<table class="js-sortable" data-reorder="<?php echo site_url('admin/locations_reorder'); ?>">
+<tr><th></th><th>Order</th><th>Image</th><th>Name</th><th>Corridor</th><th>Actions</th></tr>
 <?php if (empty($rows)): ?>
-<tr><td colspan="4">No locations found</td></tr>
+<tr><td colspan="6">No locations found</td></tr>
 <?php else: ?>
-<?php foreach ($rows as $r): ?>
-<tr>
+<?php foreach ($rows as $index => $r): ?>
+<tr data-id="<?php echo html_escape(isset($r['id']) ? $r['id'] : ''); ?>">
+  <td><span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span></td>
+  <td class="js-order"><?php echo (int) $index + 1; ?></td>
   <td><?php if ( ! empty($r['image'])): ?><img class="thumb" src="<?php echo html_escape($r['image']); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape(isset($r['name']) ? $r['name'] : ''); ?></td>
   <td><?php echo html_escape(isset($r['state']) ? $r['state'] : ''); ?></td>

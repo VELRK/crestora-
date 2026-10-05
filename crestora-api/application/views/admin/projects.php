@@ -3,14 +3,15 @@
   <a class="btn btn-new" href="<?php echo site_url('admin/project_create'); ?>"><i class="fas fa-plus"></i> Add New Project</a>
 </div>
 <?php if ( ! empty($msg)): ?><p class="ok"><?php echo html_escape($msg); ?></p><?php endif; ?>
+<p class="order-note">Drag the handle to change the order on the website. <span class="order-status"></span></p>
 <div class="card">
 <div class="table-wrap">
-<table>
-<tr><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Active</th><th>Actions</th></tr>
+<table class="js-sortable" data-reorder="<?php echo site_url('admin/projects_reorder'); ?>">
+<tr><th></th><th>Order</th><th>Image</th><th>Title</th><th>Category</th><th>Status</th><th>Active</th><th>Actions</th></tr>
 <?php if (empty($rows)): ?>
-<tr><td colspan="6">No projects found</td></tr>
+<tr><td colspan="8">No projects found</td></tr>
 <?php else: ?>
-<?php foreach ($rows as $r):
+<?php foreach ($rows as $index => $r):
   $item = json_decode($r['payload'], TRUE);
   $image = '';
   if (is_array($item)) {
@@ -22,7 +23,9 @@
   }
   $image = fieldform_asset_url($image);
 ?>
-<tr>
+<tr data-id="<?php echo html_escape($r['code']); ?>">
+  <td><span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span></td>
+  <td class="js-order"><?php echo (int) $index + 1; ?></td>
   <td><?php if ($image !== ''): ?><img class="thumb" src="<?php echo html_escape($image); ?>" alt="" /><?php endif; ?></td>
   <td><?php echo html_escape($r['title']); ?></td>
   <td><?php

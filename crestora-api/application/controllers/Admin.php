@@ -259,9 +259,29 @@ class Admin extends CI_Controller {
 	public function projects()
 	{
 		$this->require_login();
-		$data['rows'] = $this->db->order_by('sort_order', 'ASC')->get('projects')->result_array();
+		$data['rows'] = $this->db->order_by('sort_order', 'ASC')->order_by('title', 'ASC')->get('projects')->result_array();
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => 'Projects', 'body' => $this->load->view('admin/projects', $data, TRUE)));
+	}
+
+	public function projects_reorder()
+	{
+		$this->require_login();
+		$ids = $this->input->post('order');
+		if ( ! is_array($ids)) {
+			$this->json_out(array('ok' => FALSE));
+			return;
+		}
+		$sort = 1;
+		foreach ($ids as $code) {
+			$code = trim((string) $code);
+			if ($code === '') {
+				continue;
+			}
+			$this->db->where('code', $code)->update('projects', array('sort_order' => $sort));
+			$sort++;
+		}
+		$this->json_out(array('ok' => TRUE));
 	}
 
 	public function project($code = '')
@@ -717,9 +737,40 @@ class Admin extends CI_Controller {
 		$this->require_login();
 		list($row, $meta, $items) = $this->load_items('home', 'locations');
 		$data['ready'] = (bool) $row;
-		$data['rows'] = $items;
+		$data['rows'] = $this->locations_in_saved_order($items);
 		$data['msg'] = $this->session->flashdata('msg');
 		$this->load->view('admin/layout', array('title' => 'Locations', 'body' => $this->load->view('admin/locations', $data, TRUE)));
+	}
+
+	public function locations_reorder()
+	{
+		$this->require_login();
+		$ids = $this->input->post('order');
+		list($row, $meta, $items) = $this->load_items('home', 'locations');
+		if ( ! $row || ! is_array($ids)) {
+			$this->json_out(array('ok' => FALSE));
+			return;
+		}
+		$by_id = array();
+		foreach ($items as $item) {
+			$id = isset($item['id']) ? (string) $item['id'] : '';
+			if ($id !== '') {
+				$by_id[$id] = $item;
+			}
+		}
+		$next = array();
+		foreach ($ids as $id) {
+			$id = (string) $id;
+			if (isset($by_id[$id])) {
+				$next[] = $by_id[$id];
+				unset($by_id[$id]);
+			}
+		}
+		foreach ($by_id as $item) {
+			$next[] = $item;
+		}
+		$this->save_items('home', 'locations', $meta, $next);
+		$this->json_out(array('ok' => TRUE));
 	}
 
 	public function location_create()
@@ -1009,6 +1060,59 @@ class Admin extends CI_Controller {
 		$this->db->where('page', $page)->where('section_key', $key)->update('sections', array(
 			'payload' => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 		));
+		if ($page === 'home' && $key === 'locations') {
+			$this->sync_location_rows($items);
+		}
+	}
+
+	private function json_out($data)
+	{
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data));
+	}
+
+	private function locations_in_saved_order($items)
+	{
+		if ( ! $this->db->table_exists('locations') || ! $this->db->field_exists('sort_order', 'locations')) {
+			return array_values($items);
+		}
+		$rows = $this->db->order_by('sort_order', 'ASC')->order_by('id', 'ASC')->get('locations')->result_array();
+		$rank = array();
+		foreach ($rows as $index => $row) {
+			$rank[(string) $row['id']] = $index;
+		}
+		$sorted = array_values($items);
+		usort($sorted, function ($a, $b) use ($rank) {
+			$aid = isset($a['id']) ? (string) $a['id'] : '';
+			$bid = isset($b['id']) ? (string) $b['id'] : '';
+			$ia = isset($rank[$aid]) ? $rank[$aid] : 100000;
+			$ib = isset($rank[$bid]) ? $rank[$bid] : 100000;
+			if ($ia === $ib) {
+				return 0;
+			}
+			return ($ia < $ib) ? -1 : 1;
+		});
+		return $sorted;
+	}
+
+	private function sync_location_rows($items)
+	{
+		if ( ! $this->db->table_exists('locations') || ! $this->db->field_exists('sort_order', 'locations')) {
+			return;
+		}
+		$sort = 1;
+		foreach ($items as $item) {
+			if ( ! is_array($item)) {
+				continue;
+			}
+			$id = trim(isset($item['id']) ? (string) $item['id'] : '');
+			if ($id === '') {
+				continue;
+			}
+			$this->db->where('id', $id)->update('locations', array('sort_order' => $sort));
+			$sort++;
+		}
 	}
 
 	private function resolve_item_index($items, $id)

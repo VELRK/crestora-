@@ -103,6 +103,13 @@ fieldset.item > .btn-remove{position:absolute;top:12px;right:12px}
 .btn-remove{width:34px;height:34px;min-width:34px;padding:0;border-radius:6px;background:#dc3545;color:#fff;border:0;font-size:14px;line-height:1}
 .btn-remove:hover{background:#bb2d3b}
 .delete-flag{color:var(--danger);font-weight:600}
+.order-note{margin:0 0 12px;color:var(--muted);font-size:13px}
+.order-status{font-weight:600;color:#0e7a3d}
+.drag-handle{display:grid;place-items:center;width:28px;height:28px;border-radius:6px;color:#7a8f82;cursor:grab}
+.drag-handle:active{cursor:grabbing}
+tr.sortable-row.dragging{opacity:.45}
+tr.sortable-row.drop-target td{box-shadow:inset 0 2px 0 #0e7a3d}
+.js-order{width:52px;font-weight:700;color:#0e7a3d}
 .row-actions{display:flex;gap:10px;align-items:center}
 .row-actions form{margin:0}
 .row-actions a{font-weight:600}
@@ -260,6 +267,84 @@ document.addEventListener('click', function (event) {
     var row = remove.closest('fieldset.item') || remove.closest('.item-row');
     if (row) row.remove();
   }
+});
+document.querySelectorAll('table.js-sortable').forEach(function (table) {
+  var url = table.getAttribute('data-reorder');
+  var status = document.querySelector('.order-status');
+  var dragRow = null;
+  var startOrder = '';
+  function rowOrder() {
+    return Array.prototype.map.call(table.querySelectorAll('tr[data-id]'), function (row) {
+      return row.getAttribute('data-id');
+    }).join('|');
+  }
+  function paintOrder() {
+    var n = 1;
+    table.querySelectorAll('tr[data-id] .js-order').forEach(function (cell) {
+      cell.textContent = String(n++);
+    });
+  }
+  function clearDrop() {
+    table.querySelectorAll('.drop-target').forEach(function (el) {
+      el.classList.remove('drop-target');
+      el.removeAttribute('data-drop-after');
+    });
+  }
+  function saveOrder() {
+    var ids = rowOrder().split('|').filter(Boolean);
+    if (!ids.length || !url) return;
+    if (status) status.textContent = 'Saving order…';
+    var body = ids.map(function (id) { return 'order[]=' + encodeURIComponent(id); }).join('&');
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body,
+      credentials: 'same-origin'
+    }).then(function (res) {
+      if (!res.ok) throw new Error('save failed');
+      return res.json();
+    }).then(function (data) {
+      if (!data || !data.ok) throw new Error('save failed');
+      if (status) status.textContent = 'Order saved';
+    }).catch(function () {
+      if (status) status.textContent = 'Could not save order. Refresh and try again.';
+    });
+  }
+  table.querySelectorAll('tr[data-id]').forEach(function (row) {
+    row.classList.add('sortable-row');
+    var handle = row.querySelector('.drag-handle');
+    if (!handle) return;
+    handle.addEventListener('mousedown', function () { row.setAttribute('draggable', 'true'); });
+    row.addEventListener('dragstart', function (event) {
+      dragRow = row;
+      startOrder = rowOrder();
+      row.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', row.getAttribute('data-id') || '');
+    });
+    row.addEventListener('dragover', function (event) {
+      if (!dragRow || dragRow === row) return;
+      event.preventDefault();
+      clearDrop();
+      row.classList.add('drop-target');
+      var rect = row.getBoundingClientRect();
+      row.setAttribute('data-drop-after', event.clientY > rect.top + rect.height / 2 ? '1' : '0');
+    });
+    row.addEventListener('drop', function (event) {
+      if (!dragRow || dragRow === row) return;
+      event.preventDefault();
+      if (row.getAttribute('data-drop-after') === '1') row.parentNode.insertBefore(dragRow, row.nextSibling);
+      else row.parentNode.insertBefore(dragRow, row);
+    });
+    row.addEventListener('dragend', function () {
+      row.classList.remove('dragging');
+      row.removeAttribute('draggable');
+      clearDrop();
+      paintOrder();
+      if (rowOrder() !== startOrder) saveOrder();
+      dragRow = null;
+    });
+  });
 });
 </script>
 </body>

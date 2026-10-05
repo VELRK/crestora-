@@ -75,7 +75,7 @@ class Api extends CI_Controller {
 		$this->ok(array(
 			'heroSlides' => $this->section_list('home', 'hero'),
 			'categories' => $this->section('home', 'categories'),
-			'locations' => $this->section('home', 'locations'),
+			'locations' => $this->ordered_locations_section(),
 			'aboutStrip' => $this->section('home', 'about_strip'),
 			'stats' => $this->section('home', 'stats'),
 			'ticker' => $this->section('home', 'ticker'),
@@ -100,7 +100,11 @@ class Api extends CI_Controller {
 
 	public function filters()
 	{
-		$this->ok($this->section('global', 'filters'));
+		$filters = $this->section('global', 'filters');
+		if (is_array($filters) && isset($filters['localities']) && is_array($filters['localities'])) {
+			$filters['localities'] = $this->sort_by_location_order($filters['localities']);
+		}
+		$this->ok($filters);
 	}
 
 	public function categories()
@@ -111,13 +115,88 @@ class Api extends CI_Controller {
 
 	public function locations()
 	{
+		$block = $this->ordered_locations_section();
+		if (is_array($block) && isset($block['items']) && is_array($block['items'])) {
+			$this->ok(array_values($block['items']));
+			return;
+		}
 		$filters = $this->section('global', 'filters');
-		$this->ok(isset($filters['localities']) ? $filters['localities'] : array());
+		$items = (is_array($filters) && isset($filters['localities']) && is_array($filters['localities'])) ? $filters['localities'] : array();
+		$this->ok($this->sort_by_location_order($items));
+	}
+
+	private function ordered_locations_section()
+	{
+		$block = $this->section('home', 'locations');
+		if ( ! is_array($block) || ! isset($block['items']) || ! is_array($block['items'])) {
+			return $block;
+		}
+		$block['items'] = $this->sort_by_location_order($block['items']);
+		return $block;
+	}
+
+	private function location_order_map()
+	{
+		if ( ! $this->db->table_exists('locations') || ! $this->db->field_exists('sort_order', 'locations')) {
+			return array();
+		}
+		$rows = $this->db->select('id, city_key, sort_order')->order_by('sort_order', 'ASC')->order_by('id', 'ASC')->get('locations')->result_array();
+		$map = array();
+		foreach ($rows as $row) {
+			$map[(string) $row['id']] = (int) $row['sort_order'];
+			if (isset($row['city_key']) && $row['city_key'] !== '') {
+				$map[(string) $row['city_key']] = (int) $row['sort_order'];
+			}
+		}
+		return $map;
+	}
+
+	private function sort_by_location_order($items)
+	{
+		if ( ! is_array($items) || count($items) < 2) {
+			return is_array($items) ? array_values($items) : array();
+		}
+		$map = $this->location_order_map();
+		if ( ! $map) {
+			return array_values($items);
+		}
+		$indexed = array();
+		$position = 0;
+		foreach ($items as $item) {
+			$indexed[] = array('position' => $position, 'item' => $item);
+			$position++;
+		}
+		usort($indexed, function ($a, $b) use ($map) {
+			$ra = $this->location_item_rank($a['item'], $map, $a['position']);
+			$rb = $this->location_item_rank($b['item'], $map, $b['position']);
+			if ($ra === $rb) {
+				return $a['position'] - $b['position'];
+			}
+			return ($ra < $rb) ? -1 : 1;
+		});
+		$out = array();
+		foreach ($indexed as $row) {
+			$out[] = $row['item'];
+		}
+		return $out;
+	}
+
+	private function location_item_rank($item, $map, $fallback)
+	{
+		if ( ! is_array($item)) {
+			return 100000 + $fallback;
+		}
+		foreach (array('id', 'cityKey', 'city_key', 'value') as $key) {
+			if (isset($item[$key]) && array_key_exists((string) $item[$key], $map)) {
+				return $map[(string) $item[$key]];
+			}
+		}
+		return 100000 + $fallback;
 	}
 
 	public function projects()
 	{
-		$rows = $this->db->order_by('sort_order', 'ASC')->get_where('projects', array('is_active' => 1))->result_array();
+		$rows = $this->db->order_by('sort_order', 'ASC')->order_by('title', 'ASC')->get_where('projects', array('is_active' => 1))->result_array();
 		$list = array();
 		foreach ($rows as $row) {
 			$item = json_decode($row['payload'], TRUE);
@@ -194,7 +273,7 @@ class Api extends CI_Controller {
 			$this->ok(array());
 			return;
 		}
-		$rows = $this->db->order_by('sort_order', 'ASC')->get_where('projects', array('is_active' => 1))->result_array();
+		$rows = $this->db->order_by('sort_order', 'ASC')->order_by('title', 'ASC')->get_where('projects', array('is_active' => 1))->result_array();
 		$scored = array();
 		foreach ($rows as $row) {
 			$item = json_decode($row['payload'], TRUE);
