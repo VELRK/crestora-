@@ -1145,14 +1145,7 @@ export default function ProjectDetailsPage({
                       Project <span>Specifications</span>
                     </h2>
                     <div className="pdp-specs-header-actions">
-                      <button
-                        type="button"
-                        className="crestora-btn crestora-btn-outline pdp-specs-header-btn"
-                        onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
-                      >
-                        <FileCheck size={14} />
-                        <span>Request Legal Dossier</span>
-                      </button>
+
                     </div>
                   </div>
                   <p style={{ color: "#64748b", margin: "10px 0 0", fontSize: "14px", lineHeight: "1.6" }}>
@@ -1276,16 +1269,7 @@ export default function ProjectDetailsPage({
                       </p>
                     </div>
                   </div>
-                  <div className="pdp-compliance-action">
-                    <button
-                      type="button"
-                      className="pdp-compliance-btn"
-                      onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
-                    >
-                      <FileCheck size={15} />
-                      <span>REQUEST LEGAL DOSSIER</span>
-                    </button>
-                  </div>
+
                 </div>
               </section>
             )}
