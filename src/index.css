@@ -10547,6 +10547,12 @@ body:has(.project-details-page) .side-action-rail {
   border-color: #0077b5;
 }
 
+.social-share-btn.share-fb:hover {
+  background: #1877f2;
+  color: #ffffff;
+  border-color: #1877f2;
+}
+
 .social-share-btn.share-copy:hover {
   background: #091a38;
   color: #dfb743;

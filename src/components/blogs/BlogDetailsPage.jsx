@@ -93,11 +93,11 @@ export default function BlogDetailsPage({
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
 
-  // Share via LinkedIn
-  const handleShareLinkedIn = () => {
+  // Share via Facebook
+  const handleShareFacebook = () => {
     const url = encodeURIComponent(window.location.href);
     window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       "_blank"
     );
   };
@@ -350,10 +350,10 @@ export default function BlogDetailsPage({
                   </button>
                   <button
                     type="button"
-                    className="social-share-btn share-li"
-                    onClick={handleShareLinkedIn}
+                    className="social-share-btn share-fb"
+                    onClick={handleShareFacebook}
                   >
-                    Share on LinkedIn
+                    Share on Facebook
                   </button>
                   <button
                     type="button"

@@ -86,10 +86,10 @@ const data = {
     registered_office: "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107",
     hours: "Monday – Sunday, 9:00 AM – 7:30 PM",
     footer_about: "Crestora Properties develops DTCP and RERA-approved plotted communities and luxury residences across Coimbatore, combining strategic growth locations, crystal-clear titles, and transparent processes.",
-    instagram: "https://instagram.com",
-    linkedin: "https://linkedin.com",
-    facebook: "https://facebook.com",
-    youtube: "https://youtube.com",
+    instagram: "https://www.instagram.com/crestora_properties/",
+    linkedin: "",
+    facebook: "https://www.facebook.com/profile.php?id=61592152162671",
+    youtube: "",
     logo: "http://localhost/crestora-api/uploads/logo.jpeg"
   },
   ticker: [
