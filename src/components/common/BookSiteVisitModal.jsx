@@ -108,7 +108,7 @@ export default function BookSiteVisitModal({
         {/* Header */}
         <div className="modal-header-crestora">
           <div>
-            <h3>Book a Guided Site Visit</h3>
+            <h3>Enquiry Form</h3>
             <p style={{ margin: 0, fontSize: "12px", color: "rgba(255,255,255,0.75)" }}>
               Experience Crestora Properties developments in person
             </p>
@@ -220,7 +220,7 @@ export default function BookSiteVisitModal({
               >
                 <span className="btn-arrow-normal">✓</span>
                 <span className="btn-text">
-                  {isSubmitting ? "CONFIRMING SCHEDULE..." : "CONFIRM SITE VISIT"}
+                  {isSubmitting ? "SENDING..." : "SEND ENQUIRY"}
                 </span>
                 <span className="btn-arrow-hover">→</span>
               </button>

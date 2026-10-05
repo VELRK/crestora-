@@ -382,7 +382,6 @@ export default function ProjectDetailsPage({
     date: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [enquiryType, setEnquiryType] = useState("visit");
 
   // EMI Calculator State
   const initialPrice = project?.price || 4500000;
@@ -659,45 +658,27 @@ export default function ProjectDetailsPage({
       projectCode: id,
       projectId: id,
     };
-    const request =
-      enquiryType === "enquiry"
-        ? crestoraApi.submitEnquiry({
-          ...payload,
-          message: `Property enquiry for ${title}`,
-          source: "project",
-        })
-        : crestoraApi.bookSiteVisit({
-          ...payload,
-          message: `Site visit request for ${title}`,
-        });
-    request
+    crestoraApi
+      .submitEnquiry({
+        ...payload,
+        message: `Property enquiry for ${title}`,
+        source: "project",
+      })
       .then((res) => {
         if (!res?.success) {
           if (showToast) {
-            showToast(
-              enquiryType === "enquiry"
-                ? "Could not send your enquiry. Please try again."
-                : "Could not save the site visit. Please try again."
-            );
+            showToast("Could not send your enquiry. Please try again.");
           }
           return;
         }
         setFormSubmitted(true);
         if (showToast) {
-          showToast(
-            enquiryType === "enquiry"
-              ? `Enquiry sent for ${title}! Our advisor will contact you.`
-              : `Site visit enquiry submitted for ${title}! Our advisor will contact you.`
-          );
+          showToast(`Enquiry sent for ${title}! Our advisor will contact you.`);
         }
       })
       .catch(() => {
         if (showToast) {
-          showToast(
-            enquiryType === "enquiry"
-              ? "Could not send your enquiry. Please try again."
-              : "Could not save the site visit. Please try again."
-          );
+          showToast("Could not send your enquiry. Please try again.");
         }
       });
   };
@@ -1574,7 +1555,7 @@ export default function ProjectDetailsPage({
                       className="crestora-btn crestora-btn-gold pdp-map-pickup-btn"
                       onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
                     >
-                      <span>SCHEDULE VISIT</span>
+                      <span>SEND ENQUIRY</span>
                       <span className="btn-arrow-hover">→</span>
                     </button>
                   </div>
@@ -1659,25 +1640,13 @@ export default function ProjectDetailsPage({
                     />
                   </div>
 
-                  <div className="pdp-input-group">
-                    <label htmlFor="pdp-enquiry-type">Enquiry type</label>
-                    <select
-                      id="pdp-enquiry-type"
-                      value={enquiryType}
-                      onChange={(e) => setEnquiryType(e.target.value)}
-                    >
-                      <option value="visit">Schedule site visit</option>
-                      <option value="enquiry">Property enquiry</option>
-                    </select>
-                  </div>
-
                   <button
                     type="submit"
                     className="crestora-btn crestora-btn-gold pdp-submit-btn"
                   >
                     <span className="btn-arrow-normal">✓</span>
                     <span className="btn-text">
-                      {enquiryType === "enquiry" ? "SEND PROPERTY ENQUIRY" : "CONFIRM SITE VISIT"}
+                      SEND ENQUIRY
                     </span>
                     <span className="btn-arrow-hover">→</span>
                   </button>
