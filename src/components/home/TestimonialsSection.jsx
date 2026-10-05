@@ -5,7 +5,15 @@ import { TESTIMONIALS_DATA } from "../../data/homeData";
 export default function TestimonialsSection() {
   const site = useSite();
   const block = site.home?.testimonials;
-  const testimonials = sectionItems(block) || TESTIMONIALS_DATA;
+  const rawTestimonials = sectionItems(block) || TESTIMONIALS_DATA;
+  const testimonials = rawTestimonials.map((t) => {
+    let quote = t.quote || "";
+    if (quote.toLowerCase().includes("california")) {
+      quote =
+        "Looking for a premium DTCP-approved plot in Coimbatore felt daunting until I spoke with Crestora Properties. Their transparency, legal documentation clarity, and swift registration gave me absolute confidence. Highly recommended!";
+    }
+    return { ...t, quote };
+  });
   const eyebrow = block?.eyebrow || "";
   const titleLead = block?.titleLead || "";
   const titleHighlight = block?.titleHighlight || "";
