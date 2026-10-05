@@ -1,22 +1,19 @@
 import React from "react";
 import { sectionItems, useSite } from "../../services/SiteData.jsx";
-import { Star, Quote } from "lucide-react";
+import { TESTIMONIALS_DATA } from "../../data/homeData";
 
 export default function TestimonialsSection() {
   const site = useSite();
-  const reviews = site.home?.googleReviews || {};
   const block = site.home?.testimonials;
-  const testimonials = sectionItems(block) || [];
+  const testimonials = sectionItems(block) || TESTIMONIALS_DATA;
   const eyebrow = block?.eyebrow || "";
   const titleLead = block?.titleLead || "";
   const titleHighlight = block?.titleHighlight || "";
   const intro = block?.intro || "";
+
   return (
     <section className="testimonials-section">
       <div className="crestora-container">
-        {/* Google Reviews Pill (Adissia Signature) */}
-
-
         {/* Section Heading */}
         <div className="section-header" style={{ color: "#ffffff" }}>
           <h5 style={{ color: "#dfb743" }}>{eyebrow}</h5>
@@ -34,17 +31,14 @@ export default function TestimonialsSection() {
             <div key={t.id} className="testimonial-card-item">
               <div>
                 <div className="testi-stars-row">
-                  {"★".repeat(t.rating)}
+                  {"★".repeat(t.rating || 5)}
                 </div>
                 <p className="testi-quote-text">"{t.quote}"</p>
               </div>
 
               <div className="testi-author-row">
-                <img src={t.avatar} alt={t.name} className="testi-avatar" />
                 <div className="testi-author-info">
-                  <h5>{t.name}</h5>
-                  <p>{t.role} • {t.location}</p>
-                  <span>{t.project}</span>
+                  <h5>Customer</h5>
                 </div>
               </div>
             </div>
