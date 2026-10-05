@@ -46,8 +46,8 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
   const ACCREDITATIONS_LIVE = ACCREDITATIONS;
   const heroMetrics = [
     { value: "15+", label: "Years of Excellence" },
-    { value: "8+", label: "Landmark Enclaves" },
-    { value: "100+", label: "Sanctioned Plots" },
+    { value: "60+", label: "Landmark Enclaves" },
+    { value: "1000+", label: "Sanctioned Plots" },
     { value: "100%", label: "Title Transparency" },
   ];
   const anchors = [
