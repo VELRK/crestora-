@@ -119,7 +119,7 @@ export default function App() {
               setSelectedProject(res.data);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
         setActivePage("project-details");
         return;
       }
@@ -564,7 +564,7 @@ export default function App() {
             className="side-action-btn outline"
             onClick={() => handleOpenBookVisit()}
           >
-            BOOK SITE VISIT
+            SEND ENQUIRY
           </button>
         </div>
       )}

@@ -120,7 +120,7 @@ export default function HeroBanner({
               onClick={() => onBookSiteVisit && onBookSiteVisit(activeSlide)}
             >
               <span className="btn-arrow-normal">✓</span>
-              <span className="btn-text">BOOK SITE VISIT</span>
+              <span className="btn-text">SEND ENQUIRY</span>
               <span className="btn-arrow-hover">→</span>
             </button>
           </div>

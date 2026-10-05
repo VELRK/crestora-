@@ -1715,7 +1715,7 @@ export default function ProjectDetailsPage({
             onClick={() => onBookSiteVisit && onBookSiteVisit(project)}
             style={{ flex: 1 }}
           >
-            <span>BOOK SITE VISIT</span>
+            <span>SEND ENQUIRY</span>
           </button>
         </div>
       </div>

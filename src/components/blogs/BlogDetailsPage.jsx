@@ -407,7 +407,7 @@ export default function BlogDetailsPage({
                   className="crestora-btn crestora-btn-gold sidebar-cta-btn"
                   onClick={onBookSiteVisit}
                 >
-                  <span>Book Site Visit &amp; Advisory</span>
+                  <span>ENQUIRE &amp; Advisory</span>
                   <ArrowRight size={14} />
                 </button>
               </div>

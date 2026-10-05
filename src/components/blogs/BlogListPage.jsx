@@ -365,7 +365,7 @@ export default function BlogListPage({
                 className="crestora-btn crestora-btn-gold"
                 onClick={onBookSiteVisit}
               >
-                <span>Book Site Visit &amp; Consultation</span>
+                <span>SEND ENQUIRY</span>
                 <ArrowRight size={14} />
               </button>
               <button
