@@ -48,7 +48,6 @@ export default function BlogListPage({
         post.title.toLowerCase().includes(q) ||
         post.excerpt.toLowerCase().includes(q) ||
         post.category.toLowerCase().includes(q) ||
-        post.author.name.toLowerCase().includes(q) ||
         (post.tags && post.tags.some((t) => t.toLowerCase().includes(q)));
       return matchesCategory && matchesSearch;
     });
@@ -169,18 +168,6 @@ export default function BlogListPage({
                 </div>
 
                 <div className="blog-featured-footer">
-                  <div className="blog-author-strip">
-                    <img
-                      src={featuredBlog.author.avatar}
-                      alt={featuredBlog.author.name}
-                      className="author-avatar-img"
-                    />
-                    <div>
-                      <div className="author-name">{featuredBlog.author.name}</div>
-                      <div className="author-role">{featuredBlog.author.role}</div>
-                    </div>
-                  </div>
-
                   <button
                     type="button"
                     className="crestora-btn crestora-btn-gold featured-read-btn"
@@ -325,17 +312,8 @@ export default function BlogListPage({
 
                     <p className="blog-item-excerpt">{post.excerpt}</p>
 
-                    {/* Author & Read Action */}
+                    {/* Read Action */}
                     <div className="blog-item-bottom">
-                      <div className="blog-mini-author">
-                        <img
-                          src={post.author.avatar}
-                          alt={post.author.name}
-                          className="mini-avatar"
-                        />
-                        <span className="mini-name">{post.author.name}</span>
-                      </div>
-
                       <span className="read-more-link">
                         Read Article <ArrowRight size={14} />
                       </span>

@@ -184,22 +184,8 @@ export default function BlogDetailsPage({
               <p className="article-lead-subtitle">{currentPost.subtitle}</p>
             )}
 
-            {/* Author and Metadata Strip */}
+            {/* Metadata Strip */}
             <div className="article-meta-strip">
-              <div className="author-badge-large">
-                <img
-                  src={currentPost.author.avatar}
-                  alt={currentPost.author.name}
-                  className="author-avatar-large"
-                />
-                <div className="author-info-block">
-                  <div className="author-name-large">{currentPost.author.name}</div>
-                  <div className="author-role-large">{currentPost.author.role}</div>
-                </div>
-              </div>
-
-              <div className="article-meta-divider" />
-
               <div className="article-stats-items">
                 <div className="meta-stat-item">
                   <Calendar size={14} color="#c59b27" />
@@ -365,20 +351,6 @@ export default function BlogDetailsPage({
                 </div>
               </div>
 
-              {/* Author Bio Box */}
-              <div className="article-author-bio-card">
-                <img
-                  src={currentPost.author.avatar}
-                  alt={currentPost.author.name}
-                  className="author-bio-avatar"
-                />
-                <div className="author-bio-text">
-                  <div className="bio-written-by">Written by</div>
-                  <h4 className="bio-name">{currentPost.author.name}</h4>
-                  <div className="bio-role">{currentPost.author.role}</div>
-                  <p className="bio-desc">{currentPost.author.bio}</p>
-                </div>
-              </div>
             </main>
 
             {/* RIGHT: STICKY SIDEBAR */}

@@ -26,14 +26,14 @@ export default function Footer({ onNavigate }) {
   ];
   const instagram =
     settings.instagram &&
-    settings.instagram !== "https://instagram.com" &&
-    settings.instagram !== "https://www.instagram.com"
+      settings.instagram !== "https://instagram.com" &&
+      settings.instagram !== "https://www.instagram.com"
       ? settings.instagram
       : "https://www.instagram.com/crestora_properties/";
   const facebook =
     settings.facebook &&
-    settings.facebook !== "https://facebook.com" &&
-    settings.facebook !== "https://www.facebook.com"
+      settings.facebook !== "https://facebook.com" &&
+      settings.facebook !== "https://www.facebook.com"
       ? settings.facebook
       : "https://www.facebook.com/profile.php?id=61592152162671";
   const categoriesList = filterCategories.length > 0 ? filterCategories : defaultCategories;
@@ -231,7 +231,7 @@ export default function Footer({ onNavigate }) {
                 onClick={() => onNavigate && onNavigate("contact")}
               >
                 <span className="btn-arrow-normal">✓</span>
-                <span className="btn-text">CONTACT US &amp; BOOK VISIT</span>
+                <span className="btn-text">CONTACT US &amp; ENQUIRE NOW</span>
                 <span className="btn-arrow-hover">→</span>
               </button>
             </div>
