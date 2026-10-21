@@ -110,6 +110,8 @@ export default function App() {
         if (match) {
           setSelectedProject(match);
           setActivePage("project-details");
+          setFilters(DEFAULT_FILTERS);
+          setCurrentPage(1);
           return;
         }
         crestoraApi
@@ -121,6 +123,8 @@ export default function App() {
           })
           .catch(() => { });
         setActivePage("project-details");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (blogSlug) {
@@ -129,32 +133,48 @@ export default function App() {
         if (match) {
           setSelectedBlog(match);
           setActivePage("blog-details");
+          setFilters(DEFAULT_FILTERS);
+          setCurrentPage(1);
           return;
         }
         setActivePage("blog-details");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (path === "/blogs") {
         setActivePage("blogs");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (path === "/projects") {
         setActivePage("projects");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (path === "/exclusive-projects" || path === "/exclusive") {
         setActivePage("exclusive-projects");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (path === "/contact") {
         setActivePage("contact");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       if (path === "/about") {
         setActivePage("about");
+        setFilters(DEFAULT_FILTERS);
+        setCurrentPage(1);
         return;
       }
       setActivePage("home");
+      setFilters(DEFAULT_FILTERS);
+      setCurrentPage(1);
       if (window.location.hash === "#locations") {
         setTimeout(() => {
           document.getElementById("locations-section")?.scrollIntoView({ behavior: "smooth" });
@@ -167,11 +187,23 @@ export default function App() {
     return () => window.removeEventListener("popstate", handleLocationChange);
   }, [projects, blogPosts]);
 
+  // Whenever leaving the search filter page ("projects"), reset filters so old filters are not applied
+  useEffect(() => {
+    if (activePage !== "projects") {
+      setFilters(DEFAULT_FILTERS);
+      setCurrentPage(1);
+      setSortBy("featured");
+    }
+  }, [activePage]);
+
   // Project selection helper (Navigates to dedicated Project Details page)
   const handleSelectProject = (project) => {
     if (!project) return;
     setSelectedProject(project);
     setActivePage("project-details");
+    setFilters(DEFAULT_FILTERS);
+    setCurrentPage(1);
+    setSortBy("featured");
     window.scrollTo({ top: 0, behavior: "smooth" });
     const key = project.slug || project.id;
     if (key) {
@@ -188,6 +220,9 @@ export default function App() {
     if (!blog) return;
     setSelectedBlog(blog);
     setActivePage("blog-details");
+    setFilters(DEFAULT_FILTERS);
+    setCurrentPage(1);
+    setSortBy("featured");
     window.scrollTo({ top: 0, behavior: "smooth" });
     const key = blog.slug || blog.id;
     if (key) {
@@ -209,7 +244,14 @@ export default function App() {
   const handleNavigate = (page, filterUpdates = null) => {
     setActivePage(page);
     if (filterUpdates) {
-      setFilters((prev) => ({ ...prev, ...filterUpdates }));
+      // Start fresh with default filters overlaid only with explicitly provided updates
+      setFilters({ ...DEFAULT_FILTERS, ...filterUpdates });
+      setCurrentPage(1);
+    } else {
+      // Cleanly reset filters when navigating to any page (or entering projects anew)
+      setFilters(DEFAULT_FILTERS);
+      setCurrentPage(1);
+      setSortBy("featured");
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
     const paths = {
@@ -256,6 +298,7 @@ export default function App() {
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
     setCurrentPage(1);
+    setSortBy("featured");
   };
 
   // Filter and sort computation

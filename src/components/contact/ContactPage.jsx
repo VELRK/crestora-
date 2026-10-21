@@ -25,12 +25,32 @@ export default function ContactPage({ onNavigate, showToast }) {
   const phoneTel = page.phoneTel || settings.phone_tel || "+919943053044";
   const phoneTel2 = "+919442523744";
   const email = page.email || settings.email || "crestoraproperties1@gmail.com";
-  const address = page.address || settings.corporate_office || "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
+  const defaultAddress = "6/459, PG Pudur, S S Kulam Via, Coimbatore - 641 107";
+  const rawAddress = page.address || settings.corporate_office || settings.registered_office || defaultAddress;
+  const address =
+    rawAddress.includes("Harita") || rawAddress.includes("GKNM")
+      ? (settings.corporate_office || defaultAddress)
+      : rawAddress;
+
   const hours = page.hours || settings.hours || "Monday – Sunday, 9:00 AM – 7:30 PM";
   const whatsapp = page.whatsapp || settings.whatsapp || "https://wa.me/919943053044?text=Hi%20Crestora%20Properties,%20I%20would%20like%20to%20know%20more%20about%20your%20projects.";
   const whatsappLabel = page.whatsappLabel || `Chat on WhatsApp (+91 99430 53044)`;
-  const mapUrl = page.mapUrl || "https://maps.google.com/?q=6/459+PG+Pudur+S+S+Kulam+Coimbatore+641107";
-  const mapEmbed = page.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15661.79!2d76.99!3d11.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDA0JzQ4LjAiTiA3NsKwNTknMjQuMCJF!5e0!3m2!1sen!2sin!4v1711111111111!5m2!1sen!2sin";
+
+  const defaultMapQuery = "6/459, PG Pudur, S S Kulam Via, Coimbatore 641107";
+  const mapUrl =
+    page.mapUrl && !page.mapUrl.includes("GKNM") && !page.mapUrl.includes("0x0")
+      ? page.mapUrl
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(defaultMapQuery)}`;
+
+  const isOldOrBrokenEmbed =
+    !page.mapEmbed ||
+    page.mapEmbed.includes("GKNM") ||
+    page.mapEmbed.includes("0x0%3A0x0") ||
+    page.mapEmbed.includes("0x0:0x0");
+
+  const mapEmbed = !isOldOrBrokenEmbed
+    ? page.mapEmbed
+    : `https://www.google.com/maps?q=${encodeURIComponent(defaultMapQuery)}&output=embed`;
   const projects = site.projects || [];
   const [formData, setFormData] = useState({
     name: "",
@@ -242,13 +262,13 @@ export default function ContactPage({ onNavigate, showToast }) {
                 </div>
               </div>
 
-              {/* Simple Map Embed */}
+              {/* Office Location Map */}
               <div className="sc-map-frame">
                 <iframe
-                  title="Crestora Properties Location"
+                  title="Crestora Properties Location - 6/459, PG Pudur, S S Kulam Via, Coimbatore 641107"
                   src={mapEmbed}
                   width="100%"
-                  height="170"
+                  height="220"
                   style={{ border: 0, display: "block" }}
                   allowFullScreen=""
                   loading="lazy"

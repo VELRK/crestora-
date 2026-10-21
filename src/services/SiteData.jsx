@@ -188,8 +188,9 @@ export function SiteProvider({ children }) {
       crestoraApi.blogs(),
       crestoraApi.filters(),
       crestoraApi.settings(),
+      crestoraApi.contact().catch(() => ({ data: null })),
     ])
-      .then(([home, projects, blogs, filters, settings]) => {
+      .then(([home, projects, blogs, filters, settings, contact]) => {
         const apiHome = home.data || {};
         const apiFilters = filters.data || {};
         const posts = blogs.data?.posts?.length ? blogs.data.posts : BLOGS_DATA;
@@ -216,7 +217,7 @@ export function SiteProvider({ children }) {
             categories: blogCategories(posts, blogs.data?.categories),
             newsletter: BLOG_NEWSLETTER_DATA,
           },
-          contact: null,
+          contact: contact?.data || null,
           filters: {
             categories,
             localities,
