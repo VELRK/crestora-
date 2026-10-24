@@ -12,16 +12,9 @@ export default function HomeFeaturedProperties({
   const site = useSite();
   const copy = site.home?.featured || {};
 
-  // Display top 5 property projects
-  const allProjects = site.projects || [];
-  const popularOrFeatured = featuredProjects.length > 0 ? featuredProjects : allProjects;
-  let displayProjects = popularOrFeatured.slice(0, 5);
-
-  if (displayProjects.length < 5 && allProjects.length > displayProjects.length) {
-    const existingIds = new Set(displayProjects.map((p) => p.id));
-    const extra = allProjects.filter((p) => !existingIds.has(p.id));
-    displayProjects = [...displayProjects, ...extra].slice(0, 5);
-  }
+  // Display top property projects in original order
+  const allProjects = (featuredProjects && featuredProjects.length > 0) ? featuredProjects : (site.projects || []);
+  const displayProjects = allProjects.slice(0, 6);
 
   return (
     <section className="comTitle" style={{ background: "#ffffff", padding: "80px 0" }}>

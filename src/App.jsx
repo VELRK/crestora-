@@ -471,7 +471,7 @@ export default function App() {
 
             {/* 9. Featured Residences & Plots Grid */}
             <HomeFeaturedProperties
-              featuredProjects={projects.filter((p) => p.isPopular || p.isFeatured)}
+              featuredProjects={projects}
               onSelectProject={handleSelectProject}
               onBookSiteVisit={(project) => handleOpenBookVisit(project)}
               onViewAll={() => handleNavigate("projects")}

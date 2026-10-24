@@ -3949,16 +3949,22 @@ ol {
 .cpc-media-wrap {
   position: relative;
   width: 100%;
-  height: 230px;
+  height: 240px;
+  min-height: 240px;
+  max-height: 240px;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   cursor: pointer;
   background: #0a1c38;
+  flex-shrink: 0;
 }
 
 .cpc-thumb-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -4330,16 +4336,21 @@ ol {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 230px;
+  min-height: 250px;
+  max-height: 280px;
+  aspect-ratio: 16 / 11;
   overflow: hidden;
   cursor: pointer;
   background: #0a1c38;
+  flex-shrink: 0;
 }
 
 .plc-thumb-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -4679,7 +4690,10 @@ ol {
   }
 
   .plc-media-wrap {
-    height: 210px;
+    height: 220px;
+    min-height: 220px;
+    max-height: 220px;
+    aspect-ratio: 16 / 10;
   }
 
   .plc-content {
