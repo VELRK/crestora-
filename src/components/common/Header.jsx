@@ -102,7 +102,7 @@ export default function Header({
               <span>DTCP &amp; RERA Approved Projects</span>
             </div>
             <span className="topbar-separator d-none-mobile">|</span>
-              <span className="topbar-hours d-none-mobile">
+            <span className="topbar-hours d-none-mobile">
               <Clock size={12} className="topbar-icon" /> {settings.hours || "9:00 AM – 7:30 PM"}
             </span>
           </div>
@@ -195,7 +195,7 @@ export default function Header({
                 onClick={() => onNavigate && onNavigate("exclusive-projects")}
                 style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}
               >
-                <Sparkles size={12} style={{ color: "#dfb743" }} />
+                {/* <Sparkles size={12} style={{ color: "#dfb743" }} /> */}
                 <span>EXCLUSIVE PROJECTS</span>
               </button>
             </div>
