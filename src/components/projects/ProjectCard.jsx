@@ -100,23 +100,13 @@ export default function ProjectCard({
           <div className="plc-media-gradient"></div>
 
           {/* Top Badges */}
-          <div className="plc-media-top" style={{ display: "flex", gap: "6px", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
+          <div className="plc-media-top">
             <span className={`cpc-status-pill status-${status || "ongoing"}`}>
               <span className="cpc-status-dot"></span>
               {statusText}
             </span>
             {displayType && (
-              <span className="cpc-type-pill" style={{
-                background: "rgba(15, 23, 42, 0.8)",
-                backdropFilter: "blur(4px)",
-                color: "#ffffff",
-                padding: "3px 9px",
-                borderRadius: "20px",
-                fontSize: "10.5px",
-                fontWeight: "600",
-                letterSpacing: "0.4px",
-                border: "1px solid rgba(255, 255, 255, 0.2)"
-              }}>
+              <span className="cpc-type-pill">
                 {displayType}
               </span>
             )}
@@ -125,7 +115,7 @@ export default function ProjectCard({
           {/* Bottom Approval Tag over image */}
           {(project.reraNumber || project.dtcpNumber || project.badge) && (
             <div className="plc-media-bottom">
-              <span className="plc-price-badge" style={{ fontSize: "11px", fontWeight: "700" }}>
+              <span className="cpc-approval-pill">
                 {project.reraNumber ? `RERA: ${project.reraNumber}` : project.dtcpNumber ? `DTCP: ${project.dtcpNumber}` : project.badge}
               </span>
             </div>
@@ -248,23 +238,13 @@ export default function ProjectCard({
         <div className="cpc-media-gradient"></div>
 
         {/* Top Badges Row */}
-        <div className="cpc-top-bar" style={{ display: "flex", gap: "6px", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
+        <div className="cpc-top-bar">
           <span className={`cpc-status-pill status-${status || "ongoing"}`}>
             <span className="cpc-status-dot"></span>
             {statusText}
           </span>
           {displayType && (
-            <span className="cpc-type-pill" style={{
-              background: "rgba(15, 23, 42, 0.8)",
-              backdropFilter: "blur(4px)",
-              color: "#ffffff",
-              padding: "3px 9px",
-              borderRadius: "20px",
-              fontSize: "10.5px",
-              fontWeight: "600",
-              letterSpacing: "0.4px",
-              border: "1px solid rgba(255, 255, 255, 0.2)"
-            }}>
+            <span className="cpc-type-pill">
               {displayType}
             </span>
           )}
@@ -273,7 +253,7 @@ export default function ProjectCard({
         {/* Bottom Approval on Media (if available) */}
         {(project.reraNumber || project.dtcpNumber || project.badge) && (
           <div className="cpc-bottom-media-bar">
-            <span className="cpc-media-price" style={{ fontSize: "11px", fontWeight: "700" }}>
+            <span className="cpc-approval-pill">
               {project.reraNumber ? `RERA: ${project.reraNumber}` : project.dtcpNumber ? `DTCP: ${project.dtcpNumber}` : project.badge}
             </span>
           </div>
