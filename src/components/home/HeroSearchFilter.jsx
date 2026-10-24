@@ -5,12 +5,10 @@ export default function HeroSearchFilter({ onSearch }) {
   const site = useSite();
   const propertyTypes = site.filters?.propertyTypes || [];
   const locations = site.filters?.localities || [];
-  const maxPrices = site.filters?.budgets || [];
   const statuses = site.filters?.statuses || [];
   const [searchParams, setSearchParams] = useState({
     location: "all",
     type: "all",
-    maxPrice: "all",
     status: "all",
   });
 
@@ -60,21 +58,6 @@ export default function HeroSearchFilter({ onSearch }) {
             </select>
           </div>
 
-          {/* Budget Range Field */}
-          <div className="filter-input-group">
-            <label>Budget Range (INR)</label>
-            <select
-              value={searchParams.maxPrice}
-              onChange={(e) => handleChange("maxPrice", e.target.value)}
-              className="filter-select"
-            >
-              {maxPrices.map((price) => (
-                <option key={price.label} value={price.value}>
-                  {price.label}
-                </option>
-              ))}
-            </select>
-          </div>
 
           {/* Development Status */}
           <div className="filter-input-group">

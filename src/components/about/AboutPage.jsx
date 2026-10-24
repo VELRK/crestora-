@@ -212,17 +212,7 @@ export default function AboutPage({ onNavigate, onBookSiteVisit }) {
                 </div>
 
                 {/* Secondary Inset Arch Visual */}
-                <div className="about-secondary-arch d-none-mobile">
-                  <img
-                    src={secondaryImage}
-                    alt="Crestora British Gateways"
-                    className="about-secondary-img"
-                  />
-                  <div className="about-secondary-badge">
-                    <span className="asb-tag">{text("secondaryBadgeTag", "Neoclassical Facade")}</span>
-                    <span className="asb-name">{text("secondaryBadgeName", "Regal Arch Gateway")}</span>
-                  </div>
-                </div>
+
 
                 {/* Floating Heritage Seal Badge */}
                 <div className="about-floating-seal">

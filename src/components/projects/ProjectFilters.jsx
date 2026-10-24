@@ -16,7 +16,6 @@ export default function ProjectFilters({
   const site = useSite();
   const propertyTypes = site.filters?.propertyTypes || [];
   const locations = site.filters?.localities || [];
-  const maxPrices = site.filters?.budgets || [];
   const sortOptions = site.filters?.sortOptions || [];
   const statuses = site.filters?.statuses || [];
   const handleInputChange = (field, value) => {
@@ -30,7 +29,6 @@ export default function ProjectFilters({
     (filters.keyword && filters.keyword !== "") ||
     (filters.type && filters.type !== "all") ||
     (filters.location && filters.location !== "all") ||
-    (filters.maxPrice && filters.maxPrice !== "all") ||
     (filters.status && filters.status !== "all");
 
   return (
@@ -81,20 +79,6 @@ export default function ProjectFilters({
           </select>
         </div>
 
-        {/* Budget Max */}
-        <div>
-          <select
-            className="crestora-input"
-            value={filters.maxPrice || "all"}
-            onChange={(e) => handleInputChange("maxPrice", e.target.value)}
-          >
-            {maxPrices.map((p) => (
-              <option key={p.label} value={p.value}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-        </div>
 
         {/* Status */}
         <div>

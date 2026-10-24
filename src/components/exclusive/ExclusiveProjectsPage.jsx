@@ -59,7 +59,6 @@ export default function ExclusiveProjectsPage({
   const [collectionFilter, setCollectionFilter] = useState("all"); // 'all' | 'flagship' | 'villas' | 'plots' | 'townships' | 'commercial'
   const [corridorFilter, setCorridorFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all"); // 'all' | 'ongoing' | 'upcoming' | 'completed'
-  const [budgetFilter, setBudgetFilter] = useState("all"); // 'all' | 'under-50' | '50-100' | 'above-100'
   const [sortBy, setSortBy] = useState("curated"); // 'curated' | 'price-desc' | 'price-asc' | 'rating'
   const [viewMode, setViewMode] = useState("grid"); // 'grid' | 'ledger'
 
@@ -155,7 +154,7 @@ export default function ExclusiveProjectsPage({
     }
 
     return list;
-  }, [exclusiveOnlyProjects, searchQuery, collectionFilter, corridorFilter, statusFilter, budgetFilter, sortBy]);
+  }, [exclusiveOnlyProjects, searchQuery, collectionFilter, corridorFilter, statusFilter, sortBy]);
 
   // Reset all filters helper
   const handleResetFilters = () => {
@@ -163,7 +162,6 @@ export default function ExclusiveProjectsPage({
     setCollectionFilter("all");
     setCorridorFilter("all");
     setStatusFilter("all");
-    setBudgetFilter("all");
     setSortBy("curated");
   };
 
@@ -172,7 +170,6 @@ export default function ExclusiveProjectsPage({
     collectionFilter !== "all" ||
     corridorFilter !== "all" ||
     statusFilter !== "all" ||
-    budgetFilter !== "all" ||
     sortBy !== "curated";
 
   // Helper for project-specific WhatsApp inquiry URL
